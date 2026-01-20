@@ -1,0 +1,47 @@
+/*
+CTC Separate Stylesheet
+*/
+
+#innotech__mobile__menu {
+	display: none;
+}
+
+.innotech-mobile-menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.et_pb_button.et_pb_button_0_tb_header {
+	font-size: 0; /* hides text */
+}
+
+.et_pb_button.et_pb_button_0_tb_header::after {
+	font-size: 1.6rem; /* restore icon size */
+}
+
+/* Hide this menu on tablet and mobile */
+@media only screen and (max-width: $tablet) {
+	.et_mobile_nav_menu {
+		display: none !important;
+		visibility: hidden !important;
+	}
+
+	.et_pb_menu_0_tb_header.et_pb_menu {
+		background-color: transparent !important;
+		border-radius: 0 !important;
+		height: 0 !important;
+	}
+
+	#innotech__mobile__menu {
+		display: block;
+	}
+}
+
+/* Optional: explicit mobile breakpoint */
+@media only screen and (max-width: $mobile) {
+	.et_mobile_nav_menu {
+		display: none !important;
+		visibility: hidden !important;
+	}
+}
