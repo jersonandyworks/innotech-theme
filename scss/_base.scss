@@ -1,7 +1,12 @@
 /*
 CTC Separate Stylesheet
 */
-
+@for $i from 1 through 5 {
+	h#{$i}.et_pb_module_heading {
+		font-size: map-get($heading-sizes, $i);
+	}
+}
+// Mobile Menu
 #innotech__mobile__menu {
 	display: none;
 }
@@ -11,22 +16,122 @@ CTC Separate Stylesheet
 	margin: 0;
 	padding: 0;
 }
+.flex-row,
+.flex-col {
+	display: flex;
+}
+.flex-row {
+	align-items: center;
+}
+// Buttons
+body {
+	.et_pb_button {
+		border-radius: $button-radius !important;
+	}
 
-.et_pb_button.et_pb_button_0_tb_header {
-	font-size: 0; /* hides text */
+	#page-container .et_pb_section a.et_pb_button.et_pb_button_0_tb_header {
+		font-size: 0px !important;
+		width: 40px;
+		height: 40px;
+		border-radius: 50% !important;
+		padding: 0 !important;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+
+		&::before {
+			font-size: 18px !important;
+			margin-left: 0 !important;
+		}
+	}
+
+	.et_pb_button_module_wrapper {
+		&.et_pb_button_0_tb_header_wrapper {
+			&.et_pb_module {
+				display: flex;
+				justify-content: center;
+				/* align-content: flex-end; */
+				flex-wrap: nowrap;
+				flex-direction: row;
+				align-items: baseline;
+				margin-bottom: 0 !important;
+				&.profile-btn {
+					&::before {
+						font-size: 18px !important;
+					}
+				}
+
+				&::after {
+					content: "texthere";
+					border-right: 1px solid $grey;
+					opacity: 0.3;
+					font-size: 0px;
+					padding-left: 1rem;
+				}
+			}
+		}
+
+		&.et_pb_button_1_tb_header_wrapper {
+			&.et_pb_module {
+				padding-left: 1rem;
+			}
+		}
+	}
+
+	#page-container .et_pb_section .et_pb_button {
+		&.after-text {
+			font-size: 0;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			padding: 30px;
+			border-radius: $button-radius;
+
+			&::after {
+				font-size: 0.8rem !important;
+				margin-left: 0;
+			}
+		}
+
+		&.button-w-icon {
+			display: grid;
+			align-content: stretch;
+			align-items: center;
+			justify-content: space-around;
+			justify-items: end;
+			font-size: $font-size-base;
+
+			&::after {
+				font-size: 1.8rem !important;
+				background-color: $primary-color !important;
+				border-radius: $button-radius !important;
+				width: 50px;
+				height: 50px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-right: 0.5rem;
+			}
+		}
+	}
 }
 
-.et_pb_button.et_pb_button_0_tb_header::after {
-	font-size: 1.6rem; /* restore icon size */
-}
-
-/* Hide this menu on tablet and mobile */
-@media only screen and (max-width: $tablet) {
-	.et_mobile_nav_menu {
+// Hide Divi mobile menu
+.et_mobile_nav_menu {
+	@media only screen and (max-width: $tablet) {
 		display: none !important;
 		visibility: hidden !important;
 	}
 
+	@media only screen and (max-width: $mobile) {
+		display: none !important;
+		visibility: hidden !important;
+	}
+}
+
+// Tablet and mobile adjustments
+@media only screen and (max-width: $tablet) {
 	.et_pb_menu_0_tb_header.et_pb_menu {
 		background-color: transparent !important;
 		border-radius: 0 !important;
@@ -35,13 +140,5 @@ CTC Separate Stylesheet
 
 	#innotech__mobile__menu {
 		display: block;
-	}
-}
-
-/* Optional: explicit mobile breakpoint */
-@media only screen and (max-width: $mobile) {
-	.et_mobile_nav_menu {
-		display: none !important;
-		visibility: hidden !important;
 	}
 }

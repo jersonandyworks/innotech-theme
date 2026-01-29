@@ -1,0 +1,50 @@
+/* InnoTech Mouse Animation Module Styles */
+.innotech-mouse-module {
+	line-height: 0;
+}
+
+.innotech-mouse-wrapper {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+.innotech-mouse-svg .innotech-svg-wheel {
+	animation: innotechSvgWheelScroll var(--innotech-anim-speed, 1.9s) ease-in-out infinite;
+}
+
+.innotech-mouse-svg .innotech-svg-arrow {
+	animation: innotechSvgArrowFade 2s ease-in-out infinite;
+}
+
+.innotech-mouse-svg .innotech-svg-arrow-1 {
+	animation-delay: 0s;
+}
+
+.innotech-mouse-svg .innotech-svg-arrow-2 {
+	animation-delay: 0.67s;
+}
+
+.innotech-mouse-svg .innotech-svg-arrow-3 {
+	animation-delay: 0.88s;
+}
+
+@keyframes innotechSvgWheelScroll {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(8px);
+	}
+}
+
+@keyframes innotechSvgArrowFade {
+	0%,
+	100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}

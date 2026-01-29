@@ -1,0 +1,114 @@
+/* Basic Styles */
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #000;
+	color: #fff;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.hero-section {
+	text-align: center;
+	position: relative;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #020813;
+}
+
+/* Mouse Wheel Animation Styles */
+.mouse-wheel-animation {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.mouse {
+	width: 22px;
+	height: 38px;
+	border: 2px solid #fff;
+	border-radius: 12px;
+	position: relative;
+	background: transparent;
+}
+
+.wheel {
+	width: 4px;
+	height: 8px;
+	background: #fff;
+	position: absolute;
+	top: 6px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-radius: 2px;
+	animation: wheelScroll 1.9s infinite;
+}
+
+@keyframes wheelScroll {
+	0%,
+	100% {
+		top: 6px;
+	}
+	50% {
+		top: 16px;
+	}
+}
+
+.arrows {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.arrow {
+	position: relative;
+	width: 5px;
+	height: 5px;
+	margin: 3px 0;
+	animation: fadeInOut 2s infinite;
+}
+
+.arrow:nth-child(1) {
+	animation-delay: 0s;
+}
+
+.arrow:nth-child(2) {
+	animation-delay: 0.67s;
+}
+
+.arrow:nth-child(3) {
+	animation-delay: 0.88s;
+}
+
+.arrow::before {
+	content: "";
+	display: block;
+	width: 10px;
+	height: 10px;
+	background: url("_assets/chevron-down.png") no-repeat center center;
+	background-size: contain;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+@keyframes fadeInOut {
+	0%,
+	100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}

@@ -23,6 +23,8 @@ add_action( 'wp_enqueue_scripts', 'child_theme_configurator_css', 99999998 );
 
 // END ENQUEUE PARENT ACTION
 
+// Mouse Animation Divi Module
+require_once get_stylesheet_directory() . '/mouse-function.php';
 
 function innotech_mobile_menu_output() {
   if ( ! wp_is_mobile() ) return;
