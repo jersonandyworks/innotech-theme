@@ -23,8 +23,62 @@ add_action( 'wp_enqueue_scripts', 'child_theme_configurator_css', 99999998 );
 
 // END ENQUEUE PARENT ACTION
 
+// Enqueue GSAP, SplitType and custom effects
+function innotech_enqueue_animation_scripts() {
+    // GSAP
+    wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js', array(), '3.12.5', true);
+
+    // GSAP Plugins
+    wp_enqueue_script('gsap-scrollto', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js', array('gsap'), '3.12.5', true);
+    wp_enqueue_script('gsap-scrolltrigger', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js', array('gsap'), '3.12.5', true);
+    wp_enqueue_script('map-swirl', get_stylesheet_directory_uri() . '/js/map-swirl.js', array('gsap'), '1.0.0', true);
+
+    // SplitType for text animations
+    wp_enqueue_script('splittype', 'https://unpkg.com/split-type', array(), '0.3.4', true);
+
+    // Button glow effect
+    wp_enqueue_script('button-particles', get_stylesheet_directory_uri() . '/js/min/button-particles.min.js', array('gsap'), '1.0.0', true);
+
+    // Text heading effect
+    wp_enqueue_script('text-heading-effect', get_stylesheet_directory_uri() . '/js/min/text-heading-effect.min.js', array('gsap', 'splittype'), '1.0.0', true);
+
+    // Scroll effects (jQuery)
+    wp_enqueue_script('scroll-effects', get_stylesheet_directory_uri() . '/js/min/scroll-effects.min.js', array('jquery'), '1.0.0', true);
+
+    // Side navigation
+    wp_enqueue_script('side-nav', get_stylesheet_directory_uri() . '/js/min/side-nav.min.js', array('gsap', 'gsap-scrollto', 'gsap-scrolltrigger'), '1.0.0', true);
+
+    // Blob animation
+    wp_enqueue_script('blob-animation', get_stylesheet_directory_uri() . '/js/blob-animation.js', array('gsap'), '1.0.0', true);
+    wp_localize_script('blob-animation', 'blobAnimationData', array(
+        'themeUrl' => get_stylesheet_directory_uri()
+    ));
+
+    // Liquid background effect
+    wp_enqueue_script('liquid-background', get_stylesheet_directory_uri() . '/js/min/liquid-background.min.js', array(), '1.0.0', true);
+    wp_localize_script('liquid-background', 'innotechTheme', array(
+        'themeUrl' => get_stylesheet_directory_uri()
+    ));
+
+    // Horizontal pin scroll (GSAP ScrollTrigger)
+    wp_enqueue_script('horizontal-pin-scroll', get_stylesheet_directory_uri() . '/js/min/locomotive-scroll-init.min.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
+}
+add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
+
+// Add module type to liquid-background script
+function innotech_add_module_type($tag, $handle, $src) {
+    if ('liquid-background' === $handle) {
+        return '<script type="module" src="' . esc_url($src) . '"></script>';
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'innotech_add_module_type', 10, 3);
+
 // Mouse Animation Divi Module
 require_once get_stylesheet_directory() . '/mouse-function.php';
+
+// Nested Grid Module - Allows columns inside columns
+require_once get_stylesheet_directory() . '/nested-grid-module.php';
 
 function innotech_mobile_menu_output() {
   if ( ! wp_is_mobile() ) return;
@@ -63,3 +117,15 @@ if ( function_exists( 'wp_body_open' ) ) {
 } else {
   add_action( 'wp_footer', 'innotech_mobile_menu_output', 20 );
 }
+
+// Dot Label Divi Module
+require_once get_stylesheet_directory() . '/dot-label-function.php';
+// Enable SVG uploads for admin users only
+function enable_svg_uploads_admin_only($mimes) {
+    if (current_user_can('manage_options')) {
+        $mimes['svg'] = 'image/svg+xml';
+    }
+    return $mimes;
+}
+add_filter('upload_mimes', 'enable_svg_uploads_admin_only');
+

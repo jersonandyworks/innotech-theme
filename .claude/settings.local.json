@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm install:*)",
+      "Bash(gulp build)",
+      "Bash(find:*)",
+      "Bash(npx gulp scripts)"
     ]
   }
 }

@@ -6,15 +6,22 @@ $grey: #e1e1e6;
 $black: #000000;
 $button-radius: 100px;
 $font-size-base: 16px;
+$button-font-size: clamp(16px, 2vw, 18px);
+$line-height-base: 2rem;
+$line-height-heading: 4rem;
 
 // Headings - Responsive (uses clamp for fluid scaling)
 // Desktop max -> Mobile min (-20px each level)
 $heading-sizes: (
-	1: clamp(40px, 5vw + 20px, 100px), // max: 100px, min: 40px
-	2: clamp(32px, 4vw + 16px, 80px),  // max: 80px, min: 32px
-	3: clamp(26px, 3vw + 14px, 60px),  // max: 60px, min: 26px
-	4: clamp(20px, 2vw + 12px, 40px),  // max: 40px, min: 20px
-	5: clamp(16px, 1vw + 10px, 20px)   // max: 20px, min: 16px
+	1: clamp(40px, 5vw + 20px, 100px),
+	// max: 100px, min: 40px
+	2: clamp(32px, 4vw + 16px, 80px),
+	// max: 80px, min: 32px
+	3: clamp(26px, 3vw + 14px, 60px),
+	// max: 60px, min: 26px
+	4: clamp(20px, 2vw + 12px, 26px),
+	// max: 28px, min: 20px
+	5: clamp(16px, 1vw + 10px, 20px), // max: 20px, min: 16px
 );
 
 // Breakpoints

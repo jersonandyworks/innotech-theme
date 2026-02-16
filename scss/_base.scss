@@ -1,9 +1,40 @@
 /*
 CTC Separate Stylesheet
 */
+h1,
+h2,
+h3,
+h4,
+h5 {
+	line-height: $line-height-heading !important;
+}
+p,
+li,
+div {
+	line-height: $line-height-base !important;
+}
+
+body {
+	background-image: url(_assets/frame-bg.png);
+	background-repeat: repeat-y;
+	background-position: center;
+	background-size: cover;
+}
+
 @for $i from 1 through 5 {
 	h#{$i}.et_pb_module_heading {
-		font-size: map-get($heading-sizes, $i);
+		font-size: map-get($heading-sizes, $i) !important;
+	}
+}
+
+.et_pb_text_inner {
+	@for $i from 1 through 5 {
+		h#{$i} {
+			font-size: map-get($heading-sizes, $i) !important;
+		}
+	}
+	h4 {
+		font-weight: 400;
 	}
 }
 // Mobile Menu
@@ -23,6 +54,37 @@ CTC Separate Stylesheet
 .flex-row {
 	align-items: center;
 }
+.button-col {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.grid-style {
+	display: grid;
+	grid-template-columns: 1.2fr 1fr;
+	gap: 2rem;
+	align-items: start;
+}
+.grid-style > .et_pb_image_0_tb_body {
+	grid-column: 1; /* first column */
+}
+
+.grid-style > .et_pb_text_1_tb_body,
+.grid-style > .et_pb_text_2_tb_body {
+	grid-column: 2; /* second column */
+}
+
+/* Add spacing between the stacked texts */
+.grid-style > .et_pb_text_1_tb_body {
+	margin-bottom: 1.5rem;
+}
+
+.innotech-nested-container {
+	display: grid !important;
+	grid-template-columns: 1fr !important;
+	gap: 2rem !important;
+}
 // Buttons
 body {
 	.et_pb_button {
@@ -31,8 +93,8 @@ body {
 
 	#page-container .et_pb_section a.et_pb_button.et_pb_button_0_tb_header {
 		font-size: 0px !important;
-		width: 40px;
-		height: 40px;
+		width: 62px;
+		height: 62px;
 		border-radius: 50% !important;
 		padding: 0 !important;
 		display: inline-flex;
@@ -67,14 +129,14 @@ body {
 					border-right: 1px solid $grey;
 					opacity: 0.3;
 					font-size: 0px;
-					padding-left: 1rem;
+					padding-left: 1.5rem;
 				}
 			}
 		}
 
 		&.et_pb_button_1_tb_header_wrapper {
 			&.et_pb_module {
-				padding-left: 1rem;
+				padding-left: 1.5rem;
 			}
 		}
 	}
@@ -101,6 +163,8 @@ body {
 			justify-content: space-around;
 			justify-items: end;
 			font-size: $font-size-base;
+			padding-top: 18px !important;
+			padding-bottom: 18px !important;
 
 			&::after {
 				font-size: 1.8rem !important;
@@ -112,6 +176,19 @@ body {
 				justify-content: center;
 				align-items: center;
 				margin-right: 0.5rem;
+				will-change: box-shadow, opacity;
+				box-shadow:
+					0 0 8px 2px rgba(0, 128, 199, 0),
+					0 0 16px 4px rgba(0, 128, 199, 0);
+				transition: box-shadow 0.5s ease-out;
+			}
+
+			&:hover::after {
+				box-shadow:
+					0 0 8px 2px rgba(0, 128, 199, 0.5),
+					0 0 16px 4px rgba(0, 128, 199, 0.25);
+				animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+				animation-delay: 0.1s;
 			}
 		}
 	}
@@ -141,4 +218,143 @@ body {
 	#innotech__mobile__menu {
 		display: block;
 	}
+}
+
+// Button pulsating glow effect
+@keyframes pulseGlow {
+	0%,
+	100% {
+		box-shadow:
+			0 0 8px 2px rgba(0, 128, 199, 0.5),
+			0 0 16px 4px rgba(0, 128, 199, 0.25);
+	}
+	50% {
+		box-shadow:
+			0 0 20px 6px rgba(0, 128, 199, 0.7),
+			0 0 35px 12px rgba(0, 128, 199, 0.35);
+	}
+}
+
+// Modern Noir Text Heading Effect
+.text-heading-effect-1 {
+	display: flex;
+	justify-content: center;
+
+	.char {
+		display: inline-block;
+		will-change: filter, opacity, letter-spacing;
+	}
+}
+
+// Side Navigation
+.side-nav {
+	--dot-main: 6px;
+	--dot-sub: 2px;
+
+	position: fixed;
+	right: 40px;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 1000;
+
+	.nav-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+		line-height: 10px;
+	}
+
+	.nav-item {
+		display: grid;
+		grid-template-columns: 20px 10px 40px;
+		align-items: center;
+		justify-items: center;
+		cursor: pointer;
+		text-decoration: none;
+		color: white;
+		padding: 0;
+
+		&.active .nav-num {
+			opacity: 1;
+			transform: translateX(5px);
+		}
+	}
+
+	.dot-main {
+		grid-column: 2;
+		width: var(--dot-main);
+		height: var(--dot-main);
+		background-color: #ffffff;
+		border-radius: 50%;
+		transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		pointer-events: none;
+	}
+
+	.nav-num {
+		grid-column: 3;
+		font-size: 13px;
+		opacity: 0.4;
+		transition: all 0.4s ease;
+		justify-self: start;
+		margin-left: 12px;
+		pointer-events: none;
+	}
+
+	.sub-dot {
+		display: grid;
+		grid-template-columns: 20px 10px 40px;
+		align-items: center;
+		justify-items: center;
+		width: 100%;
+		height: 8px;
+		margin-top: -5px;
+
+		&::after {
+			content: "";
+			grid-column: 2;
+			width: var(--dot-sub);
+			height: var(--dot-sub);
+			background-color: #ffffff;
+			border-radius: 50%;
+			opacity: 0.5;
+			transform-origin: center center;
+			transition:
+				transform 0.3s ease,
+				opacity 0.3s ease;
+		}
+	}
+
+	.sub-dot.pulse::after {
+		transform: scale(1.8);
+		opacity: 1;
+	}
+
+	@media only screen and (max-width: $tablet) {
+		display: none;
+	}
+}
+
+// Liquid Background Effect
+#section1 {
+	position: relative;
+	overflow: hidden;
+}
+
+.liquid-background-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	pointer-events: none;
+}
+
+#section1 > *:not(.liquid-background-canvas) {
+	position: relative;
+	z-index: 1;
 }

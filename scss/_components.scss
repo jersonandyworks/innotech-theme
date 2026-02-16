@@ -1,0 +1,128 @@
+.innotech-nested-container {
+	position: relative;
+}
+
+.innotech-nested-item {
+	.item-title {
+		font-size: clamp(1.5rem, 2vw, 28px);
+		font-weight: 400;
+		margin-bottom: 2rem;
+	}
+	.item-content {
+		p {
+			font-weight: 200;
+			font-size: clamp(18px, 2vw, 22px);
+			line-height: 1.8rem;
+		}
+	}
+}
+
+.blob-icon {
+	position: absolute;
+	right: -20px;
+	top: 50%;
+	width: 50px;
+	height: auto;
+	opacity: 0.9;
+	pointer-events: none;
+}
+
+// DOT NAVIGATION LABEL TEXT
+.sidebar-item {
+	.label {
+		line-height: 1rem;
+		text-transform: uppercase;
+	}
+}
+
+// Locomotive Scroll
+.page-container {
+	overflow: hidden;
+}
+
+// pin scroll.
+
+.pin-wrap {
+	height: 100vh;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 100px 10vw 50px;
+
+	& > * {
+		min-width: 60vw;
+		padding: 0 5vw;
+	}
+
+	img.wp-image-233 {
+		border-radius: 58px;
+
+		@media (max-width: $tablet) {
+			margin-left: -15vw;
+			max-width: none;
+			width: 55vw;
+		}
+	}
+}
+
+.btn-tech {
+	background-color: $primary-color;
+	padding: 10px 40px;
+	border-radius: $button-radius;
+	color: $white;
+	font-size: $button-font-size;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+
+	&::after {
+		content: "";
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background: url("_assets/btn-arrow.png") no-repeat center / contain;
+		transition: transform 0.3s ease;
+	}
+
+	&:hover::after {
+		transform: translateX(10px);
+	}
+}
+
+.scroll-description {
+	padding-right: 0px;
+	.innotech-nested-item .item-content {
+		& > p:first-of-type {
+			font-size: clamp(16px, 2vw, 18px);
+			font-weight: 200;
+			width: 30vw;
+		}
+	}
+}
+
+.row-tech {
+	display: flex;
+	justify-content: space-between;
+	column-gap: 60px;
+
+	.col-tech {
+		img {
+			width: 35vw;
+		}
+	}
+}
+
+.col-tech.grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	justify-items: center;
+	justify-content: center;
+	align-content: center;
+	column-gap: 30px;
+	row-gap: 30px;
+
+	.info {
+		border-bottom: 1px solid white;
+		padding-bottom: 2vh;
+	}
+}
