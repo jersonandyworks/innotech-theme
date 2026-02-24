@@ -24,7 +24,16 @@ body {
 @for $i from 1 through 5 {
 	h#{$i}.et_pb_module_heading {
 		font-size: map-get($heading-sizes, $i) !important;
+		font-weight: 400;
 	}
+}
+
+.ver-grid-divider {
+	background: url(./_assets/ver-divider.svg);
+	background-repeat: repeat-x;
+	height: 14px;
+	opacity: 0.4;
+	transform: translateY(-320px);
 }
 
 .et_pb_text_inner {
@@ -207,6 +216,18 @@ body {
 	}
 }
 
+// #SECTION 4 - What Powers Innotech
+#pin-container {
+	.et_pb_column {
+		.innotech-nested-container {
+			.et_pb_nested_container_item {
+				.item-title {
+					font-size: clamp(1.5rem, 2vw, 60px);
+				}
+			}
+		}
+	}
+}
 // Tablet and mobile adjustments
 @media only screen and (max-width: $tablet) {
 	.et_pb_menu_0_tb_header.et_pb_menu {

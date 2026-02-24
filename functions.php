@@ -32,7 +32,10 @@ function innotech_enqueue_animation_scripts() {
     wp_enqueue_script('gsap-scrollto', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js', array('gsap'), '3.12.5', true);
     wp_enqueue_script('gsap-scrolltrigger', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js', array('gsap'), '3.12.5', true);
     wp_enqueue_script('map-swirl', get_stylesheet_directory_uri() . '/js/map-swirl.js', array('gsap'), '1.0.0', true);
-
+    wp_enqueue_script('blurb', get_stylesheet_directory_uri() . '/js/blurb.js', array('gsap'), '1.0.0', true);
+    wp_localize_script('blurb', 'innotechTheme', array(
+        'themeUrl' => get_stylesheet_directory_uri()
+    ));
     // SplitType for text animations
     wp_enqueue_script('splittype', 'https://unpkg.com/split-type', array(), '0.3.4', true);
 
@@ -53,6 +56,9 @@ function innotech_enqueue_animation_scripts() {
     wp_localize_script('blob-animation', 'blobAnimationData', array(
         'themeUrl' => get_stylesheet_directory_uri()
     ));
+
+    // Section8 scroll-tick pin
+    wp_enqueue_script('mask-zoom-effect', get_stylesheet_directory_uri() . '/js/mask-zoom-effect.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
 
     // Liquid background effect
     wp_enqueue_script('liquid-background', get_stylesheet_directory_uri() . '/js/min/liquid-background.min.js', array(), '1.0.0', true);
@@ -120,6 +126,7 @@ if ( function_exists( 'wp_body_open' ) ) {
 
 // Dot Label Divi Module
 require_once get_stylesheet_directory() . '/dot-label-function.php';
+
 // Enable SVG uploads for admin users only
 function enable_svg_uploads_admin_only($mimes) {
     if (current_user_can('manage_options')) {

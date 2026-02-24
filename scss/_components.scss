@@ -27,6 +27,16 @@
 	pointer-events: none;
 }
 
+figure.blob-s {
+	background: url("_assets/blob-small.svg") no-repeat;
+	background-size: contain;
+	position: absolute;
+	right: -195px;
+	top: 20px;
+	transform: translate(-50%, -50%);
+	width: 118px;
+	height: 160px;
+}
 // DOT NAVIGATION LABEL TEXT
 .sidebar-item {
 	.label {
@@ -124,5 +134,143 @@
 	.info {
 		border-bottom: 1px solid white;
 		padding-bottom: 2vh;
+	}
+}
+
+// Disable Divi Top Animation
+.et-waypoint.et_pb_animation_top.et-animated,
+.et_pb_animation_top.et-animated {
+	-webkit-animation: none !important;
+	animation: none !important;
+}
+
+.mining-blurb-img {
+	position: relative;
+	overflow: hidden;
+
+	h4 {
+		margin-top: 313px;
+		font-size: clamp(1.5rem, 3vw, 36px);
+		font-weight: 300;
+	}
+
+	.blurb-custom-icon {
+		padding: 0px;
+		width: 42px;
+		height: 42px;
+		background-color: #000;
+		border-radius: 100px;
+	}
+
+	.et_pb_main_blurb_image {
+		img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			opacity: 0 !important;
+			transform: scale(4);
+			transition:
+				transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+				opacity 0.6s ease;
+			pointer-events: none;
+		}
+	}
+
+	&:hover {
+		border-color: transparent !important;
+		transition: border-color 0.2s 0.2s;
+		.et_pb_main_blurb_image {
+			img {
+				opacity: 1 !important;
+				transform: scale(5.5);
+			}
+		}
+	}
+}
+
+#section5 {
+	.et_pb_row {
+		.et_pb_column {
+			.et_pb_module {
+				.et_pb_text_inner {
+					font-size: clamp(1rem, 2vw, 22px);
+					font-weight: 300;
+					text-align: right;
+					text-decoration: underline;
+					text-decoration-thickness: 1px;
+
+					#view-all-hardware {
+						&:hover {
+							cursor: pointer;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#section7 {
+	.et_pb_row.et_pb_row_4col {
+		.et_pb_column {
+			margin-right: 0 !important;
+			width: 21.875% !important;
+		}
+	}
+	.et_pb_row.et_pb_row_14_tb_body {
+		.et_pb_column {
+			margin-right: 0 !important;
+			width: 31.875% !important;
+		}
+	}
+}
+
+#section8 {
+	position: relative;
+	background-color: #070c3b;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+
+		background: url("_assets/swirl-compressed.png") no-repeat center;
+		-webkit-mask-image: url("_assets/mask-swirl-1.png");
+		mask-image: url("_assets/mask-swirl-1.png");
+
+		/* JS drives --s8-mask-w / --s8-mask-h via ScrollTrigger onUpdate.
+		   Fallback 400px 400px is the resting size before the pin fires. */
+		-webkit-mask-size: var(--s8-mask-w, 650px) var(--s8-mask-h, 650px);
+		mask-size: var(--s8-mask-w, 650px) var(--s8-mask-h, 650px);
+
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+
+		/* JS drives --s8-mask-x / --s8-mask-y for mouse-follow. */
+		-webkit-mask-position: var(--s8-mask-x, 50%) var(--s8-mask-y, 50%);
+		mask-position: var(--s8-mask-x, 50%) var(--s8-mask-y, 50%);
+
+		animation: maskPulse 4s ease-in-out infinite;
+		animation-play-state: var(--s8-anim-state, running);
+	}
+
+	@keyframes maskPulse {
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.04);
+		}
+	}
+
+	& > * {
+		position: relative;
+		z-index: 1;
 	}
 }

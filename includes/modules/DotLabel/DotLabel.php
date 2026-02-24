@@ -66,9 +66,9 @@ class INNOTECH_DotLabel extends ET_Builder_Module {
         return array(
             'label_text' => array(
                 'label'           => esc_html__( 'Label Text', 'innotech-divi-child' ),
-                'type'            => 'text',
+                'type'            => 'tiny_mce',
                 'default'         => '',
-                'description'     => esc_html__( 'Enter the label text to display.', 'innotech-divi-child' ),
+                'description'     => esc_html__( 'Enter the label text to display. HTML is allowed.', 'innotech-divi-child' ),
                 'toggle_slug'     => 'main_content',
             ),
             'dot_color' => array(
@@ -170,7 +170,7 @@ class INNOTECH_DotLabel extends ET_Builder_Module {
                 <span class="dot"></span>
                 <span class="label">%s</span>
             </div>',
-            esc_html( $label_text )
+            wp_kses_post( $label_text )
         );
 
         // Get module classes
