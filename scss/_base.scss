@@ -40,11 +40,17 @@ body {
 	@for $i from 1 through 5 {
 		h#{$i} {
 			font-size: map-get($heading-sizes, $i) !important;
+			font-weight: 300;
 		}
 	}
 	h4 {
 		font-weight: 400;
 	}
+
+	// p {
+	// 	font-size: clamp(14px, 2vw, 18px);
+	// 	font-weight: 300;
+	// }
 }
 // Mobile Menu
 #innotech__mobile__menu {

@@ -1,0 +1,50 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Responsive Styles
+// Breakpoints: $tablet (980px), $mobile (767px) — defined in _variables.scss
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Footer Navigation
+// ─────────────────────────────────────────────────────────────────────────────
+
+footer {
+	nav {
+		// Medium desktop (981px – 1200px): reduce Login offset
+		@media (min-width: #{$tablet + 1}) and (max-width: 1200px) {
+			ul#menu-footer-menu {
+				column-gap: 20px;
+
+				#menu-item-468 {
+					transform: translateX(2vw);
+				}
+			}
+		}
+
+		// Tablet (≤980px): tighten gap, drop transform — use margin-left: auto
+		// to keep Login pushed right without overflowing
+		@media (max-width: $tablet) {
+			ul#menu-footer-menu {
+				column-gap: 16px;
+				flex-wrap: wrap;
+
+				#menu-item-468 {
+					transform: none;
+					margin-left: auto;
+				}
+			}
+		}
+
+		// Mobile (≤767px): stack vertically, Login sits inline with the rest
+		@media (max-width: $mobile) {
+			ul#menu-footer-menu {
+				flex-direction: column;
+				column-gap: 0;
+				row-gap: 12px;
+
+				#menu-item-468 {
+					margin-left: 0;
+				}
+			}
+		}
+	}
+}

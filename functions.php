@@ -68,6 +68,9 @@ function innotech_enqueue_animation_scripts() {
 
     // Horizontal pin scroll (GSAP ScrollTrigger)
     wp_enqueue_script('horizontal-pin-scroll', get_stylesheet_directory_uri() . '/js/min/locomotive-scroll-init.min.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
+
+    // Footer background sway effect
+    wp_enqueue_script('footer-bg-sway', get_stylesheet_directory_uri() . '/js/footer-bg-sway.js', array('gsap'), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
 
@@ -126,6 +129,47 @@ if ( function_exists( 'wp_body_open' ) ) {
 
 // Dot Label Divi Module
 require_once get_stylesheet_directory() . '/dot-label-function.php';
+
+// Latest Posts Shortcode [innotech_latest_posts]
+require_once get_stylesheet_directory() . '/latest-posts-shortcode.php';
+
+// Latest Post Hero Shortcode [innotech_latest_post_hero]
+require_once get_stylesheet_directory() . '/latest-post-hero-shortcode.php';
+
+// Blog Posts Listing Shortcode [innotech_blog_posts]
+require_once get_stylesheet_directory() . '/blog-posts-shortcode.php';
+
+// Register Lower Footer Menu location
+function innotech_register_menus() {
+    register_nav_menus( array(
+        'lower-footer' => __( 'Lower Footer Menu', 'innotech-divi-child' ),
+    ) );
+}
+add_action( 'init', 'innotech_register_menus' );
+
+// Shortcode [innotech_lower_footer_menu]
+function innotech_lower_footer_menu_shortcode() {
+    ob_start();
+    wp_nav_menu( array(
+        'menu'        => 'Lower Footer Menu',
+        'container'   => false,
+        'menu_class'  => 'innotech-lower-footer-menu',
+        'fallback_cb' => false,
+        'depth'       => 1,
+    ) );
+    return ob_get_clean();
+}
+add_shortcode( 'innotech_lower_footer_menu', 'innotech_lower_footer_menu_shortcode' );
+
+// Load WP admin media helpers for FakerPress REST API (media_handle_sideload lives in wp-admin)
+function innotech_load_admin_media_for_rest() {
+    if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+    }
+}
+add_action( 'init', 'innotech_load_admin_media_for_rest' );
 
 // Enable SVG uploads for admin users only
 function enable_svg_uploads_admin_only($mimes) {

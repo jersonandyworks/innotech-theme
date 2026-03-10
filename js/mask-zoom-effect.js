@@ -7,6 +7,19 @@
 
 		var pinCreated = false;
 
+		// Slide ratios — defined here so they are shared between the immediate
+		// gsap.set below and the ScrollTrigger created later inside createPin().
+		var X_START_RATIO = 0.785;
+		var X_END_RATIO = 0.424;
+
+		// ── Set slide start position IMMEDIATELY on load ───────────────────────
+		// Must run before the 600ms MutationObserver delay so the wrapper is
+		// already at the correct position when the page first renders.
+		var pinContent = section.querySelector(".pin-content-wrapper");
+		if (pinContent) {
+			gsap.set(pinContent, { x: window.innerWidth * X_START_RATIO });
+		}
+
 		// Mask size range (matches _components.scss fallback → user-specified max)
 		var W_START = 650,
 			W_END = 2980;
@@ -66,7 +79,7 @@
 			if (pinCreated) return;
 			pinCreated = true;
 
-			var END_DISTANCE = window.innerHeight * 10;
+			var END_DISTANCE = window.innerHeight * 8;
 
 			ScrollTrigger.create({
 				trigger: "#section8",
@@ -79,12 +92,10 @@
 				onEnterBack: pauseAnim,
 				onLeave: resumeAnim,
 				onLeaveBack: function () {
-					// reset mask to resting size when scrolled back above section
 					setMaskSize(W_START, H_START);
 					resumeAnim();
 				},
 
-				// self.progress 0→1 maps mask-size from start→max
 				onUpdate: function (self) {
 					var p = self.progress;
 					setMaskSize(
@@ -93,6 +104,32 @@
 					);
 				},
 			});
+
+			// ── Horizontal slide for .pin-content-wrapper (locomotive pattern) ─────
+			// Each child is 100vw wide; translate the wrapper left by (n-1) × 100vw,
+			// scrubbed to the same trigger/start/end as the pin above.
+			var pinContent = section.querySelector(".pin-content-wrapper");
+			if (pinContent && pinContent.children.length > 1) {
+				// X_START_RATIO / X_END_RATIO declared at the top of the load handler
+
+				gsap.to(pinContent, {
+					x: function () {
+						return -window.innerWidth * X_END_RATIO;
+					},
+					ease: "none",
+					scrollTrigger: {
+						trigger: "#section8",
+						start: "top top",
+						end: "+=" + END_DISTANCE,
+						scrub: true,
+						invalidateOnRefresh: true,
+						onRefresh: function () {
+							// Re-apply start position on resize so it stays proportional
+							gsap.set(pinContent, { x: window.innerWidth * X_START_RATIO });
+						},
+					},
+				});
+			}
 
 			ScrollTrigger.refresh();
 		}
