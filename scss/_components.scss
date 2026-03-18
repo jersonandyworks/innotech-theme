@@ -1,3 +1,9 @@
+//START MAIN MENU
+#menu-main-menu {
+	column-gap: 20px;
+}
+// END MAIN MENU
+
 // START PAGE STYLES
 // Filter is applied to ::before so children (h1, text) are unaffected.
 // CSS filter on a parent creates a stacking context that children cannot escape.
@@ -12,7 +18,7 @@
 			position: absolute;
 			inset: 0;
 			background: inherit;
-			filter: grayscale(100%) contrast(60%) brightness(60%);
+			filter: grayscale(100%) contrast(40%) brightness(30%);
 			z-index: 0;
 			pointer-events: none;
 		}
@@ -376,6 +382,9 @@ footer {
 		border-color: #ffffff40 !important;
 		grid-template-columns: 1fr 1fr !important;
 		display: grid !important;
+		img {
+			display: none;
+		}
 	}
 
 	.innotech-nested-item {
@@ -540,7 +549,7 @@ footer {
 .innotech-lph {
 	position: relative;
 	isolation: isolate;
-	border-radius: 12px;
+	border-radius: 20px;
 	overflow: hidden;
 	background-size: cover;
 	background-position: center;
@@ -673,7 +682,6 @@ footer {
 // Blog Posts Listing  [innotech_blog_posts]
 // ─────────────────────────────────────────────────────────────────────────────
 .innotech-blog {
-
 	// ── Row 1: filter tabs + search ──────────────────────────────────────────
 	&__filters {
 		display: grid;
@@ -709,25 +717,101 @@ footer {
 	}
 
 	&__search {
+		position: relative; // anchor for dropdown
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 		padding-bottom: 6px;
-		min-width: 220px;
+		min-width: clamp(220px, 25vw, 400px);
+	}
+
+	// ── Search dropdown ───────────────────────────────────────────────────────
+	&__dropdown {
+		display: none;
+		position: absolute;
+		top: calc(100% + 10px);
+		right: 0;
+		min-width: 100%;
+		width: max-content;
+		max-width: 480px;
+		background-color: #0d1133;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 10px;
+		overflow: hidden;
+		z-index: 200;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+		&--open {
+			display: block;
+		}
+	}
+
+	&__dropdown-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 12px 16px;
+		cursor: pointer;
+		transition: background-color 0.15s ease;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&:hover,
+		&--active {
+			background-color: rgba(255, 255, 255, 0.06);
+		}
+	}
+
+	&__dropdown-title {
+		flex: 1;
+		font-size: clamp(12px, 1.2vw, 14px);
+		font-weight: 300;
+		color: $white;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__dropdown-cat {
+		flex-shrink: 0;
+		font-size: 10px;
+		font-weight: 400;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	&__dropdown-empty {
+		padding: 16px;
+		font-size: 13px;
+		color: rgba(255, 255, 255, 0.4);
+		text-align: center;
+	}
+
+	&__no-results {
+		padding: clamp(24px, 4vw, 48px) 0;
+		color: rgba(255, 255, 255, 0.35);
+		font-size: 14px;
+		font-weight: 300;
+		text-align: center;
 	}
 
 	&__search-input {
 		flex: 1;
-		background: none;
-		border: none;
-		outline: none;
+		background-color: transparent !important;
+		border: none !important;
+		outline: none !important;
 		color: $white;
 		font-size: clamp(12px, 1.2vw, 14px);
 		padding: 0;
 
 		&::placeholder {
-			color: rgba(255, 255, 255, 0.35);
+			color: $white;
 		}
 	}
 
@@ -762,14 +846,14 @@ footer {
 	&__post {
 		display: grid;
 		grid-template-columns: 1.2fr 1fr;
-		align-items: stretch;
+		align-items: center;
 		gap: clamp(24px, 4vw, 64px);
-		padding: clamp(32px, 4vw, 56px) 0;
+		padding: clamp(32px, 4vw, 56px) 0 clamp(32px, 4vw, 70px);
 	}
 
 	// Image column
 	&__post-img {
-		border-radius: 12px;
+		border-radius: $image-radius;
 		overflow: hidden;
 		aspect-ratio: 4 / 3;
 
@@ -787,6 +871,11 @@ footer {
 		}
 	}
 
+	// Reveal colour when hovering the Read More button
+	&__post:has(&__post-btn:hover) &__post-img img {
+		filter: grayscale(0%);
+	}
+
 	&__post-img-fallback {
 		width: 100%;
 		height: 100%;
@@ -796,8 +885,8 @@ footer {
 	// Content column — 4-row grid: meta | title | excerpt | button
 	&__post-content {
 		display: grid;
-		grid-template-rows: auto auto 1fr auto;
-		gap: clamp(10px, 1.5vw, 18px);
+		grid-template-rows: auto auto auto auto;
+		gap: clamp(8px, 1vw, 12px);
 	}
 
 	&__post-meta {
@@ -808,7 +897,7 @@ footer {
 		font-weight: 300;
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
-		color: rgba(255, 255, 255, 0.5);
+		color: #ffffff;
 	}
 
 	&__post-sep {
@@ -819,7 +908,7 @@ footer {
 		margin: 0;
 		font-size: clamp(18px, 2.2vw, 32px);
 		font-weight: 300;
-		line-height: 1.25;
+		line-height: 1.25em !important;
 
 		a {
 			color: $white;
@@ -836,7 +925,7 @@ footer {
 		margin: 0;
 		font-size: clamp(13px, 1.3vw, 15px);
 		font-weight: 300;
-		color: rgba(255, 255, 255, 0.55);
+		color: #ffffff;
 		line-height: 1.75;
 		align-self: start;
 	}
@@ -844,6 +933,7 @@ footer {
 	&__post-actions {
 		display: flex;
 		align-items: center;
+		margin-top: 2rem;
 	}
 
 	// Same properties as .innotech-lph__btn
@@ -859,7 +949,9 @@ footer {
 		border-radius: $button-radius;
 		text-decoration: none;
 		white-space: nowrap;
-		transition: background-color 0.3s ease, gap 0.2s ease;
+		transition:
+			background-color 0.3s ease,
+			gap 0.2s ease;
 
 		svg {
 			transition: transform 0.2s ease;
@@ -898,7 +990,39 @@ footer {
 		}
 
 		&__post-content {
-			grid-template-rows: auto auto auto auto;
+			gap: 10px;
+		}
+	}
+}
+
+.post-big-img-container {
+	img {
+		border-radius: $image-radius;
+		filter: grayscale(100%);
+	}
+}
+.post-content-wrapper {
+	ul {
+		li {
+			&::marker {
+				color: $primary-color;
+				font-size: 20px;
+			}
+		}
+	}
+
+	h2 {
+		line-height: 2rem !important;
+	}
+}
+.post-image-wrap {
+	.et_pb_image_wrap {
+		height: 270px;
+		overflow: hidden;
+		border-radius: $image-radius;
+
+		img {
+			filter: grayscale(100%);
 		}
 	}
 }

@@ -8,10 +8,13 @@ h4,
 h5 {
 	line-height: $line-height-heading !important;
 }
-p,
-li,
-div {
-	line-height: $line-height-base !important;
+// p,
+// li,
+// div {
+// 	line-height: $line-height-base;
+// }
+hr {
+	border-color: #ffffff40;
 }
 
 body {
@@ -21,10 +24,19 @@ body {
 	background-size: cover;
 }
 
-@for $i from 1 through 5 {
-	h#{$i}.et_pb_module_heading {
-		font-size: map-get($heading-sizes, $i) !important;
-		font-weight: 400;
+.heading-post-title {
+	h1.et_pb_module_heading {
+		font-size: clamp(40px, 5vw + 20px, 60px) !important;
+	}
+}
+
+.home {
+	@for $i from 1 through 5 {
+		h#{$i}.et_pb_module_heading {
+			font-size: map-get($heading-sizes, $i) !important;
+			font-weight: 400;
+			line-height: $line-height-post-title !important;
+		}
 	}
 }
 

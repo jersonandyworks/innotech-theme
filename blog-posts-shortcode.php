@@ -23,13 +23,14 @@ function innotech_blog_posts_shortcode( $atts ) {
         'hide_empty' => true,
     ) );
 
-    // Query posts
+    // Query posts — offset 1 to skip the latest post (featured in hero shortcode)
     $query = new WP_Query( array(
         'post_type'      => 'post',
         'post_status'    => 'publish',
         'posts_per_page' => absint( $atts['count'] ),
         'orderby'        => 'date',
         'order'          => 'DESC',
+        'offset'         => 1,
     ) );
 
     if ( ! $query->have_posts() ) {

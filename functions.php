@@ -74,6 +74,23 @@ function innotech_enqueue_animation_scripts() {
 }
 add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
 
+// Blog search script
+function innotech_enqueue_blog_search() {
+    wp_enqueue_script(
+        'blog-search',
+        get_stylesheet_directory_uri() . '/js/blog-search.js',
+        array(),
+        '1.0.0',
+        true
+    );
+    wp_localize_script( 'blog-search', 'innotechBlogSearch', array(
+        'postsUrl'      => rest_url( 'wp/v2/posts' ),
+        'categoriesUrl' => rest_url( 'wp/v2/categories' ),
+        'perPage'       => 10,
+    ) );
+}
+add_action( 'wp_enqueue_scripts', 'innotech_enqueue_blog_search' );
+
 // Add module type to liquid-background script
 function innotech_add_module_type($tag, $handle, $src) {
     if ('liquid-background' === $handle) {
@@ -139,6 +156,9 @@ require_once get_stylesheet_directory() . '/latest-post-hero-shortcode.php';
 // Blog Posts Listing Shortcode [innotech_blog_posts]
 require_once get_stylesheet_directory() . '/blog-posts-shortcode.php';
 
+// ACF: Show Categories field + shortcode [innotech_post_categories]
+require_once get_stylesheet_directory() . '/acf-post-categories.php';
+
 // Register Lower Footer Menu location
 function innotech_register_menus() {
     register_nav_menus( array(
@@ -180,3 +200,53 @@ function enable_svg_uploads_admin_only($mimes) {
 }
 add_filter('upload_mimes', 'enable_svg_uploads_admin_only');
 
+
+
+function custom_social_share_buttons() {
+
+    $permalink = get_permalink();
+
+    // Replace local dev URL with the live site URL for social sharing.
+    // Social platforms (Facebook, LinkedIn) cannot access localhost URLs.
+    // Define LIVE_SITE_URL in wp-config.php when developing locally:
+    //   define( 'LIVE_SITE_URL', 'https://yourdomain.com' );
+    if ( defined( 'LIVE_SITE_URL' ) ) {
+        $permalink = str_replace( untrailingslashit( home_url() ), untrailingslashit( LIVE_SITE_URL ), $permalink );
+    }
+
+    $url   = urlencode( $permalink );
+    $title = urlencode( get_the_title() );
+
+    ob_start();
+    ?>
+
+    <div class="custom-share-buttons">
+        <a href="#" class="share-copy-link" onclick="copyShareLink()">Copy Link</a>
+        <a class="share-facebook"
+           href="https://www.facebook.com/sharer/sharer.php?u=<?php echo esc_attr( $url ); ?>"
+           target="_blank" rel="noopener">
+           Facebook
+        </a>
+
+        <a class="share-linkedin"
+           href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo esc_attr( $url ); ?>&title=<?php echo esc_attr( $title ); ?>"
+           target="_blank" rel="noopener">
+           LinkedIn
+        </a>
+
+       
+    </div>
+
+    <script>
+    function copyShareLink() {
+        navigator.clipboard.writeText('<?php echo esc_js( $permalink ); ?>').then(function() {
+            alert("Link copied!");
+        });
+    }
+    </script>
+
+    <?php
+    return ob_get_clean();
+}
+
+add_shortcode('share_buttons', 'custom_social_share_buttons');
