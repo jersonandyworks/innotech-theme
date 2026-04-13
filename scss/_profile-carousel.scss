@@ -1,0 +1,429 @@
+// =============================================================================
+// Profile Carousel  [profile_carousel]
+// =============================================================================
+
+// Component-level variables
+$pc-bg: #0a0a0a;
+$pc-accent: $primary-color; // #0080c7 (from _variables.scss)
+$pc-text: $white;
+$pc-text-muted: rgba($white, 0.55);
+$pc-border: rgba($white, 0.15);
+$pc-transition: 0.4s ease-in-out;
+
+// Photo stack proportions (percentages relative to .__profiles width)
+$pc-active-w: 45%;
+$pc-p1-left: 54%;
+$pc-p1-w: 32%;
+$pc-p1-h: 82%;
+$pc-p2-left: 80%;
+$pc-p2-w: 20%;
+$pc-p2-h: 66%;
+
+// =============================================================================
+
+#profile-carousel-container {
+	position: relative;
+	display: grid;
+	grid-template-columns: 42% 58%;
+	grid-template-rows: auto 1fr;
+	background: $pc-bg;
+	min-height: 520px;
+	overflow: hidden;
+
+	// ── Navigation (top-right) ──────────────────────────────────────────────
+	#__navigation {
+		grid-column: 2;
+		grid-row: 1;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 24px;
+		padding: 32px 40px 20px;
+		margin-right: 195px;
+		.pagination-counter {
+			font-size: 13px;
+			letter-spacing: 0.12em;
+			color: $pc-text-muted;
+
+			.current-num {
+				color: $pc-text;
+				font-weight: 600;
+			}
+		}
+
+		.nav-arrows {
+			display: flex;
+			gap: 10px;
+
+			button {
+				width: 42px;
+				height: 42px;
+				border-radius: 50%;
+				border: 1px solid $pc-border;
+				background: transparent;
+				color: $pc-text;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				padding: 0;
+				line-height: 1;
+				transition:
+					border-color $pc-transition,
+					background $pc-transition;
+
+				svg {
+					display: block;
+				}
+
+				&:hover {
+					border-color: $pc-accent;
+					background: rgba($pc-accent, 0.12);
+				}
+			}
+		}
+	}
+
+	// ── Info panel (left column, spans all rows) ────────────────────────────
+	.__info {
+		grid-column: 1;
+		grid-row: 1 / -1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 60px 50px 60px 60px;
+		margin-left: 255px;
+
+		.--name {
+			font-size: clamp(18px, 2vw, 28px);
+			font-weight: 400;
+			color: $pc-text;
+			line-height: 1.2;
+			margin: 0 0 8px;
+		}
+
+		.--position {
+			font-size: 14px;
+			font-weight: 300;
+			letter-spacing: 0.16em;
+			text-transform: uppercase;
+			color: $pc-text-muted;
+			margin: 0 0 28px;
+		}
+
+		.--line-separator {
+			width: 100%;
+			height: 1px;
+			background: $pc-border;
+			margin-bottom: 28px;
+		}
+
+		.--description {
+			font-size: clamp(12px, 1.1vw, 16px);
+			font-weight: 300;
+			line-height: 1.85;
+			color: $pc-text-muted;
+			margin-bottom: 36px;
+			max-width: 420px;
+
+			p {
+				margin-bottom: 14px;
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			// Strip Gutenberg block padding/margin overrides
+			* {
+				max-width: none !important;
+			}
+		}
+
+		.--social-links {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+
+			.social-link {
+				width: 38px;
+				height: 38px;
+				border-radius: 7px;
+				background: rgba($white, 0.08);
+				color: $pc-text;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				text-decoration: none;
+				transition:
+					background $pc-transition,
+					color $pc-transition;
+
+				svg {
+					display: block;
+				}
+
+				&:hover {
+					background: $pc-accent;
+					color: $white;
+				}
+			}
+		}
+	}
+
+	// ── Photo stack (right column, row 2) ──────────────────────────────────
+	.__profiles {
+		grid-column: 2;
+		grid-row: 2;
+		position: relative;
+		overflow: hidden;
+
+		.--photo {
+			position: absolute;
+			bottom: 0;
+			overflow: hidden;
+			cursor: pointer;
+			filter: grayscale(100%);
+
+			// All animatable properties defined here so transitions always fire
+			transition:
+				left $pc-transition,
+				width $pc-transition,
+				height $pc-transition,
+				filter $pc-transition,
+				opacity $pc-transition;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: top center;
+				display: block;
+				user-select: none;
+				pointer-events: none;
+			}
+
+			// ── Active ──
+			&[data-offset="0"] {
+				left: 160px;
+				width: $pc-active-w;
+				height: 100%;
+				filter: grayscale(0%);
+				z-index: 10;
+				cursor: default;
+				opacity: 1;
+			}
+
+			// ── Second visible ──
+			&[data-offset="1"] {
+				left: $pc-p1-left;
+				width: $pc-p1-w;
+				height: $pc-p1-h;
+				filter: grayscale(100%);
+				z-index: 5;
+				opacity: 1;
+			}
+
+			// ── Third visible ──
+			&[data-offset="2"] {
+				left: $pc-p2-left;
+				width: $pc-p2-w;
+				height: $pc-p2-h;
+				filter: grayscale(100%);
+				z-index: 4;
+				opacity: 0.75;
+			}
+
+			// ── Hidden (offset 3 – 14) ──
+			@for $i from 3 through 14 {
+				&[data-offset="#{$i}"] {
+					left: 100%;
+					width: 12%;
+					height: 50%;
+					opacity: 0;
+					pointer-events: none;
+					z-index: 1;
+				}
+			}
+		}
+	}
+
+	// ── Responsive: medium desktop (≤ 1280px) ─────────────────────────────
+	@media (max-width: 1280px) {
+		.__info {
+			margin-left: 120px;
+		}
+
+		#__navigation {
+			margin-right: 80px;
+		}
+
+		.__profiles .--photo[data-offset="0"] {
+			left: 80px;
+		}
+	}
+
+	// ── Responsive: small desktop (≤ 1100px) ───────────────────────────────
+	@media (max-width: 1100px) {
+		.__info {
+			margin-left: 40px;
+			padding: 48px 32px 48px 0;
+		}
+
+		#__navigation {
+			margin-right: 20px;
+			padding: 28px 24px 16px;
+		}
+
+		.__profiles .--photo[data-offset="0"] {
+			left: 20px;
+		}
+	}
+
+	// ── Responsive: tablet (≤ 980px) ───────────────────────────────────────
+	// Layout flips to single column: nav → photos → info
+	@media (max-width: $tablet) {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto auto auto;
+		min-height: auto;
+
+		// Reset desktop-only fixed offsets
+		#__navigation {
+			grid-column: 1;
+			grid-row: 1;
+			margin-right: 0;
+			padding: 20px 20px 12px;
+		}
+
+		.__info {
+			grid-column: 1;
+			grid-row: 3; // Info moves below photos on mobile
+			grid-row: 3;
+			margin-left: 0;
+			padding: 28px 24px 36px;
+
+			.--description {
+				max-width: none;
+				font-size: 14px;
+			}
+		}
+
+		.__profiles {
+			grid-column: 1;
+			grid-row: 2; // Photos come first
+			height: clamp(300px, 50vw, 460px);
+
+			.--photo {
+				// Reset the desktop left: 160px offset on active photo
+				&[data-offset="0"] {
+					left: 0;
+					width: 62%;
+					height: 100%;
+				}
+
+				// Second photo - visible as a side-by-side peek
+				&[data-offset="1"] {
+					left: 60%;
+					width: 32%;
+					height: 82%;
+					opacity: 1;
+				}
+
+				// Third photo - hide on tablet (too cramped)
+				&[data-offset="2"] {
+					left: 100%;
+					opacity: 0;
+					pointer-events: none;
+				}
+			}
+		}
+	}
+
+	// ── Responsive: mobile (≤ 767px) ───────────────────────────────────────
+	@media (max-width: $mobile) {
+		.__info {
+			padding: 20px 16px 32px;
+
+			.--name {
+				font-size: clamp(20px, 6vw, 26px);
+			}
+
+			.--position {
+				font-size: 11px;
+				margin-bottom: 20px;
+			}
+
+			.--line-separator {
+				margin-bottom: 16px;
+			}
+
+			.--description {
+				font-size: 13px;
+				margin-bottom: 24px;
+				line-height: 1.75;
+			}
+		}
+
+		.__profiles {
+			height: clamp(240px, 65vw, 340px);
+
+			.--photo {
+				// Active: nearly full width — leaves right edge as peek hint
+				&[data-offset="0"] {
+					left: 0;
+					width: 86%;
+					height: 100%;
+				}
+
+				// Next profile peeks from the right edge
+				&[data-offset="1"] {
+					left: 84%;
+					width: 16%;
+					height: 72%;
+					opacity: 0.65;
+					filter: grayscale(100%);
+				}
+
+				// Hide everything else (offsets 2 – 14)
+				@for $i from 2 through 14 {
+					&[data-offset="#{$i}"] {
+						left: 100%;
+						opacity: 0;
+						pointer-events: none;
+					}
+				}
+			}
+		}
+	}
+
+	// ── Responsive: small mobile (≤ 480px) ─────────────────────────────────
+	@media (max-width: 480px) {
+		#__navigation {
+			padding: 16px 16px 10px;
+			gap: 16px;
+
+			.nav-arrows button {
+				width: 36px;
+				height: 36px;
+			}
+		}
+
+		.__info {
+			padding: 16px 16px 28px;
+		}
+
+		.__profiles {
+			height: clamp(200px, 70vw, 280px);
+
+			.--photo {
+				&[data-offset="0"] {
+					width: 88%;
+				}
+
+				&[data-offset="1"] {
+					left: 86%;
+					width: 14%;
+				}
+			}
+		}
+	}
+}

@@ -50,7 +50,7 @@
 			chartContainer.style.position = "absolute";
 			chartContainer.style.padding = "0 0 60px 0";
 			chartContainer.style.background = "#000";
-			chartContainer.style.top = "25%";
+			chartContainer.style.top = "26.8%";
 			chartContainer.style.left = "35%";
 			chartContainer.style.transform = "translate(-50%, -50%)";
 			chartContainer.style.width = "30%";

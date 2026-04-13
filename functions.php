@@ -159,6 +159,12 @@ require_once get_stylesheet_directory() . '/blog-posts-shortcode.php';
 // ACF: Show Categories field + shortcode [innotech_post_categories]
 require_once get_stylesheet_directory() . '/acf-post-categories.php';
 
+// Career Opportunities CPT + Shortcode [innotech_careers]
+require_once get_stylesheet_directory() . '/career-opportunities-shortcode.php';
+
+// Profile Carousel Shortcode [profile_carousel]
+require_once get_stylesheet_directory() . '/profile-carousel-shortcode.php';
+
 // Register Lower Footer Menu location
 function innotech_register_menus() {
     register_nav_menus( array(
