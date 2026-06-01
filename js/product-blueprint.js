@@ -2,31 +2,29 @@
 	"use strict";
 
 	// Hotspot config — coords in % relative to image bounds (0–100).
-	// terminusX/bendOffset can be objects {desktop, tablet, mobile} for
-	// responsive overrides. Otherwise single value applies to all sizes.
 	var HOTSPOTS = [
 		{
-			x: 52,
+			x: 54,
 			y: 26,
 			side: "right",
-			terminusX: { desktop: 96, tablet: 92, mobile: 78 },
-			bendOffset: { desktop: 12, tablet: 10, mobile: 8 },
+			terminusX: 96,
+			bendOffset: 12,
 			label: "Corrosion Status Display",
 		},
 		{
 			x: 20,
 			y: 30,
 			side: "left",
-			terminusX: { desktop: -40, tablet: -10, mobile: 4 },
-			bendOffset: { desktop: 12, tablet: 10, mobile: 8 },
+			terminusX: -40,
+			bendOffset: 12,
 			label: "LED Indicators",
 		},
 		{
 			x: 68,
 			y: 86,
 			side: "right",
-			terminusX: { desktop: 96, tablet: 92, mobile: 78 },
-			bendOffset: { desktop: 14, tablet: 10, mobile: 8 },
+			terminusX: 96,
+			bendOffset: 14,
 			bendRise: -1,
 			label: "External Corrosion Probe",
 		},
@@ -34,23 +32,12 @@
 			x: 4,
 			y: 64,
 			side: "left",
-			terminusX: { desktop: -40, tablet: -10, mobile: 4 },
-			bendOffset: { desktop: 14, tablet: 10, mobile: 8 },
+			terminusX: -40,
+			bendOffset: 14,
 			bendRise: -1,
 			label: "Secure Mounting Screws",
 		},
 	];
-
-	function bp(W) {
-		if (W < 768) return "mobile";
-		if (W < 1024) return "tablet";
-		return "desktop";
-	}
-
-	function resolve(val, key) {
-		if (val && typeof val === "object") return val[key];
-		return val;
-	}
 
 	var SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -94,18 +81,16 @@
 	function layoutHotspot(node, W, H) {
 		var h = node.h;
 		var isRight = node.isRight;
-		var size = bp(W);
-		var bendOff = resolve(h.bendOffset, size);
-		var termX = resolve(h.terminusX, size);
 
 		var targetX = (h.x / 100) * W;
 		var targetY = (h.y / 100) * H;
-		var bendX = targetX + (isRight ? bendOff : -bendOff) * (W / 100);
+		var bendX =
+			targetX + (isRight ? h.bendOffset : -h.bendOffset) * (W / 100);
 		// bendRise > 0 → bend ABOVE hotspot (incline up). Negative → below.
 		// Multiplier of bendOffset; defaults to 0.55. Override per-hotspot.
 		var rise = typeof h.bendRise === "number" ? h.bendRise : 0.55;
-		var bendY = targetY - bendOff * rise * (H / 100);
-		var endX = (termX / 100) * W;
+		var bendY = targetY - h.bendOffset * rise * (H / 100);
+		var endX = (h.terminusX / 100) * W;
 		var endY = bendY;
 
 		node.poly.setAttribute(

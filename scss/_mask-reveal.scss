@@ -22,3 +22,11 @@
 		}
 	}
 }
+
+// Mobile — disable mask reveal. Show media unmasked.
+@media (max-width: 767px) {
+	.mask-reveal-row .mask-reveal {
+		clip-path: none !important;
+		will-change: auto;
+	}
+}

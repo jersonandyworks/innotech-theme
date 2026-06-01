@@ -1,7 +1,20 @@
 (function () {
 	gsap.registerPlugin(ScrollTrigger);
 
+	var MOBILE_BREAKPOINT = 768;
+
 	window.addEventListener("load", function () {
+		// Skip mask reveal on mobile — clip-path animation disabled below
+		// breakpoint. Image/video shown unmasked.
+		if (window.innerWidth < MOBILE_BREAKPOINT) {
+			document.querySelectorAll(".mask-reveal-row .mask-reveal").forEach(
+				function (el) {
+					el.style.clipPath = "none";
+				},
+			);
+			return;
+		}
+
 		var rows = document.querySelectorAll(".mask-reveal-row");
 		if (!rows.length) return;
 
