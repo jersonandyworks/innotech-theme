@@ -60,6 +60,9 @@ function innotech_enqueue_animation_scripts() {
     // Section8 scroll-tick pin
     wp_enqueue_script('mask-zoom-effect', get_stylesheet_directory_uri() . '/js/mask-zoom-effect.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
 
+    // Scroll-driven mask reveal (clip-path inset grows as user scrolls)
+    wp_enqueue_script('mask-reveal', get_stylesheet_directory_uri() . '/js/mask-reveal.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
+
     // Liquid background effect
     wp_enqueue_script('liquid-background', get_stylesheet_directory_uri() . '/js/min/liquid-background.min.js', array(), '1.0.0', true);
     wp_localize_script('liquid-background', 'innotechTheme', array(
@@ -71,6 +74,15 @@ function innotech_enqueue_animation_scripts() {
 
     // Footer background sway effect
     wp_enqueue_script('footer-bg-sway', get_stylesheet_directory_uri() . '/js/footer-bg-sway.js', array('gsap'), '1.0.0', true);
+
+    // Autoplay HTML5 videos with .autoplay-video class
+    wp_enqueue_script('video-autoplay', get_stylesheet_directory_uri() . '/js/video-autoplay.js', array(), '1.0.0', true);
+
+    // Mobile menu (hamburger + fullscreen overlay)
+    wp_enqueue_script('mobile-menu', get_stylesheet_directory_uri() . '/js/mobile-menu.js', array(), '1.0.0', true);
+
+    // Interactive product blueprint hotspot diagram (GSAP + ScrollTrigger)
+    wp_enqueue_script('product-blueprint', get_stylesheet_directory_uri() . '/js/product-blueprint.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
 
@@ -165,6 +177,9 @@ require_once get_stylesheet_directory() . '/career-opportunities-shortcode.php';
 // Profile Carousel Shortcode [profile_carousel]
 require_once get_stylesheet_directory() . '/profile-carousel-shortcode.php';
 
+// Google Map Shortcode [innotech_google_map]
+require_once get_stylesheet_directory() . '/google-map-shortcode.php';
+
 // Register Lower Footer Menu location
 function innotech_register_menus() {
     register_nav_menus( array(
@@ -256,3 +271,84 @@ function custom_social_share_buttons() {
 }
 
 add_shortcode('share_buttons', 'custom_social_share_buttons');
+/**
+ * Custom WooCommerce product loop — horizontal card layout.
+ * Each product = full-width card, title/desc/button left, image right.
+ *
+ * Usage:
+ *   [innotech_products limit="8" category="hand-tools" orderby="date" order="DESC"]
+ */
+function innotech_products_shortcode($atts) {
+    if (!class_exists('WooCommerce')) {
+        return '';
+    }
+
+    $atts = shortcode_atts([
+        'limit'    => 8,
+        'category' => '',
+        'orderby'  => 'date',
+        'order'    => 'DESC',
+    ], $atts, 'innotech_products');
+
+    $args = [
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        'posts_per_page' => intval($atts['limit']),
+        'orderby'        => sanitize_text_field($atts['orderby']),
+        'order'          => sanitize_text_field($atts['order']),
+    ];
+
+    if (!empty($atts['category'])) {
+        $args['tax_query'] = [[
+            'taxonomy' => 'product_cat',
+            'field'    => 'slug',
+            'terms'    => array_map('sanitize_title', explode(',', $atts['category'])),
+        ]];
+    }
+
+    $query = new WP_Query($args);
+    if (!$query->have_posts()) {
+        return '<p class="innotech-products__empty">' . esc_html__('No products found.', 'innotech') . '</p>';
+    }
+
+    ob_start();
+    ?>
+    <div class="innotech-products">
+        <?php while ($query->have_posts()) : $query->the_post();
+            global $product;
+            if (!$product || !is_a($product, 'WC_Product')) {
+                $product = wc_get_product(get_the_ID());
+            }
+            if (!$product) continue;
+
+            $desc = $product->get_short_description();
+            if (empty($desc)) {
+                $desc = wp_trim_words(get_the_excerpt() ?: $product->get_description(), 40);
+            }
+            ?>
+            <article class="innotech-product">
+                <div class="innotech-product__content">
+                    <h3 class="innotech-product__title"><?php the_title(); ?></h3>
+                    <div class="innotech-product__desc">
+                        <?php echo wp_kses_post(wpautop($desc)); ?>
+                    </div>
+                    <a class="innotech-product__btn cta-button" href="<?php the_permalink(); ?>">
+                        <span class="cta-button__text"><?php esc_html_e('Read More', 'innotech'); ?></span>
+                        <span class="cta-button__icon-wrapper" aria-hidden="true">
+                            <svg class="cta-button__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+                <div class="innotech-product__image">
+                    <?php echo $product->get_image('large'); ?>
+                </div>
+            </article>
+        <?php endwhile; wp_reset_postdata(); ?>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('innotech_products', 'innotech_products_shortcode');

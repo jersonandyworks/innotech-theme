@@ -1,0 +1,239 @@
+// Custom WooCommerce product loop — horizontal card layout.
+// Each product = full-width dark card, text left + image right.
+.innotech-products {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	width: 100%;
+
+	&__empty {
+		color: #fff;
+		text-align: center;
+		padding: 2rem;
+	}
+}
+
+.innotech-product {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 3rem;
+	align-items: center;
+	background: rgba(255, 255, 255, 0.02);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 24px;
+	padding: 3rem 3.5rem 3rem clamp(2rem, 6vw, 6rem);
+	color: #fff;
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__title {
+		font-size: clamp(28px, 2.5vw + 12px, 60px) !important;
+		font-weight: 400;
+		line-height: 1;
+		margin: 0 0 clamp(2rem, 12vw, 15.625rem);
+		color: #fff;
+	}
+
+	&__desc {
+		font-size: 1.125rem;
+		line-height: 1.7;
+		font-weight: 300;
+		color: rgba(255, 255, 255, 0.75);
+		max-width: 90%;
+
+		p {
+			margin: 0 0 0.75rem;
+			&:last-child { margin-bottom: 0; }
+		}
+	}
+
+	&__btn {
+		align-self: flex-start;
+	}
+
+	&__image {
+		border-radius: 16px;
+		overflow: hidden;
+		align-self: stretch;
+		height: 100%;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			filter: grayscale(100%);
+			transition: filter 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		&:hover img {
+			filter: grayscale(0%);
+		}
+	}
+
+	&:has(.cta-button:hover) &__image img {
+		filter: grayscale(0%);
+	}
+}
+
+// Hybrid CTA button: pill + circle connected via concave organic curves.
+// Pure CSS — no inline SVG masks, no images. Mask radial-gradients carve
+// inverted curves out of a brand-colored bridge so page bg shows through.
+.cta-button {
+	--cta-brand: #0084cd;
+	--cta-brand-hover: #006ba8;
+	--cta-text: #ffffff;
+	--cta-height: 2.95rem;
+	--cta-pad-x: 2.5rem;
+	--cta-gap: 0.125rem;
+	--cta-bridge-curve: 0.875rem;
+	--cta-icon-size: 1.5rem;
+	--cta-ease: cubic-bezier(0.4, 0, 0.2, 1);
+	--cta-duration: 0.35s;
+
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	height: var(--cta-height);
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--cta-text) !important;
+	text-decoration: none;
+	font-family: inherit;
+	font-size: 1.125rem;
+	font-weight: 400;
+	line-height: 1;
+	cursor: pointer;
+	transition: filter var(--cta-duration) var(--cta-ease);
+
+	&__text {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		padding: 0 var(--cta-pad-x);
+		background: var(--cta-brand);
+		border-radius: 999px;
+		color: var(--cta-text);
+		position: relative;
+		z-index: 1;
+		transition: background var(--cta-duration) var(--cta-ease);
+	}
+
+	// Concave bridge — only visible on hover. SVG data URI renders the
+	// connector shape with two circular cutouts (top + bottom), giving
+	// the organic blob look. preserveAspectRatio="none" stretches cleanly.
+	&__text::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		right: calc(-1 * var(--cta-gap) - 3px);
+		width: calc(var(--cta-gap) + 6px);
+		height: 26px;
+		transform: translateY(-50%) scaleX(0);
+		transform-origin: left center;
+		background: transparent
+			url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 15' preserveAspectRatio='none'><path d='M0,0 Q5,3 10,0 L10,15 Q5,12 0,15 Z' fill='%230084cd'/></svg>")
+			center / 130% 100% no-repeat;
+		pointer-events: none;
+		opacity: 0;
+		transition:
+			opacity var(--cta-duration) var(--cta-ease),
+			transform var(--cta-duration) var(--cta-ease),
+			background var(--cta-duration) var(--cta-ease);
+	}
+
+	&:hover &__text::after,
+	&:focus-visible &__text::after {
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 15' preserveAspectRatio='none'><path d='M0,0 Q5,3 10,0 L10,15 Q5,12 0,15 Z' fill='%23006ba8'/></svg>");
+	}
+
+	&__icon-wrapper {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 0;
+		height: var(--cta-height);
+		margin-left: 0;
+		background: var(--cta-brand);
+		border-radius: 50%;
+		color: var(--cta-text);
+		position: relative;
+		z-index: 1;
+		opacity: 0;
+		transform: scale(0.4);
+		transform-origin: left center;
+		overflow: hidden;
+		transition:
+			width var(--cta-duration) var(--cta-ease),
+			margin-left var(--cta-duration) var(--cta-ease),
+			opacity var(--cta-duration) var(--cta-ease),
+			transform var(--cta-duration) var(--cta-ease),
+			background var(--cta-duration) var(--cta-ease);
+		will-change: width, transform, opacity;
+	}
+
+	&__icon {
+		width: var(--cta-icon-size);
+		height: var(--cta-icon-size);
+		stroke: currentColor;
+		flex-shrink: 0;
+		opacity: 0;
+		transform: translateX(-0.5rem);
+		transition:
+			opacity var(--cta-duration) var(--cta-ease),
+			transform var(--cta-duration) var(--cta-ease);
+	}
+
+	&:hover,
+	&:focus-visible {
+		.cta-button__text {
+			background: var(--cta-brand-hover);
+		}
+		.cta-button__text::after {
+			opacity: 1;
+			transform: translateY(-50%) scaleX(1);
+		}
+		.cta-button__icon-wrapper {
+			width: var(--cta-height);
+			margin-left: var(--cta-gap);
+			opacity: 1;
+			transform: scale(1);
+			background: var(--cta-brand-hover);
+		}
+		.cta-button__icon {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--cta-brand);
+		outline-offset: 4px;
+	}
+
+	&:active .cta-button__icon-wrapper {
+		transform: scale(0.95);
+	}
+}
+
+@media (max-width: 980px) {
+	.innotech-product {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+		padding: 2rem;
+
+		&__image {
+			order: -1;
+			aspect-ratio: 16 / 10;
+			height: auto;
+		}
+
+		&__desc { max-width: 100%; }
+	}
+}

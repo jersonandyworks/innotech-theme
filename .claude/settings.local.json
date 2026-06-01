@@ -6,7 +6,9 @@
       "Bash(gulp build)",
       "Bash(find:*)",
       "Bash(npx gulp scripts)",
-      "Bash(npx gulp styles)"
+      "Bash(npx gulp styles)",
+      "Bash(npx skills *)",
+      "Bash(npm run *)"
     ]
   }
 }

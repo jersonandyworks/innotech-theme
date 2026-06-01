@@ -1,0 +1,24 @@
+// Scroll-driven mask reveal — element starts cropped to center rectangle,
+// expands to full bounds as user scrolls through the pinned row.
+// Works for image, video, iframe — clip-path applied to .mask-reveal itself.
+.mask-reveal-row {
+	overflow: hidden;
+
+	.mask-reveal {
+		// Initial crop: center rectangle visible (40% wide, 60% tall),
+		// rounded 30px corners. JS overwrites inline as scroll progresses.
+		clip-path: inset(calc(20% - 150px) 30% calc(30% - 300px) 30% round 30px);
+		will-change: clip-path;
+
+		// Ensure inner media fills the masked area cleanly.
+		.et_pb_image_wrap,
+		.et_pb_video_box,
+		img,
+		video,
+		iframe {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+	}
+}

@@ -1,13 +1,13 @@
 /*
 CTC Separate Stylesheet
 */
-h1,
-h2,
-h3,
-h4,
-h5 {
-	line-height: $line-height-heading !important;
-}
+// h1,
+// h2,
+// h3,
+// h4,
+// h5 {
+// 	line-height: $line-height-heading !important;
+// }
 // p,
 // li,
 // div {
@@ -118,7 +118,7 @@ body {
 		border-radius: $button-radius !important;
 	}
 
-	#page-container .et_pb_section a.et_pb_button.et_pb_button_0_tb_header {
+	&.et-db #page-container #et-boc .et-l .et_pb_section a.et_pb_button.et_pb_button_0_tb_header {
 		font-size: 0px !important;
 		width: 62px;
 		height: 62px;
