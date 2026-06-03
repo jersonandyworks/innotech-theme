@@ -1,3 +1,9 @@
+// GSAP ScrollTrigger wraps pinned elements in `.pin-spacer`. Only target
+// pin-spacers that appear AFTER #section3 (same parent, general sibling).
+#section3 ~ .pin-spacer {
+	background-color: #00051b;
+}
+
 // Scroll-driven mask reveal — element starts cropped to center rectangle,
 // expands to full bounds as user scrolls through the pinned row.
 // Works for image, video, iframe — clip-path applied to .mask-reveal itself.

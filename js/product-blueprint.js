@@ -2,6 +2,10 @@
 	"use strict";
 
 	// Hotspot config — coords in % relative to image bounds (0–100).
+	// `mobile: { terminusX, bendOffset }` is an optional override applied
+	// when image width < MOBILE_BREAKPOINT. Desktop/tablet use top-level
+	// values unchanged.
+	var MOBILE_BREAKPOINT = 768;
 	var HOTSPOTS = [
 		{
 			x: 54,
@@ -9,6 +13,8 @@
 			side: "right",
 			terminusX: 96,
 			bendOffset: 12,
+			mobile: { terminusX: 78, bendOffset: 8 },
+			number: 2,
 			label: "Corrosion Status Display",
 		},
 		{
@@ -17,6 +23,8 @@
 			side: "left",
 			terminusX: -40,
 			bendOffset: 12,
+			mobile: { terminusX: 4, bendOffset: 8 },
+			number: 1,
 			label: "LED Indicators",
 		},
 		{
@@ -26,6 +34,8 @@
 			terminusX: 96,
 			bendOffset: 14,
 			bendRise: -1,
+			mobile: { terminusX: 78, bendOffset: 8 },
+			number: 4,
 			label: "External Corrosion Probe",
 		},
 		{
@@ -35,6 +45,8 @@
 			terminusX: -40,
 			bendOffset: 14,
 			bendRise: -1,
+			mobile: { terminusX: 4, bendOffset: 8 },
+			number: 3,
 			label: "Secure Mounting Screws",
 		},
 	];
@@ -62,6 +74,7 @@
 		card.className =
 			"product-blueprint__callout-card product-blueprint__callout-card--" +
 			(isRight ? "right" : "left");
+		card.dataset.num = h.number != null ? h.number : idx + 1;
 		card.textContent = h.label;
 		cards.appendChild(card);
 
@@ -82,15 +95,22 @@
 		var h = node.h;
 		var isRight = node.isRight;
 
+		// Apply mobile override only when below breakpoint; desktop/tablet
+		// preserve current long-line config. Use viewport width (not image
+		// width) so desktop with a narrow image still gets desktop config.
+		var useMobile =
+			window.innerWidth < MOBILE_BREAKPOINT && h.mobile;
+		var bendOff = useMobile ? h.mobile.bendOffset : h.bendOffset;
+		var termX = useMobile ? h.mobile.terminusX : h.terminusX;
+
 		var targetX = (h.x / 100) * W;
 		var targetY = (h.y / 100) * H;
-		var bendX =
-			targetX + (isRight ? h.bendOffset : -h.bendOffset) * (W / 100);
+		var bendX = targetX + (isRight ? bendOff : -bendOff) * (W / 100);
 		// bendRise > 0 → bend ABOVE hotspot (incline up). Negative → below.
 		// Multiplier of bendOffset; defaults to 0.55. Override per-hotspot.
 		var rise = typeof h.bendRise === "number" ? h.bendRise : 0.55;
-		var bendY = targetY - h.bendOffset * rise * (H / 100);
-		var endX = (h.terminusX / 100) * W;
+		var bendY = targetY - bendOff * rise * (H / 100);
+		var endX = (termX / 100) * W;
 		var endY = bendY;
 
 		node.poly.setAttribute(

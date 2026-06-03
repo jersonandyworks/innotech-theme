@@ -83,6 +83,22 @@ function innotech_enqueue_animation_scripts() {
 
     // Interactive product blueprint hotspot diagram (GSAP + ScrollTrigger)
     wp_enqueue_script('product-blueprint', get_stylesheet_directory_uri() . '/js/product-blueprint.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
+
+    // WooCommerce custom gallery lightbox — JS rebuilds gallery DOM + GSAP popup.
+    // Always load (self-bails if no gallery). Avoids is_product() misses on Divi.
+    wp_enqueue_script('wc-gallery-lightbox', get_stylesheet_directory_uri() . '/js/wc-gallery-lightbox.js', array('gsap'), '1.0.8', true);
+
+    // Breadcrumb separator → chevron-right (Divi WC breadcrumb hardcodes "/")
+    wp_enqueue_script('breadcrumb-chevron', get_stylesheet_directory_uri() . '/js/breadcrumb-chevron.js', array(), '1.0.0', true);
+
+    // WC quantity input — inject minus/plus buttons.
+    wp_enqueue_script('wc-qty-add-to-cart', get_stylesheet_directory_uri() . '/js/wc-qty-add-to-cart.js', array(), '1.0.0', true);
+
+    // ACF Product Information tabs.
+    wp_enqueue_script('product-info-tabs', get_stylesheet_directory_uri() . '/js/product-info-tabs.js', array(), '1.0.0', true);
+
+    // ACF Product Information layout (features + accordion).
+    wp_enqueue_script('product-info-layout', get_stylesheet_directory_uri() . '/js/product-info-layout.js', array(), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
 
@@ -321,9 +337,66 @@ function innotech_products_shortcode($atts) {
             }
             if (!$product) continue;
 
-            $desc = $product->get_short_description();
+            // Cascade through sources: short desc → excerpt → full desc.
+            // For each: strip shortcodes; if empty, extract inner text from
+            // Divi text/blurb shortcodes; if STILL empty, render shortcodes
+            // (do_shortcode) and strip tags. Finally trim to 40 words.
+            $sources = array(
+                $product->get_short_description(),
+                get_the_excerpt(),
+                $product->get_description(),
+            );
+            $desc = '';
+            foreach ($sources as $src) {
+                if (empty($src)) continue;
+
+                $clean = wp_strip_all_tags(strip_shortcodes($src));
+                $clean = trim(preg_replace('/\s+/', ' ', $clean));
+
+                if (strlen($clean) < 20) {
+                    if (preg_match_all('/\[et_pb_(?:text|blurb)[^\]]*\](.*?)\[\/et_pb_(?:text|blurb)\]/s', $src, $m)) {
+                        $clean = wp_strip_all_tags(implode(' ', $m[1]));
+                        $clean = trim(preg_replace('/\s+/', ' ', $clean));
+                    }
+                }
+
+                if (strlen($clean) < 20) {
+                    // Last resort: render shortcodes then strip tags.
+                    $rendered = do_shortcode($src);
+                    $clean = wp_strip_all_tags($rendered);
+                    $clean = trim(preg_replace('/\s+/', ' ', $clean));
+
+                    // Strip Divi WC page chrome: breadcrumb + tab headers
+                    // before description. Greedy up to "DescriptionReviews (N)"
+                    // or last "Description" then strip suffix tabs.
+                    $clean = preg_replace('/^.*?DescriptionReviews\s*\(\d+\)\s*/iu', '', $clean);
+                    $clean = preg_replace('/\s*(Related products|Additional information)\b.*$/iu', '', $clean);
+                    $clean = trim($clean);
+                }
+
+                if (strlen($clean) >= 20) {
+                    $desc = wp_trim_words($clean, 40);
+                    break;
+                }
+            }
+
+            // Final fallback: build a blurb from product categories + title.
             if (empty($desc)) {
-                $desc = wp_trim_words(get_the_excerpt() ?: $product->get_description(), 40);
+                $cats = get_the_terms(get_the_ID(), 'product_cat');
+                $cat_names = ($cats && !is_wp_error($cats))
+                    ? wp_list_pluck($cats, 'name')
+                    : array();
+                $cat_str = !empty($cat_names) ? implode(', ', $cat_names) : '';
+                $desc = $cat_str
+                    ? sprintf(
+                        __('%1$s — explore the %2$s for InnoTECH industrial monitoring solutions.', 'innotech'),
+                        $product->get_name(),
+                        $cat_str
+                    )
+                    : sprintf(
+                        __('%s — part of the InnoTECH industrial monitoring product range.', 'innotech'),
+                        $product->get_name()
+                    );
             }
             ?>
             <article class="innotech-product">
@@ -352,3 +425,22 @@ function innotech_products_shortcode($atts) {
     return ob_get_clean();
 }
 add_shortcode('innotech_products', 'innotech_products_shortcode');
+
+// WooCommerce gallery: JS rebuilds Divi-rendered `.woocommerce-product-gallery`
+// in place — 1 main image + 2-col grid of thumbs + custom lightbox.
+// Disable WC flexslider/zoom features so they don't conflict.
+add_action('after_setup_theme', function () {
+    remove_theme_support('wc-product-gallery-zoom');
+    remove_theme_support('wc-product-gallery-lightbox');
+    remove_theme_support('wc-product-gallery-slider');
+}, 20);
+
+// Replace WooCommerce breadcrumb separator "/" with chevron-right SVG.
+add_filter('woocommerce_breadcrumb_defaults', function ($defaults) {
+    $svg = '<svg class="innotech-breadcrumb-sep" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+    $defaults['delimiter'] = ' ' . $svg . ' ';
+    return $defaults;
+});
+
+// ACF "Product Information" field group + shortcodes.
+require_once get_stylesheet_directory() . '/acf-product-info.php';
