@@ -1,0 +1,150 @@
+// #section4 #pin-container — mobile/tablet responsive overrides.
+// Disables horizontal pin-scroll effect, stacks content vertically.
+// GSAP ScrollTrigger pin wraps element in .pin-spacer with fixed position —
+// neutralize on mobile so vertical flow works.
+@media (max-width: 980px) {
+	#section4 + .pin-spacer,
+	.pin-spacer:has(#section4) {
+		position: static !important;
+		max-width: 100% !important;
+		width: 100% !important;
+		height: auto !important;
+		padding: 0 !important;
+		transform: none !important;
+		translate: none !important;
+	}
+
+	#section4 {
+		// Kill inline pin styling injected by GSAP ScrollTrigger.
+		position: static !important;
+		max-width: 100% !important;
+		width: 100% !important;
+		max-height: none !important;
+		height: auto !important;
+		transform: none !important;
+		translate: none !important;
+		padding: 2rem 1rem !important;
+
+		#pin-container {
+			display: block !important;
+			width: 100% !important;
+		}
+
+		.pin-wrap {
+			transform: none !important;
+			translate: none !important;
+			width: 100% !important;
+			max-width: 100% !important;
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: stretch !important;
+			justify-content: flex-start !important;
+			height: auto !important;
+			padding: 1rem 0 !important;
+
+			> * {
+				min-width: 0 !important;
+				width: 100% !important;
+				padding: 0 !important;
+				margin-bottom: 1.25rem;
+			}
+
+			.innotech-nested-container {
+				display: flex !important;
+				flex-direction: column;
+				gap: 1.25rem;
+				width: 100%;
+				margin-bottom: 1.5rem;
+			}
+
+			.innotech-nested-item {
+				width: 100% !important;
+				max-width: 100% !important;
+				padding: 1.5rem;
+				border-radius: 14px;
+			}
+
+			.et_pb_image_2_tb_body {
+				width: 100% !important;
+				max-width: 100% !important;
+				margin: 1.5rem 0 !important;
+
+				img {
+					width: 100%;
+					height: auto;
+					border-radius: 14px;
+				}
+			}
+
+			.scroll-description {
+				gap: 1.5rem;
+			}
+		}
+
+		// Tech grid (image + bullet list) → stack image above list.
+		.row-tech {
+			display: flex !important;
+			flex-direction: column;
+			gap: 1.5rem;
+			width: 100%;
+		}
+
+		.col-tech {
+			width: 100% !important;
+
+			&.grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 1rem;
+			}
+
+			img {
+				width: 100%;
+				height: auto;
+				display: block;
+			}
+
+			.info {
+				padding: 0.75rem 0;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+				p {
+					margin: 0;
+				}
+
+				&:last-child {
+					border-bottom: 0;
+				}
+			}
+		}
+
+		.btn-tech {
+			display: inline-flex;
+			padding: 0.6rem 1.5rem;
+			border-radius: 999px;
+			background: #0084cd;
+			color: #fff;
+			text-decoration: none;
+			font-size: 14px;
+			font-weight: 500;
+		}
+
+		.bullet-point-container {
+			margin-bottom: 1rem;
+		}
+	}
+}
+
+@media (max-width: 600px) {
+	#section4 {
+		padding: 1.5rem 0.75rem !important;
+
+		.innotech-nested-item {
+			padding: 1.1rem;
+		}
+
+		.col-tech.grid {
+			gap: 0.5rem;
+		}
+	}
+}

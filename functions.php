@@ -99,6 +99,22 @@ function innotech_enqueue_animation_scripts() {
 
     // ACF Product Information layout (features + accordion).
     wp_enqueue_script('product-info-layout', get_stylesheet_directory_uri() . '/js/product-info-layout.js', array(), '1.0.0', true);
+
+    // Three.js (local, same-origin) + liquid blob indicator for .carousel-menu-container.
+    wp_enqueue_script('three-js', get_stylesheet_directory_uri() . '/js/three.min.js', array(), '0.158.0', true);
+    wp_enqueue_script('carousel-menu-blob', get_stylesheet_directory_uri() . '/js/carousel-menu-blob.js', array('three-js'), '1.0.11', true);
+
+    // Slot-machine carousel slider.
+    wp_enqueue_script('component-carousel', get_stylesheet_directory_uri() . '/js/component-carousel.js', array('gsap'), '1.0.2', true);
+
+    // Product instructional video shortcode.
+    wp_enqueue_script('product-video', get_stylesheet_directory_uri() . '/js/product-video.js', array(), '1.0.2', true);
+
+    // Mobile-only carousel for .show-card-container.
+    wp_enqueue_script('show-card-carousel', get_stylesheet_directory_uri() . '/js/show-card-carousel.js', array(), '1.0.0', true);
+
+    // Disable #section4 horizontal pin on mobile.
+    wp_enqueue_script('section4-mobile', get_stylesheet_directory_uri() . '/js/section4-mobile.js', array('gsap', 'gsap-scrolltrigger', 'horizontal-pin-scroll'), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
 
@@ -444,3 +460,23 @@ add_filter('woocommerce_breadcrumb_defaults', function ($defaults) {
 
 // ACF "Product Information" field group + shortcodes.
 require_once get_stylesheet_directory() . '/acf-product-info.php';
+
+// ACF product_components.instructional_video_file shortcode.
+require_once get_stylesheet_directory() . '/acf-product-video.php';
+
+// WooCommerce — always redirect to Cart page after Add to Cart.
+add_filter('woocommerce_add_to_cart_redirect', function () {
+    return wc_get_cart_url();
+});
+
+// Disable AJAX add-to-cart so the redirect filter above takes effect even
+// from shop/archive pages (AJAX would otherwise bypass the page reload).
+add_filter('option_woocommerce_enable_ajax_add_to_cart', function () {
+    return 'no';
+});
+add_filter('option_woocommerce_cart_redirect_after_add', function () {
+    return 'yes';
+});
+
+// Divi WC Add-to-Cart module uses its own button — same form, so the WC
+// redirect filter applies. No extra hook required.

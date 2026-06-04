@@ -1,0 +1,108 @@
+// Equal-height columns inside .show-card-container (Divi row).
+// Forces 4-col layout (Divi adds margins; we use grid for clean gaps).
+.show-card-container {
+	display: grid !important;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 1.5rem;
+	align-items: stretch !important;
+
+	> .et_pb_column {
+		width: 100% !important;
+		max-width: 100% !important;
+		margin: 0 !important;
+		height: auto;
+	}
+
+	> .et_pb_column > .et_pb_module {
+		height: 100%;
+	}
+}
+
+@media (max-width: 980px) {
+	.show-card-container {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 600px) {
+	// Mobile: JS converts grid into a 1-card carousel.
+	.show-card-container {
+		display: block !important;
+		position: relative;
+		padding: 0 !important;
+
+		.show-card-viewport {
+			overflow: hidden;
+			width: 100%;
+		}
+
+		.show-card-track {
+			display: flex;
+			width: 100%;
+			transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+			will-change: transform;
+		}
+
+		.show-card-track > .et_pb_column {
+			flex: 0 0 100%;
+			max-width: 100%;
+			width: 100%;
+			margin: 0 !important;
+		}
+
+		.show-card-nav {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 1.5rem;
+			margin-top: 1.25rem;
+		}
+
+		.show-card-nav__btn {
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid rgba(255, 255, 255, 0.18);
+			color: #fff;
+			width: 42px;
+			height: 42px;
+			border-radius: 50%;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			padding: 0;
+			transition:
+				background 0.25s ease,
+				transform 0.2s ease;
+
+			&:hover {
+				background: rgba(0, 132, 205, 0.85);
+				border-color: rgba(0, 132, 205, 0.85);
+			}
+
+			&:active {
+				transform: scale(0.95);
+			}
+		}
+
+		.show-card-nav__count {
+			color: rgba(255, 255, 255, 0.85);
+			font-size: 14px;
+			letter-spacing: 0.1em;
+			font-weight: 500;
+			min-width: 60px;
+			text-align: center;
+		}
+
+		.show-card-nav__cur {
+			color: #fff;
+		}
+	}
+}
+
+// Hide carousel chrome on desktop (defensive — JS removes it but cover edge cases).
+@media (min-width: 601px) {
+	.show-card-container .show-card-nav,
+	.show-card-container .show-card-viewport {
+		display: none !important;
+	}
+}
