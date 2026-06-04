@@ -1,0 +1,106 @@
+// Swirl chart section (#map-swirl + "Integrity Forest Chart" texts) — mobile.
+//
+// Desktop: map-swirl.js absolutely positions #chartContainer (top 26.8%,
+// left 35%, width 30%) and guide lines over the rotating mask-swirl, with
+// the two text modules flowing below. On small screens that inline geometry
+// leaves the chart tiny and off-centre.
+//
+// Mobile fix: turn the column into a stacking context — mask-swirl sits
+// behind as a centred backdrop, the chart is enlarged/centred (aspect
+// preserved, no stretch), and the text modules stack as full-width blocks
+// layered on top.
+//
+// !important needed throughout: map-swirl.js writes geometry as inline styles.
+
+@media (max-width: 980px) {
+	.et_pb_row_12_tb_body .et_pb_column_14_tb_body {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 90vh; // room for the centred swirl behind stacked text
+		padding: 48px 20px;
+		overflow: hidden;
+
+		// Rotating mask-swirl + guide lines + chart: the backdrop layer.
+		#map-swirl {
+			position: absolute !important;
+			inset: 0;
+			z-index: 0;
+			margin: 0 !important;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: none;
+
+			// Keep the swirl image square & centred — never stretched.
+			.et_pb_image_wrap,
+			.et_pb_image_wrap > img {
+				width: 100%;
+				height: 100%;
+			}
+			.et_pb_image_wrap > img {
+				object-fit: contain;
+				object-position: center;
+			}
+		}
+
+		// Chart container: dead-centre, bigger than the 30% desktop width.
+		#chartContainer {
+			top: 50% !important;
+			left: 50% !important;
+			transform: translate(-50%, -50%) !important;
+			width: 80% !important;
+			max-width: 340px;
+			padding: 0 0 24px 0 !important;
+		}
+
+		// Chart image: fill container width, keep aspect ratio (no stretch).
+		.swirl-chart {
+			display: block;
+			width: 100%;
+			height: auto;
+			object-fit: contain;
+		}
+
+		// Guide lines: keep inside the viewport on small screens.
+		.swirl-hoz-line {
+			height: 55vh !important;
+			max-width: 92%;
+		}
+		.swirl-vert-line {
+			max-height: 55vh;
+			max-width: 92%;
+		}
+
+		// Text modules: Divi theme-builder pins these as absolute overlay
+		// pills (inset:15%/32% + translateX(-50%)) for desktop. On mobile
+		// that geometry throws them off-screen, so reset to stacked blocks.
+		// !important: the unified theme-builder rule out-specifies this scope.
+		.et_pb_text_3_tb_body,
+		.et_pb_text_4_tb_body {
+			position: relative !important;
+			inset: auto !important;
+			transform: none !important;
+			overflow: visible !important; // stop the pill clipping the text
+			z-index: 2;
+			max-width: 90%;
+			margin: 0 auto;
+		}
+
+		// Title: keep the black pill hugging its text, centred.
+		.et_pb_text_3_tb_body {
+			order: 1;
+			width: auto;
+			align-self: center;
+		}
+
+		// Paragraph: full-width centred text block at the bottom.
+		.et_pb_text_4_tb_body {
+			order: 2;
+			width: 100%;
+			max-width: 520px;
+		}
+	}
+}

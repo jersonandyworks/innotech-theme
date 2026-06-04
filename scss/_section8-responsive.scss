@@ -1,0 +1,90 @@
+// #section8 "About" — mobile/tablet responsive.
+//
+// Desktop: a GSAP-pinned horizontal slider (mask-zoom-effect.js) — the
+// .pin-content-wrapper lays its children out as 100vw slides and translates
+// left on scroll; the inner .innotech-nested-container is a 3-col grid. On
+// mobile that pins content off-screen and squeezes the paragraphs to ~80px.
+//
+// mask-zoom-effect.js now bails out at <=980px (no pin/slide/mask), so here we
+// just stack everything into a single readable column.
+
+@media (max-width: 980px) {
+	#section8 {
+		// In case any pin height/transform lingers from a desktop→mobile resize.
+		height: auto !important;
+		max-height: none !important;
+		padding: 3rem 1.25rem !important;
+		// Desktop centres flex children (align-items:center) so rows shrink to
+		// content width — stretch them full instead.
+		align-items: stretch !important;
+
+		// Rows/columns fill the section width.
+		.et_pb_row {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin: 0 !important;
+		}
+
+		.et_pb_column {
+			width: 100% !important;
+			padding: 0 !important;
+		}
+
+		.item-content {
+			width: 100% !important;
+		}
+
+		// Horizontal slider → vertical stack.
+		.pin-content-wrapper {
+			display: flex !important;
+			flex-direction: column !important;
+			flex-wrap: nowrap !important;
+			align-items: stretch !important;
+			transform: none !important;
+			translate: none !important;
+			width: 100% !important;
+
+			// Each former 100vw slide → full-width block.
+			> * {
+				flex: 0 0 auto !important;
+				width: 100% !important;
+				max-width: 100% !important;
+				padding: 0 !important;
+				margin-bottom: 1.75rem;
+			}
+
+			h1.et_pb_module_heading {
+				width: 100% !important;
+				font-size: clamp(2rem, 9vw, 2.75rem);
+				line-height: 1.15;
+			}
+		}
+
+		// 3-col grid → stacked column (bullet statement above paragraphs).
+		.innotech-nested-container {
+			display: flex !important;
+			flex-direction: column !important;
+			grid-template-columns: none !important;
+			gap: 1.25rem !important;
+			width: 100% !important;
+		}
+
+		.innotech-nested-item {
+			width: 100% !important;
+			max-width: 100% !important;
+		}
+
+		.bullet-heading-slide .item-title {
+			font-size: clamp(1.4rem, 6vw, 2rem) !important;
+			line-height: 1.3 !important;
+		}
+
+		// Kill the desktop 30vw paragraph width that squeezed the text.
+		.scroll-description .item-content > p:first-of-type,
+		.item-content p {
+			width: 100% !important;
+			font-size: 1rem;
+			line-height: 1.6;
+		}
+	}
+}

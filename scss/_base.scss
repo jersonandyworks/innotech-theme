@@ -283,6 +283,38 @@ body {
 		display: inline-block;
 		will-change: filter, opacity, letter-spacing;
 	}
+
+	// Word wrappers injected by heading-word-wrap.js prevent mid-word breaks.
+	.word {
+		display: inline-block;
+		white-space: nowrap;
+	}
+
+	// Mobile — bigger type that fluidly fills the viewport. Heading wraps
+	// at word boundaries so "Unknown" drops to a new line instead of clipping.
+	@media (max-width: 768px) {
+		.et_pb_heading_container {
+			display: block !important;
+			width: 100% !important;
+			max-width: 100% !important;
+			text-align: center;
+			padding: 0 0.5rem;
+		}
+
+		.et_pb_module_heading {
+			display: block !important;
+			width: 100% !important;
+			max-width: 100% !important;
+			font-size: clamp(40px, 12vw, 80px) !important;
+			line-height: 1.05 !important;
+			word-spacing: 0.05em;
+			overflow-wrap: break-word;
+		}
+
+		.char {
+			white-space: normal;
+		}
+	}
 }
 
 // Side Navigation
@@ -381,6 +413,11 @@ body {
 #section1 {
 	position: relative;
 	overflow: hidden;
+
+	.et_pb_column {
+		padding-top: 130px !important;
+		padding-bottom: 0 !important;
+	}
 }
 
 .liquid-background-canvas {

@@ -49,6 +49,11 @@
 				margin-bottom: 1.25rem;
 			}
 
+			// Image moves above all text content on mobile.
+			.et_pb_image_2_tb_body {
+				order: -1 !important;
+			}
+
 			.innotech-nested-container {
 				display: flex !important;
 				flex-direction: column;
@@ -146,5 +151,122 @@
 		.col-tech.grid {
 			gap: 0.5rem;
 		}
+	}
+}
+
+// Kill desktop translateY offsets on sections that follow #section4. They
+// were sized for the tall pinned desktop section and overlap on mobile.
+@media (max-width: 980px) {
+	#section4 + .ver-grid-divider,
+	#section4 ~ .et_pb_section.ver-grid-divider,
+	.et_pb_section_4_tb_body.ver-grid-divider,
+	#section5,
+	.et_pb_section_5_tb_body {
+		transform: none !important;
+		translate: none !important;
+	}
+}
+
+// Section4 mobile carousel — built by section4-carousel.js (≤ 980px).
+@media (max-width: 980px) {
+	.section4-carousel__viewport {
+		overflow: hidden;
+		width: 100%;
+		order: 2;
+		margin-bottom: 0 !important;
+		transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.section4-carousel__track {
+		display: flex;
+		align-items: flex-start;
+		width: 100%;
+		transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+		will-change: transform;
+	}
+
+	.section4-carousel__slide {
+		flex: 0 0 100%;
+		width: 100%;
+		max-width: 100%;
+		padding: 0 0.25rem;
+		box-sizing: border-box;
+
+		.innotech-nested-item {
+			width: 100% !important;
+			margin: 0 !important;
+		}
+	}
+
+	// Nav arrows hidden on mobile — carousel autoplays instead.
+	.section4-carousel__nav {
+		display: none !important;
+	}
+
+	.section4-carousel__btn {
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		color: #fff;
+		width: 42px;
+		height: 42px;
+		border-radius: 50%;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		padding: 0;
+		transition:
+			background 0.25s ease,
+			transform 0.2s ease;
+
+		&:hover {
+			background: rgba(0, 132, 205, 0.85);
+			border-color: rgba(0, 132, 205, 0.85);
+		}
+
+		&:active {
+			transform: scale(0.95);
+		}
+	}
+
+	.section4-carousel__count {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 14px;
+		letter-spacing: 0.1em;
+		font-weight: 500;
+		min-width: 60px;
+		text-align: center;
+	}
+
+	.section4-carousel__cur {
+		color: #fff;
+	}
+
+	// Empty nested-container shells left behind after items moved into
+	// carousel — collapse them so they don't leave gaps.
+	#section4 .pin-wrap .innotech-nested-container:empty,
+	#section4 .pin-wrap .innotech-nested-container:not(:has(.innotech-nested-item)) {
+		display: none !important;
+		margin: 0 !important;
+	}
+}
+
+// Mobile — neutralize the data-scroll-step="257" transform that Divi
+// motion-effects applies to .et_pb_text_2_tb_body. Causes content to drift.
+@media (max-width: 768px) {
+	body[data-scroll-step="257"] .et_pb_text_2_tb_body {
+		transform: translate(0, 0) !important;
+		translate: none !important;
+	}
+}
+
+// Mobile — override z-index: -1 on the pin container so content renders
+// above section bg instead of behind it.
+@media (max-width: 980px) {
+	.et_pb_row_8_tb_body,
+	#section4 .et_pb_row_8_tb_body,
+	#section4 #pin-container {
+		z-index: auto !important;
+		position: relative !important;
 	}
 }

@@ -85,6 +85,10 @@ figure.blob-s {
 	transform: translate(-50%, -50%);
 	width: 118px;
 	height: 160px;
+
+	@media (max-width: 768px) {
+		display: none !important;
+	}
 }
 // DOT NAVIGATION LABEL TEXT
 .sidebar-item {

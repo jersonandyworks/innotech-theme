@@ -16,7 +16,7 @@ add_filter( 'locale_stylesheet_uri', 'chld_thm_cfg_locale_css' );
          
 if ( !function_exists( 'child_theme_configurator_css' ) ):
     function child_theme_configurator_css() {
-        wp_enqueue_style( 'chld_thm_cfg_separate', trailingslashit( get_stylesheet_directory_uri() ) . 'ctc-style.css', array(  ) );
+        wp_enqueue_style( 'chld_thm_cfg_separate', trailingslashit( get_stylesheet_directory_uri() ) . 'ctc-style.css', array(  ), filemtime( trailingslashit( get_stylesheet_directory() ) . 'ctc-style.css' ) );
     }
 endif;
 add_action( 'wp_enqueue_scripts', 'child_theme_configurator_css', 99999998 );
@@ -58,7 +58,7 @@ function innotech_enqueue_animation_scripts() {
     ));
 
     // Section8 scroll-tick pin
-    wp_enqueue_script('mask-zoom-effect', get_stylesheet_directory_uri() . '/js/mask-zoom-effect.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
+    wp_enqueue_script('mask-zoom-effect', get_stylesheet_directory_uri() . '/js/mask-zoom-effect.js', array('gsap', 'gsap-scrolltrigger'), filemtime( get_stylesheet_directory() . '/js/mask-zoom-effect.js' ), true);
 
     // Scroll-driven mask reveal (clip-path inset grows as user scrolls)
     wp_enqueue_script('mask-reveal', get_stylesheet_directory_uri() . '/js/mask-reveal.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
@@ -115,6 +115,12 @@ function innotech_enqueue_animation_scripts() {
 
     // Disable #section4 horizontal pin on mobile.
     wp_enqueue_script('section4-mobile', get_stylesheet_directory_uri() . '/js/section4-mobile.js', array('gsap', 'gsap-scrolltrigger', 'horizontal-pin-scroll'), '1.0.0', true);
+
+    // Mobile-only carousel for #section4 nested items.
+    wp_enqueue_script('section4-carousel', get_stylesheet_directory_uri() . '/js/section4-carousel.js', array('section4-mobile'), '1.0.0', true);
+
+    // Wrap consecutive .char elements in .word spans (prevents mid-word breaks).
+    wp_enqueue_script('heading-word-wrap', get_stylesheet_directory_uri() . '/js/heading-word-wrap.js', array('text-heading-effect'), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
 

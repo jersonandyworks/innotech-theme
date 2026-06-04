@@ -5,6 +5,11 @@
 		var section = document.getElementById("section8");
 		if (!section) return;
 
+		// Mobile/tablet: skip the pin + horizontal slide + mask zoom entirely so
+		// the content stacks vertically and stays readable. CSS handles the
+		// stacked layout (see _section8-responsive.scss).
+		if (window.innerWidth <= 980) return;
+
 		var pinCreated = false;
 
 		// Slide ratios — defined here so they are shared between the immediate
