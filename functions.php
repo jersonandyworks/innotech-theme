@@ -23,123 +23,56 @@ add_action( 'wp_enqueue_scripts', 'child_theme_configurator_css', 99999998 );
 
 // END ENQUEUE PARENT ACTION
 
-// Enqueue GSAP, SplitType and custom effects
+// Enqueue external libs + the combined theme JS bundle.
+//
+// All of the theme's own classic scripts are concatenated into ONE minified
+// file (js/min/theme.bundle.min.js) by `gulp bundle`. Only these stay separate
+// because they cannot be folded in:
+//   - GSAP / ScrollTo / ScrollTrigger / SplitType : external CDN
+//   - three.min.js                                : vendor global lib (THREE)
+//   - liquid-background                           : loaded as <script type="module">
 function innotech_enqueue_animation_scripts() {
-    // GSAP
-    wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js', array(), '3.12.5', true);
+    $theme_uri = get_stylesheet_directory_uri();
+    $theme_dir = get_stylesheet_directory();
 
-    // GSAP Plugins
+    // ── External libs (CDN) — kept separate (browser-cached, parallel) ─────────
+    wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js', array(), '3.12.5', true);
     wp_enqueue_script('gsap-scrollto', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js', array('gsap'), '3.12.5', true);
     wp_enqueue_script('gsap-scrolltrigger', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js', array('gsap'), '3.12.5', true);
-    wp_enqueue_script('map-swirl', get_stylesheet_directory_uri() . '/js/map-swirl.js', array('gsap'), '1.0.0', true);
-    wp_enqueue_script('blurb', get_stylesheet_directory_uri() . '/js/blurb.js', array('gsap'), '1.0.0', true);
-    wp_localize_script('blurb', 'innotechTheme', array(
-        'themeUrl' => get_stylesheet_directory_uri()
-    ));
-    // SplitType for text animations
     wp_enqueue_script('splittype', 'https://unpkg.com/split-type', array(), '0.3.4', true);
 
-    // Button glow effect
-    wp_enqueue_script('button-particles', get_stylesheet_directory_uri() . '/js/min/button-particles.min.js', array('gsap'), '1.0.0', true);
+    // ── Vendor global — Three.js (carousel-menu-blob reads window.THREE) ───────
+    wp_enqueue_script('three-js', $theme_uri . '/js/three.min.js', array(), '0.158.0', true);
 
-    // Text heading effect
-    wp_enqueue_script('text-heading-effect', get_stylesheet_directory_uri() . '/js/min/text-heading-effect.min.js', array('gsap', 'splittype'), '1.0.0', true);
-
-    // Scroll effects (jQuery)
-    wp_enqueue_script('scroll-effects', get_stylesheet_directory_uri() . '/js/min/scroll-effects.min.js', array('jquery'), '1.0.0', true);
-
-    // Side navigation
-    wp_enqueue_script('side-nav', get_stylesheet_directory_uri() . '/js/min/side-nav.min.js', array('gsap', 'gsap-scrollto', 'gsap-scrolltrigger'), '1.0.0', true);
-
-    // Blob animation
-    wp_enqueue_script('blob-animation', get_stylesheet_directory_uri() . '/js/blob-animation.js', array('gsap'), '1.0.0', true);
-    wp_localize_script('blob-animation', 'blobAnimationData', array(
-        'themeUrl' => get_stylesheet_directory_uri()
-    ));
-
-    // Section8 scroll-tick pin
-    wp_enqueue_script('mask-zoom-effect', get_stylesheet_directory_uri() . '/js/mask-zoom-effect.js', array('gsap', 'gsap-scrolltrigger'), filemtime( get_stylesheet_directory() . '/js/mask-zoom-effect.js' ), true);
-
-    // Scroll-driven mask reveal (clip-path inset grows as user scrolls)
-    wp_enqueue_script('mask-reveal', get_stylesheet_directory_uri() . '/js/mask-reveal.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
-
-    // Liquid background effect
-    wp_enqueue_script('liquid-background', get_stylesheet_directory_uri() . '/js/min/liquid-background.min.js', array(), '1.0.0', true);
-    wp_localize_script('liquid-background', 'innotechTheme', array(
-        'themeUrl' => get_stylesheet_directory_uri()
-    ));
-
-    // Horizontal pin scroll (GSAP ScrollTrigger)
-    wp_enqueue_script('horizontal-pin-scroll', get_stylesheet_directory_uri() . '/js/min/locomotive-scroll-init.min.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
-
-    // Footer background sway effect
-    wp_enqueue_script('footer-bg-sway', get_stylesheet_directory_uri() . '/js/footer-bg-sway.js', array('gsap'), '1.0.0', true);
-
-    // Autoplay HTML5 videos with .autoplay-video class
-    wp_enqueue_script('video-autoplay', get_stylesheet_directory_uri() . '/js/video-autoplay.js', array(), '1.0.0', true);
-
-    // Mobile menu (hamburger + fullscreen overlay)
-    wp_enqueue_script('mobile-menu', get_stylesheet_directory_uri() . '/js/mobile-menu.js', array(), '1.0.0', true);
-
-    // Interactive product blueprint hotspot diagram (GSAP + ScrollTrigger)
-    wp_enqueue_script('product-blueprint', get_stylesheet_directory_uri() . '/js/product-blueprint.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
-
-    // WooCommerce custom gallery lightbox — JS rebuilds gallery DOM + GSAP popup.
-    // Always load (self-bails if no gallery). Avoids is_product() misses on Divi.
-    wp_enqueue_script('wc-gallery-lightbox', get_stylesheet_directory_uri() . '/js/wc-gallery-lightbox.js', array('gsap'), '1.0.8', true);
-
-    // Breadcrumb separator → chevron-right (Divi WC breadcrumb hardcodes "/")
-    wp_enqueue_script('breadcrumb-chevron', get_stylesheet_directory_uri() . '/js/breadcrumb-chevron.js', array(), '1.0.0', true);
-
-    // WC quantity input — inject minus/plus buttons.
-    wp_enqueue_script('wc-qty-add-to-cart', get_stylesheet_directory_uri() . '/js/wc-qty-add-to-cart.js', array(), '1.0.0', true);
-
-    // ACF Product Information tabs.
-    wp_enqueue_script('product-info-tabs', get_stylesheet_directory_uri() . '/js/product-info-tabs.js', array(), '1.0.0', true);
-
-    // ACF Product Information layout (features + accordion).
-    wp_enqueue_script('product-info-layout', get_stylesheet_directory_uri() . '/js/product-info-layout.js', array(), '1.0.0', true);
-
-    // Three.js (local, same-origin) + liquid blob indicator for .carousel-menu-container.
-    wp_enqueue_script('three-js', get_stylesheet_directory_uri() . '/js/three.min.js', array(), '0.158.0', true);
-    wp_enqueue_script('carousel-menu-blob', get_stylesheet_directory_uri() . '/js/carousel-menu-blob.js', array('three-js'), '1.0.11', true);
-
-    // Slot-machine carousel slider.
-    wp_enqueue_script('component-carousel', get_stylesheet_directory_uri() . '/js/component-carousel.js', array('gsap'), '1.0.2', true);
-
-    // Product instructional video shortcode.
-    wp_enqueue_script('product-video', get_stylesheet_directory_uri() . '/js/product-video.js', array(), '1.0.2', true);
-
-    // Mobile-only carousel for .show-card-container.
-    wp_enqueue_script('show-card-carousel', get_stylesheet_directory_uri() . '/js/show-card-carousel.js', array(), '1.0.0', true);
-
-    // Disable #section4 horizontal pin on mobile.
-    wp_enqueue_script('section4-mobile', get_stylesheet_directory_uri() . '/js/section4-mobile.js', array('gsap', 'gsap-scrolltrigger', 'horizontal-pin-scroll'), '1.0.0', true);
-
-    // Mobile-only carousel for #section4 nested items.
-    wp_enqueue_script('section4-carousel', get_stylesheet_directory_uri() . '/js/section4-carousel.js', array('section4-mobile'), '1.0.0', true);
-
-    // Wrap consecutive .char elements in .word spans (prevents mid-word breaks).
-    wp_enqueue_script('heading-word-wrap', get_stylesheet_directory_uri() . '/js/heading-word-wrap.js', array('text-heading-effect'), '1.0.0', true);
-}
-add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
-
-// Blog search script
-function innotech_enqueue_blog_search() {
+    // ── Combined theme bundle (all theme classic scripts, one file) ────────────
+    $bundle_path = $theme_dir . '/js/min/theme.bundle.min.js';
     wp_enqueue_script(
-        'blog-search',
-        get_stylesheet_directory_uri() . '/js/blog-search.js',
-        array(),
-        '1.0.0',
+        'innotech-bundle',
+        $theme_uri . '/js/min/theme.bundle.min.js',
+        array('jquery', 'gsap', 'gsap-scrollto', 'gsap-scrolltrigger', 'splittype', 'three-js'),
+        file_exists($bundle_path) ? filemtime($bundle_path) : '1.0.0',
         true
     );
-    wp_localize_script( 'blog-search', 'innotechBlogSearch', array(
-        'postsUrl'      => rest_url( 'wp/v2/posts' ),
-        'categoriesUrl' => rest_url( 'wp/v2/categories' ),
+    // Inline data the bundled scripts read off window.* — printed before the bundle.
+    wp_localize_script('innotech-bundle', 'innotechTheme', array(
+        'themeUrl' => $theme_uri,
+    ));
+    wp_localize_script('innotech-bundle', 'blobAnimationData', array(
+        'themeUrl' => $theme_uri,
+    ));
+    wp_localize_script('innotech-bundle', 'innotechBlogSearch', array(
+        'postsUrl'      => rest_url('wp/v2/posts'),
+        'categoriesUrl' => rest_url('wp/v2/categories'),
         'perPage'       => 10,
-    ) );
+    ));
+
+    // ── ES module — must stay a separate <script type="module"> (see filter) ───
+    wp_enqueue_script('liquid-background', $theme_uri . '/js/min/liquid-background.min.js', array(), '1.0.0', true);
+    wp_localize_script('liquid-background', 'innotechTheme', array(
+        'themeUrl' => $theme_uri,
+    ));
 }
-add_action( 'wp_enqueue_scripts', 'innotech_enqueue_blog_search' );
+add_action('wp_enqueue_scripts', 'innotech_enqueue_animation_scripts');
 
 // Add module type to liquid-background script
 function innotech_add_module_type($tag, $handle, $src) {

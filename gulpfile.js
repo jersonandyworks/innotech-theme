@@ -14,6 +14,46 @@ const paths = {
   output: './'
 };
 
+// Ordered list of the theme's own classic scripts that get concatenated into a
+// single bundle. ORDER MATTERS — dependants come after their providers:
+//   - text-heading-effect before heading-word-wrap (wraps the .char elements it makes)
+//   - locomotive-scroll-init before section4-mobile before section4-carousel
+//   - carousel-menu-blob needs the global THREE (enqueued separately, before bundle)
+// Excluded on purpose (must stay separate, NOT concatenated):
+//   - gsap / gsap-scrollto / gsap-scrolltrigger / splittype  → external CDN
+//   - three.min.js                                           → vendor global lib
+//   - liquid-background.js                                   → loaded as <script type="module">
+//   - profile-carousel.js / google-map.js                    → shortcode-conditional enqueues
+const bundleOrder = [
+  './js/scroll-effects.js',
+  './js/side-nav.js',
+  './js/text-heading-effect.js',
+  './js/heading-word-wrap.js',
+  './js/button-particles.js',
+  './js/map-swirl.js',
+  './js/blurb.js',
+  './js/blob-animation.js',
+  './js/mask-zoom-effect.js',
+  './js/mask-reveal.js',
+  './js/locomotive-scroll-init.js',
+  './js/section4-mobile.js',
+  './js/section4-carousel.js',
+  './js/footer-bg-sway.js',
+  './js/video-autoplay.js',
+  './js/mobile-menu.js',
+  './js/product-blueprint.js',
+  './js/wc-gallery-lightbox.js',
+  './js/breadcrumb-chevron.js',
+  './js/wc-qty-add-to-cart.js',
+  './js/product-info-tabs.js',
+  './js/product-info-layout.js',
+  './js/carousel-menu-blob.js',
+  './js/component-carousel.js',
+  './js/product-video.js',
+  './js/show-card-carousel.js',
+  './js/blog-search.js'
+];
+
 // Compile SCSS, concatenate, and minify
 function styles() {
   return gulp.src('./scss/main.scss')
@@ -25,7 +65,8 @@ function styles() {
     .pipe(gulp.dest(paths.output));
 }
 
-// Minify JavaScript
+// Minify individual JS files (kept so single-purpose mins like
+// liquid-background.min.js still exist for their own enqueues).
 function scripts() {
   return gulp.src(['./js/**/*.js', '!./js/min/**/*.js'])
     .pipe(sourcemaps.init())
@@ -35,18 +76,32 @@ function scripts() {
     .pipe(gulp.dest(paths.jsOutput));
 }
 
+// Concatenate the theme's classic scripts into ONE minified bundle.
+// `newLine: ';\n'` inserts a semicolon between files so a file ending without
+// one can't merge into the next (ASI safety for back-to-back IIFEs).
+function bundle() {
+  return gulp.src(bundleOrder, { allowEmpty: true })
+    .pipe(sourcemaps.init())
+    .pipe(concat('theme.bundle.js', { newLine: ';\n' }))
+    .pipe(terser())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.jsOutput));
+}
+
 // Watch for changes
 function watch() {
   gulp.watch(paths.scss, styles);
-  gulp.watch(['./js/**/*.js', '!./js/min/**/*.js'], scripts);
+  gulp.watch(['./js/**/*.js', '!./js/min/**/*.js'], gulp.parallel(scripts, bundle));
 }
 
 // Build task
-const build = gulp.series(gulp.parallel(styles, scripts));
+const build = gulp.series(gulp.parallel(styles, scripts, bundle));
 
 // Default task
-exports.default = gulp.series(gulp.parallel(styles, scripts), watch);
+exports.default = gulp.series(gulp.parallel(styles, scripts, bundle), watch);
 exports.build = build;
 exports.watch = watch;
 exports.styles = styles;
 exports.scripts = scripts;
+exports.bundle = bundle;
