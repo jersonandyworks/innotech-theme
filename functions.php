@@ -83,6 +83,65 @@ function innotech_add_module_type($tag, $handle, $src) {
 }
 add_filter('script_loader_tag', 'innotech_add_module_type', 10, 3);
 
+/* ─── Full-page preloader (Option B) ────────────────────────────────────────
+ * Overlay covers the page until window 'load' fires, then waits ~200ms so the
+ * GSAP/ScrollTrigger load-handlers run, refreshes ScrollTrigger, and fades out.
+ * A 7s hard fallback guarantees it never traps the user (e.g. if a WebGL/3D
+ * asset stalls). Skipped in admin, customizer, Divi Visual Builder and no-JS.
+ */
+function innotech_show_preloader() {
+    if ( is_admin() || is_customize_preview() ) return false;
+    if ( isset( $_GET['et_fb'] ) || isset( $_GET['et_bfb'] ) ) return false; // Divi builder
+    if ( function_exists( 'et_core_is_fb_enabled' ) && et_core_is_fb_enabled() ) return false;
+    return true;
+}
+
+function innotech_preloader_head() {
+    if ( ! innotech_show_preloader() ) return;
+    ?>
+<style id="innotech-preloader-css">
+html.is-preloading, html.is-preloading body { overflow: hidden !important; }
+#innotech-preloader{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;background:#070c3b;opacity:1;transition:opacity .5s ease;}
+html.is-loaded #innotech-preloader{opacity:0;pointer-events:none;}
+#innotech-preloader .ip-spinner{width:48px;height:48px;border-radius:50%;border:3px solid rgba(255,255,255,.18);border-top-color:#0084cd;animation:ip-spin .8s linear infinite;}
+@keyframes ip-spin{to{transform:rotate(360deg);}}
+@media (prefers-reduced-motion: reduce){#innotech-preloader .ip-spinner{animation:none;}}
+</style>
+<noscript><style>#innotech-preloader{display:none!important;}html.is-preloading,html.is-preloading body{overflow:auto!important;}</style></noscript>
+<script id="innotech-preloader-js">
+(function(){
+  var html=document.documentElement;
+  html.classList.add('is-preloading');
+  var done=false;
+  function reveal(){
+    if(done)return;done=true;
+    try{ if(window.ScrollTrigger&&ScrollTrigger.refresh){ScrollTrigger.refresh();} }catch(e){}
+    requestAnimationFrame(function(){
+      html.classList.remove('is-preloading');
+      html.classList.add('is-loaded');
+      setTimeout(function(){
+        var el=document.getElementById('innotech-preloader');
+        if(el&&el.parentNode){el.parentNode.removeChild(el);}
+      },600);
+    });
+  }
+  // Option B: wait for full load, let GSAP/ScrollTrigger load-handlers run, then settle.
+  if(document.readyState==='complete'){ setTimeout(reveal,200); }
+  else { window.addEventListener('load',function(){ setTimeout(reveal,200); }); }
+  // Hard fallback — a stalled asset/WebGL must never trap the user behind the loader.
+  setTimeout(reveal,7000);
+})();
+</script>
+    <?php
+}
+add_action( 'wp_head', 'innotech_preloader_head', 0 );
+
+function innotech_preloader_markup() {
+    if ( ! innotech_show_preloader() ) return;
+    echo '<div id="innotech-preloader" role="status" aria-live="polite" aria-label="Loading"><div class="ip-spinner"></div></div>';
+}
+add_action( 'wp_body_open', 'innotech_preloader_markup', 0 );
+
 // Mouse Animation Divi Module
 require_once get_stylesheet_directory() . '/mouse-function.php';
 
