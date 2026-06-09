@@ -409,6 +409,13 @@ body {
 	}
 }
 
+// Hide dot-nav labels on mobile/tablet.
+@media only screen and (max-width: $tablet) {
+	.innotech-dot-label-module {
+		display: none !important;
+	}
+}
+
 // Liquid Background Effect
 #section1 {
 	position: relative;

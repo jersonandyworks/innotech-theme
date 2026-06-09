@@ -30,6 +30,16 @@
 		max-height: 80vh;
 	}
 
+	// Shown when 3d_object_file is empty — centered brand logo.
+	&__fallback {
+		width: 100%;
+		max-width: 280px;
+		height: auto;
+		object-fit: contain;
+		margin: auto;
+		opacity: 0.85;
+	}
+
 	&__3d {
 		position: relative;
 		width: 100%;

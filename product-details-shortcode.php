@@ -38,7 +38,11 @@ function innotech_product_details_shortcode($atts) {
 
     // 3D file (file field, return format = url).
     $glb_url = get_field('3d_object_file', $post_id);
-    if (is_array($glb_url)) $glb_url = isset($glb_url['url']) ? $glb_url['url'] : '';
+    if (is_array($glb_url)) {
+        $glb_url = isset($glb_url['url']) ? $glb_url['url'] : '';
+    } elseif (is_numeric($glb_url)) {
+        $glb_url = wp_get_attachment_url(intval($glb_url));
+    }
 
     $uid = 'pd-' . wp_unique_id();
 
@@ -60,6 +64,11 @@ function innotech_product_details_shortcode($atts) {
                 <div class="product-details__3d"
                      data-glb="<?php echo esc_url($glb_url); ?>"
                      aria-label="3D model viewer"></div>
+            <?php else : ?>
+                <img class="product-details__fallback"
+                     src="<?php echo esc_url(get_stylesheet_directory_uri() . '/_assets/innotecht-logo-xl.png'); ?>"
+                     alt=""
+                     loading="lazy" />
             <?php endif; ?>
         </div>
 

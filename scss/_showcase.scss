@@ -53,4 +53,57 @@
 			line-height: 1.1;
 		}
 	}
+
+	// Mobile — drop the left padding.
+	@media (max-width: 980px) {
+		padding-left: 0 !important;
+	}
+}
+
+// Showcase intro/benefits rows on mobile. Divi inline-styles a per-row
+// padding-left and gives the two columns mismatched widths (40% / 60%), which
+// on mobile leaves their card borders misaligned/overlapping. Stack both
+// columns full-width. `.et_pb_row.showcase-second-section` (2 classes) out-ranks
+// Divi's inline `.et_pb_row_N_tb_body` so the padding reset actually applies.
+@media (max-width: 980px) {
+	// Divi inlines `.et_pb_row_N_tb_body.et_pb_row { padding-left:40px !important }`
+	// (specificity 0,2,0 + !important, loaded after this file). Prefix with
+	// body.single-showcase (0,3,0) so this reset actually wins.
+	body.single-showcase .et_pb_row.showcase-second-section {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+
+		> .et_pb_column {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin: 0 0 1.25rem !important;
+		}
+	}
+
+	// Intro row — drop the left padding on mobile (id beats Divi's inline rule).
+	#introduction-row {
+		padding-left: 0 !important;
+	}
+}
+
+// Showcase body copy — keep paragraphs presentable (not oversized) on
+// mobile/tablet. Theme-builder sets these to 20–22px; clamp them down. Headings
+// (h1–h4, .item-title) are intentionally left alone.
+@media (max-width: 980px) {
+	body.single-showcase {
+		.et_pb_text_inner p,
+		.et_pb_blurb_description p,
+		.item-content p,
+		.et_pb_text_inner ul li,
+		.et_pb_text_inner ol li {
+			font-size: clamp(0.95rem, 2.8vw, 1.125rem) !important;
+			line-height: 1.55 !important;
+		}
+
+		// The swirl "Integrity Forest Chart" pill reads as a title — keep it larger.
+		#section6 .et_pb_text_align_left p {
+			font-size: clamp(1.1rem, 5vw, 1.5rem) !important;
+			line-height: 1.2 !important;
+		}
+	}
 }

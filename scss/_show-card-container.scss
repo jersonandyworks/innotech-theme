@@ -1,34 +1,81 @@
-// Equal-height columns inside .show-card-container (Divi row).
-// Forces 4-col layout (Divi adds margins; we use grid for clean gaps).
-.show-card-container {
+// .show-card-container — responsive product-card row (Divi row_12 reused class).
+//
+// Divi injects an inline `.et_pb_row_12_tb_body { display:grid;
+// grid-template-columns:repeat(4,1fr); padding-left:150px }` that out-ranks a
+// single-class selector, so everything here is scoped to `.et_pb_row...` (two
+// classes) + !important to win, and the 150px indent is zeroed (it pushed the
+// last card off-screen).
+//
+// Layout: 4 cards (desktop) → 2 (≤980) → 1-card carousel (≤600, built by
+// js/show-card-carousel.js).
+
+// Desktop/tablet: keep Divi's default centred row max-width (matches the other
+// rows) — do NOT force width/max-width to 100% here or the row goes full-bleed
+// and breaks the layout. Full width is only applied at the mobile carousel.
+.et_pb_row.show-card-container {
 	display: grid !important;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 1.5rem;
+	grid-template-columns: repeat(4, 1fr) !important;
+	gap: 1.5rem !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 	align-items: stretch !important;
 
 	> .et_pb_column {
+		// Reset Divi floats/widths AND any styling leaking from other templates
+		// that reuse these column class names.
+		display: block !important;
 		width: 100% !important;
 		max-width: 100% !important;
+		min-width: 0 !important;
+		min-height: 0 !important;
 		margin: 0 !important;
-		height: auto;
+		padding: 0 !important;
+		float: none !important;
+		transform: none !important;
 	}
 
-	> .et_pb_column > .et_pb_module {
-		height: 100%;
+	.mining-blurb-img {
+		// !important: this section reuses the #section7 id on some templates, and
+		// #section7 .mining-blurb-img sets a fixed height that would otherwise win.
+		height: clamp(300px, 30vw, 460px) !important;
+		margin: 0 !important;
+
+		// Anchor the label to the bottom regardless of card height (the shared
+		// .mining-blurb-img rule uses margin-top:313px, which breaks when the
+		// card height varies responsively).
+		.et_pb_blurb_content {
+			height: 100%;
+		}
+
+		h4 {
+			margin-top: 0 !important;
+			position: absolute;
+			left: 22px;
+			right: 22px;
+			bottom: 20px;
+			font-size: clamp(1.1rem, 1.8vw, 1.6rem) !important;
+		}
 	}
 }
 
+// Tablet → 2 columns.
 @media (max-width: 980px) {
-	.show-card-container {
-		grid-template-columns: repeat(2, 1fr);
+	.et_pb_row.show-card-container {
+		grid-template-columns: repeat(2, 1fr) !important;
+
+		.mining-blurb-img {
+			height: clamp(260px, 42vw, 380px) !important;
+		}
 	}
 }
 
+// Mobile → JS converts the grid into a 1-card carousel.
 @media (max-width: 600px) {
-	// Mobile: JS converts grid into a 1-card carousel.
-	.show-card-container {
+	.et_pb_row.show-card-container {
 		display: block !important;
 		position: relative;
+		width: 100% !important; // full width only on mobile (carousel)
+		max-width: 100% !important;
 		padding: 0 !important;
 
 		.show-card-viewport {
@@ -46,8 +93,12 @@
 		.show-card-track > .et_pb_column {
 			flex: 0 0 100%;
 			max-width: 100%;
-			width: 100%;
+			width: 100% !important;
 			margin: 0 !important;
+		}
+
+		.mining-blurb-img {
+			height: clamp(300px, 86vw, 420px) !important;
 		}
 
 		.show-card-nav {
@@ -99,7 +150,7 @@
 	}
 }
 
-// Hide carousel chrome on desktop (defensive — JS removes it but cover edge cases).
+// Hide carousel chrome above the carousel breakpoint (JS also removes it).
 @media (min-width: 601px) {
 	.show-card-container .show-card-nav,
 	.show-card-container .show-card-viewport {

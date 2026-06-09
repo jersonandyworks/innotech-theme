@@ -1,19 +1,36 @@
-// Swirl chart section (#map-swirl + "Integrity Forest Chart" texts) — mobile.
+// Swirl chart section (#section6: #map-swirl + "Integrity Forest Chart" texts) — mobile.
 //
 // Desktop: map-swirl.js absolutely positions #chartContainer (top 26.8%,
 // left 35%, width 30%) and guide lines over the rotating mask-swirl, with
-// the two text modules flowing below. On small screens that inline geometry
-// leaves the chart tiny and off-centre.
+// the two text modules pinned as overlay pills. On small screens that inline
+// geometry leaves the chart tiny/off-centre and the text off-screen.
 //
 // Mobile fix: turn the column into a stacking context — mask-swirl sits
 // behind as a centred backdrop, the chart is enlarged/centred (aspect
-// preserved, no stretch), and the text modules stack as full-width blocks
-// layered on top.
+// preserved), and the text modules stack as full-width blocks layered on top.
 //
-// !important needed throughout: map-swirl.js writes geometry as inline styles.
+// Scoped to #section6 (stable across templates) rather than the row/column
+// class numbers, which differ per template (home: row_12/col_14/text_3+4;
+// showcase: row_8/col_10/text_4+5). The title is always the left-aligned text
+// module, the paragraph the centre-aligned one.
+//
+// !important needed throughout: map-swirl.js + theme-builder write geometry as
+// inline / high-specificity styles.
 
 @media (max-width: 980px) {
-	.et_pb_row_12_tb_body .et_pb_column_14_tb_body {
+	// Showcase template sets a large section padding-top (300px) for the swirl
+	// layout; trim it to standard mobile spacing so it doesn't open with a big
+	// gap. Scoped to the showcase template to leave the home swirl untouched.
+	body.single-showcase #section6 {
+		padding-top: 60px !important;
+		padding-bottom: 40px !important;
+	}
+	body.single-showcase #section6 .et_pb_row {
+		padding-top: 0 !important;
+		margin-top: 0 !important;
+	}
+
+	#section6 .et_pb_column {
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -74,12 +91,10 @@
 			max-width: 92%;
 		}
 
-		// Text modules: Divi theme-builder pins these as absolute overlay
-		// pills (inset:15%/32% + translateX(-50%)) for desktop. On mobile
-		// that geometry throws them off-screen, so reset to stacked blocks.
-		// !important: the unified theme-builder rule out-specifies this scope.
-		.et_pb_text_3_tb_body,
-		.et_pb_text_4_tb_body {
+		// Text modules: theme-builder pins these as absolute overlay pills
+		// (inset:15%/32% + translateX(-50%)) for desktop. On mobile that geometry
+		// throws them off-screen, so reset to stacked blocks.
+		.et_pb_text {
 			position: relative !important;
 			inset: auto !important;
 			transform: none !important;
@@ -89,15 +104,15 @@
 			margin: 0 auto;
 		}
 
-		// Title: keep the black pill hugging its text, centred.
-		.et_pb_text_3_tb_body {
+		// Title (left-aligned): keep the black pill hugging its text, centred.
+		.et_pb_text.et_pb_text_align_left {
 			order: 1;
 			width: auto;
 			align-self: center;
 		}
 
-		// Paragraph: full-width centred text block at the bottom.
-		.et_pb_text_4_tb_body {
+		// Paragraph (centre-aligned): full-width centred block at the bottom.
+		.et_pb_text.et_pb_text_align_center {
 			order: 2;
 			width: 100%;
 			max-width: 520px;
