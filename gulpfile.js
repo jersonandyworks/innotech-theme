@@ -23,6 +23,7 @@ const paths = {
 //   - gsap / gsap-scrollto / gsap-scrolltrigger / splittype  → external CDN
 //   - three.min.js                                           → vendor global lib
 //   - liquid-background.js                                   → loaded as <script type="module">
+//   - product-details-viewer.js                              → ESM, uses import() + importmap
 //   - profile-carousel.js / google-map.js                    → shortcode-conditional enqueues
 const bundleOrder = [
   './js/scroll-effects.js',
@@ -50,6 +51,7 @@ const bundleOrder = [
   './js/carousel-menu-blob.js',
   './js/component-carousel.js',
   './js/product-video.js',
+  './js/innotech-video-wrapper.js',
   './js/show-card-carousel.js',
   './js/blog-search.js'
 ];

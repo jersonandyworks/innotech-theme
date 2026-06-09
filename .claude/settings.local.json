@@ -11,7 +11,22 @@
       "Bash(npm run *)",
       "Bash(npx gulp *)",
       "Bash(php -l functions.php)",
-      "Bash(/opt/lampp/bin/php -l functions.php)"
+      "Bash(/opt/lampp/bin/php -l functions.php)",
+      "Bash(/opt/lampp/bin/php -r ' *)",
+      "Bash(/opt/lampp/bin/php -l product-showcase-slider.php)",
+      "Bash(node -c js/product-showcase-slider.js)",
+      "Bash(/opt/lampp/bin/mysql -uroot innotechdevlocal -e \"SELECT DISTINCT post_type FROM wp_posts WHERE post_type LIKE '%show%' OR post_type LIKE '%case%' OR post_type LIKE '%product%';\")",
+      "Bash(/opt/lampp/bin/mysql -uroot innotechdevlocal -e \"SELECT DISTINCT meta_key FROM wp_postmeta WHERE meta_key LIKE '%slider%' OR meta_key LIKE '%photo_slider%' OR meta_key LIKE '%hero_slider%' LIMIT 30;\")",
+      "Bash(/opt/lampp/bin/mysql -uroot innotechdevlocal -e \"SELECT meta_key, CONCAT\\('[',meta_value,']'\\) val FROM wp_postmeta WHERE post_id=1527 AND meta_key IN \\('hero_slider_1_group_photo_slider_1_heading','hero_slider_1_group_photo_slider_1_excerpt'\\);\")",
+      "Bash(awk '{print $3,$1,$NF}')",
+      "Bash(cd /opt/lampp/htdocs/innotechdev/wp-content/themes/innotech-divi-child; rm -f js/min/*.js js/min/*.map && echo \"cleared js/min\" && npm run build 2>&1 | tail -8)",
+      "Bash(awk '{print $3, $5, $NF}')",
+      "Bash(/opt/lampp/bin/mysql -uroot innotechdevlocal -e \"SELECT ID, post_name FROM wp_posts WHERE post_type='showcase' AND post_status='publish' LIMIT 5;\")",
+      "Bash(node -c js/showcase-blob.js)",
+      "Bash(node -e ' *)"
+    ],
+    "additionalDirectories": [
+      "/opt/lampp/htdocs/innotechdev/wp-content/themes/innotech-divi-child/js/min"
     ]
   }
 }

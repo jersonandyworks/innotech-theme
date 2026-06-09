@@ -44,6 +44,16 @@ function innotech_enqueue_animation_scripts() {
     // ── Vendor global — Three.js (carousel-menu-blob reads window.THREE) ───────
     wp_enqueue_script('three-js', $theme_uri . '/js/three.min.js', array(), '0.158.0', true);
 
+    // ── Showcase carousel — registered only; the shortcode enqueues on demand ──
+    $pss_js = $theme_dir . '/js/product-showcase-slider.js';
+    wp_register_script(
+        'product-showcase-slider',
+        $theme_uri . '/js/product-showcase-slider.js',
+        array(),
+        file_exists($pss_js) ? filemtime($pss_js) : '1.0.0',
+        true
+    );
+
     // ── Combined theme bundle (all theme classic scripts, one file) ────────────
     $bundle_path = $theme_dir . '/js/min/theme.bundle.min.js';
     wp_enqueue_script(
@@ -147,6 +157,25 @@ require_once get_stylesheet_directory() . '/mouse-function.php';
 
 // Nested Grid Module - Allows columns inside columns
 require_once get_stylesheet_directory() . '/nested-grid-module.php';
+
+// [product_showcase_slider] — ACF hero carousel for showcase posts
+require_once get_stylesheet_directory() . '/product-showcase-slider.php';
+
+// Mouse-follow blob for showcase posts (vertical only). Needs GSAP.
+function innotech_enqueue_showcase_blob() {
+    if ( ! is_singular( 'showcase' ) ) {
+        return;
+    }
+    $path = get_stylesheet_directory() . '/js/showcase-blob.js';
+    wp_enqueue_script(
+        'showcase-blob',
+        get_stylesheet_directory_uri() . '/js/showcase-blob.js',
+        array( 'gsap' ),
+        file_exists( $path ) ? filemtime( $path ) : '1.0.0',
+        true
+    );
+}
+add_action( 'wp_enqueue_scripts', 'innotech_enqueue_showcase_blob' );
 
 function innotech_mobile_menu_output() {
   if ( ! wp_is_mobile() ) return;
@@ -478,3 +507,42 @@ add_filter('option_woocommerce_cart_redirect_after_add', function () {
 
 // Divi WC Add-to-Cart module uses its own button — same form, so the WC
 // redirect filter applies. No extra hook required.
+
+// [product_details post_id="N"] shortcode + 3D viewer.
+require_once get_stylesheet_directory() . '/product-details-shortcode.php';
+
+// Emit a Three.js importmap so the viewer's ESM imports resolve. Must run
+// before the module script tag — wp_head priority 1.
+add_action('wp_head', function () {
+    ?>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+      }
+    }
+    </script>
+    <?php
+}, 1);
+
+add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_script(
+        'product-details-viewer',
+        get_stylesheet_directory_uri() . '/js/product-details-viewer.js',
+        array(),
+        '1.0.0',
+        true
+    );
+
+    // .innotech-product-video-wrapper script ships inside theme.bundle.min.js
+    // (added to gulpfile bundleOrder). No separate enqueue needed.
+}, 30);
+
+// Force product-details-viewer to load as ES module so import() resolves.
+add_filter('script_loader_tag', function ($tag, $handle) {
+    if ($handle === 'product-details-viewer') {
+        return str_replace('<script ', '<script type="module" ', $tag);
+    }
+    return $tag;
+}, 10, 2);

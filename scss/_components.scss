@@ -1041,3 +1041,61 @@ footer {
 		}
 	}
 }
+
+// .darker-filter-background — dim row/section background to ~brightness(0.8)
+// without affecting child text/buttons. ::before paints a black 20% layer over
+// the row's background. Children lifted above it via stacking context.
+// Works on Divi rows where the host is .et_pb_row.
+.darker-filter-background,
+.et_pb_row.darker-filter-background,
+.et_pb_section.darker-filter-background {
+	position: relative !important;
+	isolation: isolate;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.5);
+		pointer-events: none;
+		z-index: 0;
+		border-radius: inherit;
+	}
+
+	// Lift every direct child (Divi columns/modules) above the dim layer.
+	> .et_pb_column,
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+// .box-overlay-pattern — adds the swirl-pattern PNG as a layer ABOVE the
+// element's own background image but BELOW its children.
+.box-overlay-pattern {
+	position: relative !important;
+	isolation: isolate;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-image: url("_assets/swirl-pattern-compressed.png");
+		background-repeat: repeat;
+		background-size: auto;
+		background-position: center;
+		opacity: 0.85;
+		mix-blend-mode: overlay;
+		pointer-events: none;
+		z-index: 0;
+		border-radius: inherit;
+	}
+
+	// Lift direct children above the pattern.
+	> .et_pb_module,
+	> .et_pb_column,
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}
