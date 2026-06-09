@@ -1070,6 +1070,58 @@ footer {
 	}
 }
 
+// .box-overlay-gray — element is grayscaled + dimmed (brightness 0.5).
+// When .is-blob-active is added by external blob/JS, filter is removed and
+// the element returns to its original colors. Filter applied to ::before so
+// children stay sharp.
+.box-overlay-gray {
+	position: relative !important;
+	isolation: isolate;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-image: inherit;
+		background-size: inherit;
+		background-position: inherit;
+		background-repeat: inherit;
+		background-color: inherit;
+		filter: grayscale(1) brightness(0.5);
+		opacity: 1;
+		pointer-events: none;
+		z-index: 0;
+		border-radius: inherit;
+		transition:
+			opacity 0.4s ease,
+			filter 0.4s ease;
+	}
+
+	// Color returns whenever .is-blob-active is on self, a sibling, or any
+	// descendant of the same parent (Divi row/section).
+	&.is-blob-active::before,
+	&:has(~ .is-blob-active)::before,
+	&:has(.is-blob-active)::before {
+		opacity: 0;
+	}
+}
+
+// Catch the common Divi pattern: .is-blob-active is on a sibling COLUMN of
+// the same row. Triggers grayscale removal on .box-overlay-gray inside.
+.et_pb_row:has(.is-blob-active),
+.et_pb_section:has(.is-blob-active) {
+	.box-overlay-gray::before {
+		opacity: 0;
+	}
+
+	> .et_pb_module,
+	> .et_pb_column,
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}
+
 // .box-overlay-pattern — adds the swirl-pattern PNG as a layer ABOVE the
 // element's own background image but BELOW its children.
 .box-overlay-pattern {
