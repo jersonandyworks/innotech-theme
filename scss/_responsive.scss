@@ -48,3 +48,39 @@ footer {
 		}
 	}
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Single Blog Post — Divi Theme Builder body
+// The post layout uses 1/4–1/2–1/4 (meta · content · meta) and 1/2–1/2 rows.
+// Divi's own ≤980 column-stack rule is NOT reaching these `_tb_body` columns,
+// so on mobile the content stays pinned to a ~183px middle column and the
+// meta/title columns overlap. Force the columns to stack full-width.
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $tablet) {
+	.et_pb_column[class*="_tb_body"] {
+		width: 100% !important;
+		max-width: 100% !important;
+		float: none !important;
+		margin: 0 0 24px !important;
+
+		&:last-child {
+			margin-bottom: 0 !important;
+		}
+	}
+
+	// Hero row: left-align the stacked category / title / date instead of the
+	// desktop centred title, and tighten the title so it doesn't tower.
+	.row-post-container .heading-post-title h1.et_pb_module_heading {
+		font-size: clamp(32px, 7vw + 8px, 44px) !important;
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Desktop (≥981px): widen Divi 2/3 columns in gutter-3 rows
+// ─────────────────────────────────────────────────────────────────────────────
+@media (min-width: #{$tablet + 1}) {
+	.et_pb_gutters3 .et_pb_column_2_3,
+	.et_pb_gutters3.et_pb_row .et_pb_column_2_3 {
+		width: 90.8%;
+	}
+}
