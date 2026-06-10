@@ -31,6 +31,7 @@ const bundleOrder = [
   './js/text-heading-effect.js',
   './js/heading-word-wrap.js',
   './js/button-particles.js',
+  './js/cta-button-upgrade.js',
   './js/map-swirl.js',
   './js/blurb.js',
   './js/blob-animation.js',

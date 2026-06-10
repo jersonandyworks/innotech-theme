@@ -58,11 +58,12 @@ function profile_carousel_shortcode( $atts ) {
 	$pad_total = str_pad( $total, 2, '0', STR_PAD_LEFT );
 
 	// Enqueue JS only when shortcode is rendered
+	$pc_js_path = get_stylesheet_directory() . '/js/profile-carousel.js';
 	wp_enqueue_script(
 		'profile-carousel',
 		get_stylesheet_directory_uri() . '/js/profile-carousel.js',
 		array( 'jquery' ),
-		'1.0.0',
+		file_exists( $pc_js_path ) ? filemtime( $pc_js_path ) : '1.0.0', // mtime cache-bust
 		true
 	);
 

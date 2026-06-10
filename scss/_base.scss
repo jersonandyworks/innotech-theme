@@ -48,6 +48,14 @@ body {
 	transform: translateY(-320px);
 }
 
+.blog-post-single  {
+	.et_pb_text_inner {
+		h2{
+			font-size: clamp(32px, 4vw + 16px, 28px) !important;
+		}
+	}
+	
+}
 .et_pb_text_inner {
 	@for $i from 1 through 5 {
 		h#{$i} {
@@ -57,6 +65,14 @@ body {
 	}
 	h4 {
 		font-weight: 400;
+	}
+}
+
+.blog-post-title {
+	.et_pb_text_inner {
+		h2 {
+			font-size: clamp(32px, 4vw + 16px, 28px) !important;
+		}
 	}
 
 	// p {
@@ -259,6 +275,15 @@ body {
 	}
 }
 
+// Header sticky bar — fluid horizontal padding so the logo/menu/button never
+// sit flush against the viewport edge. clamp() scales continuously on resize:
+// 16px floor on small screens → 4vw mid-range → 60px cap on large screens.
+#header-sticky-menu {
+	padding-left: clamp(16px, 4vw, 60px) !important;
+	padding-right: clamp(16px, 4vw, 60px) !important;
+	box-sizing: border-box;
+}
+
 // Button pulsating glow effect
 @keyframes pulseGlow {
 	0%,
@@ -413,6 +438,37 @@ body {
 @media only screen and (max-width: $tablet) {
 	.innotech-dot-label-module {
 		display: none !important;
+	}
+}
+
+// Some pages (e.g. About Us) absolutely-position the dot-label row as a
+// left-margin tag. That only clears the heading on very wide screens; on laptop
+// widths the heading goes full-width and the label overlaps it. Below 1800px,
+// return the row to normal flow so the label stacks above the heading instead
+// of overlapping. (Rows that are already in-flow — product/home — are
+// unaffected: relative→static with no offsets is a no-op.)
+// NB: child combinators (>) only — cleanCSS strips the descendant space inside
+// :has(), which would silently break a `.et_pb_column .innotech-dot-label-module`
+// argument into an (always-false) compound selector.
+@media only screen and (min-width: 981px) and (max-width: 1799px) {
+	.et_pb_row:has(> .et_pb_column > .innotech-dot-label-module) {
+		position: static !important;
+		inset: auto !important;
+		// Match the heading row's width/centering (it's full-width capped at
+		// 1280px) so the dot lines up with the heading's left edge instead of
+		// the label row's narrower 80% width.
+		width: 100% !important;
+		max-width: 1280px !important;
+		margin: 0 auto 0.5rem !important;
+	}
+}
+
+// Below the row max-width the full-width rows touch the viewport edge with no
+// gutter. Give the dot-label sections side padding so content keeps spacing.
+@media only screen and (min-width: 981px) and (max-width: 1320px) {
+	.et_pb_section:has(.innotech-dot-label-module) {
+		padding-left: clamp(24px, 5vw, 60px) !important;
+		padding-right: clamp(24px, 5vw, 60px) !important;
 	}
 }
 

@@ -109,6 +109,16 @@
 		var camera = new THREE.PerspectiveCamera(45, W / H, 0.05, 200);
 		camera.position.set(0, 0, 5);
 
+		// Zoom state (wheel + pinch). camDist is the live camera distance; the
+		// min/max are derived from the auto-fit distance once the model loads.
+		var camDist = 5;
+		var zoomMin = 1;
+		var zoomMax = 50;
+		function applyZoom() {
+			camDist = Math.min(zoomMax, Math.max(zoomMin, camDist));
+			camera.position.z = camDist;
+		}
+
 		var renderer = new THREE.WebGLRenderer({
 			antialias: true,
 			alpha: true,
@@ -162,11 +172,28 @@
 				var center = box.getCenter(new THREE.Vector3());
 				model.position.sub(center);
 
-				var maxDim = Math.max(size.x, size.y, size.z) || 1;
+				// Frame the model to BOTH viewport height and width so it fills
+				// the viewer at any aspect (the old height-only fit left big side
+				// margins — a small-looking model — on wide viewers). The model
+				// spins around Y, so its horizontal silhouette swings out to the
+				// XZ diagonal; fit to that so it never clips mid-rotation.
+				// FIT_MARGIN is the zoom knob: 1.0 = edge-to-edge, lower = closer
+				// (bigger), higher = more breathing room (smaller).
+				var FIT_MARGIN = 1.1;
+				var sweptWidth = Math.hypot(size.x, size.z) || 1; // widest silhouette while rotating
 				var fov = (camera.fov * Math.PI) / 180;
-				var dist = maxDim / 2 / Math.tan(fov / 2);
-				camera.position.set(0, 0, dist * 1.6);
+				var distForHeight = size.y / 2 / Math.tan(fov / 2);
+				var distForWidth =
+					sweptWidth / 2 / (Math.tan(fov / 2) * camera.aspect);
+				var dist = Math.max(distForHeight, distForWidth) * FIT_MARGIN;
+				camera.position.set(0, 0, dist);
 				camera.lookAt(0, 0, 0);
+
+				// Seed zoom bounds from the fitted distance: closer for zoom-in,
+				// a bit further than the fit for zoom-out.
+				camDist = dist;
+				zoomMin = dist * 0.35; // how far the user can zoom IN
+				zoomMax = dist * 1.6; // how far the user can zoom OUT
 
 				pivot.add(model);
 				modelLoaded = true;
@@ -204,12 +231,54 @@
 			isDown = false;
 		}
 
+		// ---- Zoom: mouse wheel ----
+		function onWheel(e) {
+			e.preventDefault(); // don't scroll the page while zooming the model
+			// Multiplicative step → smooth, frame-rate independent.
+			camDist *= Math.exp(e.deltaY * 0.0012);
+			applyZoom();
+		}
+
+		// ---- Zoom: two-finger pinch ----
+		var pinchStartDist = 0;
+		var pinchStartCam = 0;
+		function touchSpread(e) {
+			var dx = e.touches[0].clientX - e.touches[1].clientX;
+			var dy = e.touches[0].clientY - e.touches[1].clientY;
+			return Math.hypot(dx, dy);
+		}
+		function onTouchStart(e) {
+			if (e.touches.length === 2) {
+				pinchStartDist = touchSpread(e);
+				pinchStartCam = camDist;
+				isDown = false; // suspend rotation during pinch
+			} else {
+				onDown(e);
+			}
+		}
+		function onTouchMove(e) {
+			if (e.touches.length === 2) {
+				e.preventDefault(); // block the browser's page pinch-zoom
+				if (pinchStartDist > 0) {
+					camDist = pinchStartCam * (pinchStartDist / touchSpread(e));
+					applyZoom();
+				}
+			} else {
+				onMove(e);
+			}
+		}
+		function onTouchEnd(e) {
+			if (e.touches.length < 2) pinchStartDist = 0;
+			onUp(e);
+		}
+
 		host.addEventListener("mousedown", onDown);
 		window.addEventListener("mousemove", onMove);
 		window.addEventListener("mouseup", onUp);
-		host.addEventListener("touchstart", onDown, { passive: true });
-		host.addEventListener("touchmove", onMove, { passive: true });
-		host.addEventListener("touchend", onUp);
+		host.addEventListener("wheel", onWheel, { passive: false });
+		host.addEventListener("touchstart", onTouchStart, { passive: false });
+		host.addEventListener("touchmove", onTouchMove, { passive: false });
+		host.addEventListener("touchend", onTouchEnd);
 
 		// Resize.
 		new ResizeObserver(function () {

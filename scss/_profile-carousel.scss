@@ -25,7 +25,7 @@ $pc-p2-h: 66%;
 	position: relative;
 	display: grid;
 	grid-template-columns: 42% 58%;
-	grid-template-rows: auto 1fr;
+	grid-template-rows: auto auto;
 	background: $pc-bg;
 	min-height: 520px;
 	overflow: hidden;
@@ -176,6 +176,13 @@ $pc-p2-h: 66%;
 		grid-row: 2;
 		position: relative;
 		overflow: hidden;
+
+		// Portrait photos (768×1024, AR 0.75) need a tall stage. Height is
+		// derived from width (height = 0.6 × width) so the active box —
+		// 45% wide, full height — resolves to AR 0.75 and shows the full
+		// body uncropped. Fluid: recomputes on every resize.
+		aspect-ratio: 5 / 3;
+		height: auto;
 
 		.--photo {
 			position: absolute;

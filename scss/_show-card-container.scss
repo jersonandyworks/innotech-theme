@@ -39,12 +39,15 @@
 		// #section7 .mining-blurb-img sets a fixed height that would otherwise win.
 		height: clamp(300px, 30vw, 460px) !important;
 		margin: 0 !important;
+		padding: 0 !important; // card padding shrank the image area — let it fill edge-to-edge
 
 		// Anchor the label to the bottom regardless of card height (the shared
 		// .mining-blurb-img rule uses margin-top:313px, which breaks when the
 		// card height varies responsively).
 		.et_pb_blurb_content {
 			height: 100%;
+			width: 100% !important; // full card width so the image fills it
+			max-width: none !important;
 		}
 
 		h4 {
@@ -54,6 +57,39 @@
 			right: 22px;
 			bottom: 20px;
 			font-size: clamp(1.1rem, 1.8vw, 1.6rem) !important;
+		}
+
+		// Hover image: the base .mining-blurb-img zooms the full-size image
+		// scale(4)→5.5, so you only see a blown-up crop. Instead make the whole
+		// wrapper fill the card and let the image cover it (whole framed photo,
+		// crisp) with only a subtle zoom.
+		.et_pb_main_blurb_image {
+			position: absolute !important;
+			inset: 0 !important;
+			width: 100% !important;
+			height: 100% !important;
+			margin: 0 !important;
+			z-index: -1; // sits behind the label/icon, like the original
+		}
+
+		.et_pb_main_blurb_image .et_pb_image_wrap {
+			display: block !important;
+			width: 100% !important;
+			height: 100% !important;
+		}
+
+		.et_pb_main_blurb_image img {
+			position: absolute !important;
+			inset: 0 !important;
+			width: 100% !important;
+			height: 100% !important;
+			object-fit: cover !important;
+			object-position: center !important;
+			transform: scale(1) !important;
+		}
+
+		&:hover .et_pb_main_blurb_image img {
+			transform: scale(1.05) !important; // gentle, no pixelation
 		}
 	}
 }

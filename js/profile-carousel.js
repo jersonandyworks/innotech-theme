@@ -82,6 +82,7 @@
 
 		$info.stop( true ).animate( { opacity: 0 }, 180, function () {
 			updateInfo( data );
+			applyLock( naturalInfoHeight() ); // grow the lock if this profile is taller than any seen
 			$info.animate( { opacity: 1 }, 300, function () {
 				isAnimating = false;
 			} );
@@ -140,8 +141,75 @@
 		}
 	}, { passive: true } );
 
+	// ── Lock height: keep the section height constant across profiles ─────────
+	// The info column height depends on bio length. Left unconstrained, the
+	// tallest-to-shortest swing resizes #profile-carousel-container on every
+	// navigation, overflowing into the neighbouring section. We pin .__info to
+	// the tallest profile's height so the section height never changes.
+	//
+	// The lock is MONOTONIC (grows, never shrinks within a viewport width): a
+	// one-shot pre-measure can underestimate because the light-weight bio font
+	// reflows taller after it finishes loading, so we also re-check on every
+	// navigation with the live font state. Growing-only guarantees the section
+	// can never shrink-then-overlap. Reset on resize (width changes wrapping).
+	var lockedHeight = 0;
+
+	// Natural .__info height at the current content/width, ignoring the lock.
+	function naturalInfoHeight() {
+		var prev = $info[0].style.minHeight;
+		$info.css( 'min-height', '' );
+		var h = $info.outerHeight();
+		$info[0].style.minHeight = prev;
+		return h;
+	}
+
+	function applyLock( h ) {
+		if ( h > lockedHeight ) {
+			lockedHeight = h;
+			$info.css( 'min-height', lockedHeight + 'px' );
+		}
+	}
+
+	// Pre-measure every profile through the real render path (heights then match
+	// navigation exactly). All synchronous → only the restored state is painted.
+	function premeasure() {
+		if ( total <= 1 ) return;
+		var restoreData = $photos.eq( currentIndex ).data( 'profile-data' );
+		var max = naturalInfoHeight();
+		$photos.each( function () {
+			updateInfo( $( this ).data( 'profile-data' ) || {} );
+			max = Math.max( max, naturalInfoHeight() );
+		} );
+		updateInfo( restoreData );
+		applyLock( max );
+	}
+
+	var resizeTimer;
+	$( window ).on( 'resize', function () {
+		clearTimeout( resizeTimer );
+		resizeTimer = setTimeout( function () {
+			lockedHeight = 0;          // allow shrink when the viewport width changes
+			$info.css( 'min-height', '' );
+			premeasure();
+		}, 150 );
+	} );
+
+	// ResizeObserver is the timing-proof guarantee: it fires the instant .__info
+	// reflows — webfont swap-in (which on this site lands several seconds late),
+	// navigation, anything — and *before* paint, so the lock grows to the true
+	// tallest content with no flash of overflow. scrollHeight reports the real
+	// content height; once min-height clamps it, scrollHeight == clientHeight and
+	// the observer no-ops (no feedback loop). Monotonic: grows, never shrinks.
+	if ( window.ResizeObserver ) {
+		var ro = new ResizeObserver( function () {
+			applyLock( $info[0].scrollHeight );
+		} );
+		ro.observe( $info[0] );
+	}
+
 	// ── Init ─────────────────────────────────────────────────────────────────
 
 	updateOffsets(); // Ensure data-offset attributes match initial state
+	premeasure();    // best-effort floor across all profiles; RO refines it live
 
 })( jQuery );

@@ -42,14 +42,19 @@
 
 		function appendChart() {
 			var chartImg = document.createElement("img");
-			chartImg.src = themeUrl + "/_assets/chart.png";
+			// Use the showcase ACF globe_pattern_image when set; else default chart.png.
+			var customChart = window.innotechSwirl && innotechSwirl.chartImage;
+			chartImg.src = customChart
+				? innotechSwirl.chartImage
+				: themeUrl + "/_assets/chart.png";
 			chartImg.className = "swirl-chart";
 
 			var chartContainer = document.createElement("div");
 			chartContainer.id = "chartContainer";
 			chartContainer.style.position = "absolute";
 			chartContainer.style.padding = "0 0 60px 0";
-			chartContainer.style.background = "#000";
+			// No black backdrop when a custom globe_pattern_image is used.
+			chartContainer.style.background = customChart ? "transparent" : "#000";
 			chartContainer.style.top = "26.8%";
 			chartContainer.style.left = "35%";
 			chartContainer.style.transform = "translate(-50%, -50%)";

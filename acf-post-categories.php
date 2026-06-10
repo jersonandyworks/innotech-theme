@@ -103,8 +103,16 @@ function innotech_post_date_shortcode( $atts ) {
 
     if ( 'Enable' !== $show_date ) return '';
 
+    // Reading time: word count / 200 wpm, min 1 min.
+    $word_count   = str_word_count( wp_strip_all_tags( strip_shortcodes( get_post_field( 'post_content', $post_id ) ) ) );
+    $read_minutes = max( 1, (int) ceil( $word_count / 200 ) );
+    $read_label   = sprintf( '%d %s read', $read_minutes, _n( 'min', 'mins', $read_minutes ) );
+
     return '<span class="innotech-post-meta-acf__date">'
         . esc_html( get_the_date( 'F j, Y', $post_id ) )
+        . '</span>'
+        . '<span class="innotech-post-meta-acf__read">'
+        . esc_html( '/ ' . $read_label )
         . '</span>';
 }
 add_shortcode( 'innotech_post_date', 'innotech_post_date_shortcode' );

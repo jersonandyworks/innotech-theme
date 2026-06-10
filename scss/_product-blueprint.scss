@@ -107,7 +107,9 @@
 	}
 
 	.cmap-system-container .et_pb_image {
-		max-width: 100%;
+		// Match the product page blueprint scale (it uses 40%); 100% here made
+		// the device fill the full-width row and pushed the callouts off-edge.
+		max-width: 40%;
 		margin: 0 auto;
 	}
 }

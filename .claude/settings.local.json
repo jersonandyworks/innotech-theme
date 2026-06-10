@@ -23,7 +23,10 @@
       "Bash(awk '{print $3, $5, $NF}')",
       "Bash(/opt/lampp/bin/mysql -uroot innotechdevlocal -e \"SELECT ID, post_name FROM wp_posts WHERE post_type='showcase' AND post_status='publish' LIMIT 5;\")",
       "Bash(node -c js/showcase-blob.js)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(php -r ' *)",
+      "Bash(node --check js/product-details-viewer.js)",
+      "Bash(grep -n \"tablet\\\\|mobile\\\\|desktop\\\\|\\\\$.*:.*px\" _variables.scss)"
     ],
     "additionalDirectories": [
       "/opt/lampp/htdocs/innotechdev/wp-content/themes/innotech-divi-child/js/min"

@@ -210,6 +210,14 @@
 		function startPulses() {
 			killPulses();
 			nodes.forEach(function (n, i) {
+				// Re-bake the scale origin from the CURRENT circle centre so the
+				// pulse stays centred after any relayout (cx/cy can shift slightly
+				// once the responsive image/scrollbar settles).
+				gsap.set(n.pulse, {
+					transformOrigin: "50% 50%",
+					svgOrigin:
+						n.pulse.getAttribute("cx") + " " + n.pulse.getAttribute("cy"),
+				});
 				var t = i * 0.2;
 				var tween = gsap.fromTo(
 					n.pulse,
@@ -374,6 +382,10 @@
 					},
 				});
 			});
+			// Restart the pulses so they re-bake their origin on the new centres.
+			// (The beacon is timeline-controlled and rests at scale 1, so it needs
+			// no origin re-bake — touching it here introduced a small offset.)
+			if (pulseTweens.length) startPulses();
 		});
 		ro.observe(imageWrap);
 		var imgEl = imageWrap.querySelector("img");

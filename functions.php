@@ -63,9 +63,31 @@ function innotech_enqueue_animation_scripts() {
         file_exists($bundle_path) ? filemtime($bundle_path) : '1.0.0',
         true
     );
+    // Swirl chart image — from the showcase ACF field `globe_pattern_image`
+    // (falls back to the default chart.png in map-swirl.js when empty).
+    $chart_image = '';
+    if ( function_exists('get_field') ) {
+        $pid = get_queried_object_id();
+        if ( $pid ) {
+            $gp = get_field('globe_pattern_image', $pid);
+            if ( is_array($gp) ) {
+                $chart_image = isset($gp['url']) ? $gp['url'] : '';
+            } elseif ( is_numeric($gp) ) {
+                $chart_image = wp_get_attachment_url( (int) $gp );
+            } elseif ( is_string($gp) ) {
+                $chart_image = $gp;
+            }
+        }
+    }
+
     // Inline data the bundled scripts read off window.* — printed before the bundle.
     wp_localize_script('innotech-bundle', 'innotechTheme', array(
         'themeUrl' => $theme_uri,
+    ));
+    // Separate global — innotechTheme is localized twice (liquid-background re-
+    // declares it without chartImage and would clobber it), so keep this apart.
+    wp_localize_script('innotech-bundle', 'innotechSwirl', array(
+        'chartImage' => $chart_image,
     ));
     wp_localize_script('innotech-bundle', 'blobAnimationData', array(
         'themeUrl' => $theme_uri,
@@ -151,6 +173,29 @@ function innotech_preloader_markup() {
     echo '<div id="innotech-preloader" role="status" aria-live="polite" aria-label="Loading"><div class="ip-spinner"></div></div>';
 }
 add_action( 'wp_body_open', 'innotech_preloader_markup', 0 );
+
+// Footer copyright year — auto-update to the current year so it never needs
+// editing. The year is hardcoded in the Divi footer layout (.footer-text); this
+// rewrites the 4-digit year after the © to the current year on every load.
+function innotech_footer_year_autoupdate() {
+    ?>
+    <script>
+    (function(){
+        var y = new Date().getFullYear();
+        function run(){
+            document.querySelectorAll('.footer-text').forEach(function(el){
+                if (/©/.test(el.textContent) && /20\d{2}/.test(el.textContent)) {
+                    el.innerHTML = el.innerHTML.replace(/(©[\s\S]*?)20\d{2}/, '$1' + y);
+                }
+            });
+        }
+        if (document.readyState !== 'loading') run();
+        else document.addEventListener('DOMContentLoaded', run);
+    })();
+    </script>
+    <?php
+}
+add_action( 'wp_footer', 'innotech_footer_year_autoupdate', 99 );
 
 // Mouse Animation Divi Module
 require_once get_stylesheet_directory() . '/mouse-function.php';
@@ -527,11 +572,12 @@ add_action('wp_head', function () {
 }, 1);
 
 add_action('wp_enqueue_scripts', function () {
+    $pd_viewer_path = get_stylesheet_directory() . '/js/product-details-viewer.js';
     wp_enqueue_script(
         'product-details-viewer',
         get_stylesheet_directory_uri() . '/js/product-details-viewer.js',
         array(),
-        '1.0.0',
+        file_exists($pd_viewer_path) ? filemtime($pd_viewer_path) : '1.0.0', // mtime cache-bust
         true
     );
 

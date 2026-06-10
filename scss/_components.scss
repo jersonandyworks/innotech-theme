@@ -4,6 +4,17 @@
 }
 // END MAIN MENU
 
+// START POST META (date + reading time)
+.innotech-post-meta-acf__date,
+.innotech-post-meta-acf__read {
+	display: block;
+	text-transform: uppercase;
+}
+.innotech-post-meta-acf__read {
+	opacity: 0.85;
+}
+// END POST META
+
 // START PAGE STYLES
 // Filter is applied to ::before so children (h1, text) are unaffected.
 // CSS filter on a parent creates a stacking context that children cannot escape.
@@ -56,6 +67,7 @@
 		font-size: clamp(1.5rem, 2vw, 28px);
 		font-weight: 400;
 		margin-bottom: 2rem;
+		line-height: clamp(1.8rem, 1.65rem + 0.73vw, 2.2rem);
 	}
 	.item-content {
 		p {
@@ -299,6 +311,12 @@ figure.blob-s {
 			width: 31.875% !important;
 		}
 	}
+}
+
+// GSAP ScrollTrigger pin wraps #section8 in .pin-spacer — color it to match
+// the section so the pinned gap doesn't flash a different background.
+.pin-spacer:has(#section8) {
+	background-color: #070c3b;
 }
 
 #section8 {

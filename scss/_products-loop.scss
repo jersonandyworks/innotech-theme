@@ -115,7 +115,9 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		height: 100%;
+		// Fixed height (not 100%) — % can't resolve when a host page (e.g. the
+		// WooCommerce shop) strips the button's explicit height, collapsing the pill.
+		height: var(--cta-height);
 		padding: 0 var(--cta-pad-x);
 		background: var(--cta-brand);
 		border-radius: 999px;
@@ -220,6 +222,31 @@
 	&:active .cta-button__icon-wrapper {
 		transform: scale(0.95);
 	}
+}
+
+// Divi Button module upgraded via .cta-anim — strip Divi's own button chrome
+// (border / padding / background) so only the cta-button styling shows. Scoped
+// to .et_pb_button.cta-button, so the shortcode buttons (no .et_pb_button) and
+// every other Divi button are untouched.
+// Divi forces display:inline-block + button chrome (border/padding/bg) on
+// .et_pb_button, and WooCommerce/Divi can do the same to the [innotech_products]
+// card buttons. Reset both so the cta-button pill + sliding icon align identically
+// (the flex layout the bridge/icon depend on, no detaching/misalignment).
+a.et_pb_button.cta-button,
+a.et_pb_button.cta-button:hover,
+.innotech-product__btn.cta-button,
+.innotech-product__btn.cta-button:hover {
+	display: inline-flex !important;
+	align-items: center !important;
+	width: auto !important;
+	// Keep the explicit height — WooCommerce/Divi shop CSS strips it, which
+	// collapses the inner pill (.cta-button__text height:100% can't resolve).
+	height: var(--cta-height) !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	min-height: 0 !important;
+	line-height: 1 !important;
 }
 
 @media (max-width: 980px) {
