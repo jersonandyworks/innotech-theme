@@ -78,7 +78,7 @@ footer {
 // ─────────────────────────────────────────────────────────────────────────────
 // Desktop (≥981px): widen Divi 2/3 columns in gutter-3 rows
 // ─────────────────────────────────────────────────────────────────────────────
-@media (min-width: #{$tablet + 1}) {
+@media (max-width: #{$tablet + 1}) {
 	.et_pb_gutters3 .et_pb_column_2_3,
 	.et_pb_gutters3.et_pb_row .et_pb_column_2_3 {
 		width: 90.8%;

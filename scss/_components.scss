@@ -308,7 +308,12 @@ figure.blob-s {
 			width: 100% !important;
 		}
 	}
-	.et_pb_row.et_pb_row_14_tb_body {
+	// The `_14` index is brittle: it maps to a single heading column on some
+	// templates but to the FIRST 4-col tile grid on others (e.g. staging). The
+	// 31.875% then shrinks each grid item to 31.875% of its 243px track (~78px),
+	// crushing the tile so its label wraps one letter per line. Exclude the tile
+	// rows (`.et_pb_row_4col`) so they keep the grid-track width set above.
+	.et_pb_row.et_pb_row_14_tb_body:not(.et_pb_row_4col) {
 		.et_pb_column {
 			margin-right: 0 !important;
 			width: 31.875% !important;
