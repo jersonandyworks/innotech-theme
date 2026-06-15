@@ -254,11 +254,14 @@ function innotech_mobile_menu_output() {
   </script>
   <?php
 }
-if ( function_exists( 'wp_body_open' ) ) {
-  add_action( 'wp_body_open', 'innotech_mobile_menu_output', 20 );
-} else {
-  add_action( 'wp_footer', 'innotech_mobile_menu_output', 20 );
-}
+// Legacy mobile menu (#innotech__mobile__menu) disabled — the .innotech-hamburger
+// popup overlay (js/mobile-menu.js) is the only mobile menu now. Output removed to
+// avoid a duplicate menu on small screens.
+// if ( function_exists( 'wp_body_open' ) ) {
+//   add_action( 'wp_body_open', 'innotech_mobile_menu_output', 20 );
+// } else {
+//   add_action( 'wp_footer', 'innotech_mobile_menu_output', 20 );
+// }
 
 // Dot Label Divi Module
 require_once get_stylesheet_directory() . '/dot-label-function.php';
