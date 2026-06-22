@@ -1,11 +1,3 @@
-// Desktop: GSAP pin-spacer that wraps ONLY #section4 gets a fixed 2089px height.
-// Scoped to ≥981px so it can't override the mobile height:auto reset below.
-@media (min-width: 981px) {
-	.pin-spacer:has(> #section4:only-child) {
-		height: 2089px !important;
-	}
-}
-
 // #section4 #pin-container — mobile/tablet responsive overrides.
 // Disables horizontal pin-scroll effect, stacks content vertically.
 // GSAP ScrollTrigger pin wraps element in .pin-spacer with fixed position —

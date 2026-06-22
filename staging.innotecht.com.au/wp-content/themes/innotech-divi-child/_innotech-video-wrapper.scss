@@ -1,0 +1,85 @@
+// Divi Video module wrapped with .innotech-product-video-wrapper —
+// custom play overlay, hidden native chrome. Mirrors .innotech-product-video
+// behavior without changing existing markup.
+.innotech-product-video-wrapper {
+	position: relative;
+	width: 100%;
+	border-radius: 20px;
+	overflow: hidden;
+	background: #000;
+
+	.et_pb_video_box {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	video {
+		width: 100%;
+		height: 100%;
+		display: block;
+		background: #000;
+		object-fit: cover;
+
+		&::-webkit-media-controls,
+		&::-webkit-media-controls-panel,
+		&::-webkit-media-controls-play-button,
+		&::-webkit-media-controls-start-playback-button,
+		&::-webkit-media-controls-overlay-play-button {
+			display: none !important;
+			appearance: none !important;
+			-webkit-appearance: none !important;
+		}
+	}
+
+	&__play {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: transparent;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		width: 80px;
+		height: 80px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 5;
+		transition:
+			transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+			opacity 0.3s ease;
+		filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.45));
+	}
+
+	&__play-icon {
+		width: 80px;
+		height: 80px;
+		display: block;
+	}
+
+	&__play:hover {
+		transform: translate(-50%, -50%) scale(1.08);
+	}
+
+	&.is-playing {
+		.innotech-product-video-wrapper__play {
+			opacity: 0;
+			pointer-events: none;
+		}
+	}
+}
+
+@media (max-width: 600px) {
+	.innotech-product-video-wrapper {
+		border-radius: 14px;
+
+		&__play,
+		&__play-icon {
+			width: 60px;
+			height: 60px;
+		}
+	}
+}

@@ -45,7 +45,7 @@ body {
 	background-repeat: repeat-x;
 	height: 14px;
 	opacity: 0.4;
-	transform: translateY(-60px);
+	transform: translateY(-320px);
 }
 
 .blog-post-single  {
@@ -270,6 +270,9 @@ body {
 		height: 0 !important;
 	}
 
+	#innotech__mobile__menu {
+		display: block;
+	}
 }
 
 // Header sticky bar — fluid horizontal padding so the logo/menu/button never

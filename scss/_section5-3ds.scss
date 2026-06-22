@@ -1,11 +1,21 @@
-// #section5 3D slider/carousel — mobile tweaks.
-// Reduce container height and zoom-out the 3D scene so objects fit + render
-// fully within the smaller viewport.
+// #section5 3D slider/carousel — mobile fluid height.
+// Container ships inline height:100vh (too tall on phones). Override with a
+// FLUID height that adjusts continuously as the browser shrinks — not stepped
+// fixed px.
+//
+// Best practice:
+//  - dvh, not vh: tracks the *visible* viewport when mobile browser chrome
+//    (address bar) shows/hides; vh stays fixed and causes a jump/clip.
+//  - clamp(floor, ideal, ceiling): 25dvh is the ideal target, but pure 25vh
+//    collapses the 3D scene + title/subtitle/dots on short screens — the floor
+//    keeps it usable, the ceiling stops it ballooning on tall tablets.
+//  - vh line first as a fallback for browsers without dvh.
 @media (max-width: 768px) {
 	#innotech-3ds-container-1 {
-		height: 480px !important;
+		height: 25vh; // fallback for no-dvh browsers
+		height: clamp(220px, 25dvh, 340px) !important;
 		min-height: 0 !important;
-		max-height: 70vh !important;
+		max-height: none !important;
 
 		canvas {
 			transform: scale(0.78);
@@ -17,11 +27,7 @@
 }
 
 @media (max-width: 480px) {
-	#innotech-3ds-container-1 {
-		height: 400px !important;
-
-		canvas {
-			transform: scale(0.72);
-		}
+	#innotech-3ds-container-1 canvas {
+		transform: scale(0.72);
 	}
 }
