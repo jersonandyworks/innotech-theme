@@ -35,8 +35,8 @@
 			max-width: 100% !important;
 			// Desktop applies padding-left + align-items:flex-end for the staggered
 			// masonry — kill both so the grid fills and tiles align.
-			padding-left: 0 !important;
-			padding-right: 0 !important;
+			padding-left: 20px !important;
+			padding-right: 20px !important;
 			align-items: stretch !important;
 		}
 
@@ -168,6 +168,112 @@
 
 		h4 {
 			font-size: 1rem !important;
+		}
+	}
+}
+
+// Desktop (≥981px): the staggered masonry tile height = h4 `margin-top:313px`
+// + the label's line count (the image is absolute, so it adds no height). As
+// columns narrowed below ~1791px, labels wrapped to 2–3 lines ("Iron Ore",
+// "Fire industry", "Oil & Gas") while single-word ones stayed 1 line, so tile
+// heights diverged.
+//
+// Fix: replace the masonry with a clean, uniform 4-column grid — equal widths,
+// one shorter responsive height, label pinned to the bottom (so height is no
+// longer label-driven), and a hover that COVER-fills the tile instead of the
+// scale(4)→5.5 crop that got cut off.
+// Scoped to .et_pb_row_4col (NOT .show-card-container, which reuses #section7).
+@media (min-width: 981px) {
+	#section7 .et_pb_row_4col {
+		display: grid !important;
+		grid-template-columns: repeat(4, 1fr) !important;
+		gap: 1.5rem !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		align-items: stretch !important;
+
+		// Equal-width tracks: neutralise Divi's floated, varied-width columns.
+		> .et_pb_column {
+			width: 100% !important;
+			max-width: 100% !important;
+			min-width: 0 !important;
+			float: none !important;
+			margin: 0 !important;
+			transform: none !important;
+			translate: none !important;
+		}
+
+		.mining-blurb-img {
+			// One uniform, shorter height for every tile.
+			height: clamp(360px, 26vw, 440px) !important;
+			padding: 0 !important;
+
+			// Content fills the tile → offset parent for the absolute image + label.
+			.et_pb_blurb_content {
+				position: relative !important;
+				height: 100% !important;
+				width: 100% !important;
+				max-width: none !important;
+			}
+
+			// Hover-reveal image: hidden by default, COVER-fills the tile on hover
+			// (replaces the scale(4)→5.5 crop that got cut off).
+			.et_pb_main_blurb_image,
+			.et_pb_main_blurb_image .et_pb_image_wrap {
+				position: absolute !important;
+				inset: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				margin: 0 !important;
+			}
+
+			.et_pb_main_blurb_image img {
+				position: absolute !important;
+				inset: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				object-fit: cover !important;
+				object-position: center !important;
+				opacity: 0 !important;
+				transform: none !important;
+				z-index: 0 !important;
+				transition:
+					opacity 0.5s ease,
+					transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+			}
+
+			&:hover .et_pb_main_blurb_image img {
+				opacity: 1 !important;
+				transform: scale(1.05) !important;
+			}
+
+			// Gradient scrim so the white label stays legible over the hover image.
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(
+					to top,
+					rgba(0, 0, 0, 0.6) 0%,
+					rgba(0, 0, 0, 0) 55%
+				);
+				z-index: 1;
+				pointer-events: none;
+			}
+
+			// Label pinned bottom → height no longer label-driven (equal at all widths).
+			h4 {
+				margin-top: 0 !important;
+				position: absolute;
+				left: 24px;
+				right: 24px;
+				bottom: 20px;
+				z-index: 2;
+			}
+
+			.blurb-custom-icon {
+				z-index: 2;
+			}
 		}
 	}
 }

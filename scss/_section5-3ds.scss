@@ -11,9 +11,20 @@
 //    keeps it usable, the ceiling stops it ballooning on tall tablets.
 //  - vh line first as a fallback for browsers without dvh.
 @media (max-width: 768px) {
-	#innotech-3ds-container-1 {
+	// .et_pb_code_inner wrapper inside .3d-slider-code-wrapper. The class starts
+	// with a digit, so use an attribute selector (a plain `.3d-...` selector is
+	// invalid). Fluid 25dvh that shrinks with the viewport; same dvh + clamp
+	// best practice as the container below.
+	[class~="3d-slider-code-wrapper"] .et_pb_code_inner {
 		height: 25vh; // fallback for no-dvh browsers
-		height: clamp(220px, 25dvh, 340px) !important;
+		height: clamp(180px, 25dvh, 320px) !important;
+		min-height: 0 !important;
+		max-height: none !important;
+	}
+
+	#innotech-3ds-container-1 {
+		// Fill the .et_pb_code_inner wrapper — it owns the 25vh height now.
+		height: 100% !important;
 		min-height: 0 !important;
 		max-height: none !important;
 
@@ -28,6 +39,6 @@
 
 @media (max-width: 480px) {
 	#innotech-3ds-container-1 canvas {
-		transform: scale(0.72);
+		transform: scale(1.72);
 	}
 }

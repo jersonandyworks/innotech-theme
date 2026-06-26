@@ -266,8 +266,16 @@ a.et_pb_button.cta-button:hover,
 
 		&__image {
 			order: -1;
-			aspect-ratio: 16 / 10;
+			// Drop the desktop 735px floor + fixed box — on mobile they left the
+			// image tiny and centered in a huge empty box. Let the box wrap the
+			// image at the column's full width.
+			aspect-ratio: auto;
 			height: auto;
+			min-height: 0;
+
+			img {
+				height: auto;
+			}
 		}
 
 		&__desc { max-width: 100%; }
