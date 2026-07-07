@@ -1,0 +1,1174 @@
+//START MAIN MENU
+#menu-main-menu {
+	column-gap: 20px;
+	border-radius: 100px 100px 100px 100px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 16px !important;
+}
+// END MAIN MENU
+
+// START POST META (date + reading time)
+.innotech-post-meta-acf__date,
+.innotech-post-meta-acf__read {
+	display: block;
+	text-transform: uppercase;
+}
+.innotech-post-meta-acf__read {
+	opacity: 0.85;
+}
+// END POST META
+
+// START PAGE STYLES
+// Filter is applied to ::before so children (h1, text) are unaffected.
+// CSS filter on a parent creates a stacking context that children cannot escape.
+.wp-singular {
+	.page-featured-hero {
+		display: flex;
+		position: relative;
+		isolation: isolate;
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: inherit;
+			filter: grayscale(100%) contrast(40%) brightness(30%);
+			z-index: 0;
+			pointer-events: none;
+		}
+
+		& > * {
+			position: relative;
+			z-index: 1;
+		}
+	}
+	// .et_pb_text_inner {
+	// 	p {
+	// 		font-size: clamp(14px, 2vw, 18px);
+	// 	}
+	// }
+
+	.sixty-font-size {
+		.et_pb_text_inner {
+			p {
+				font-size: 60px;
+				font-weight: 200;
+				line-height: 1em;
+			}
+		}
+	}
+}
+
+// END PAGE STYLES
+
+.innotech-nested-container {
+	position: relative;
+}
+
+.innotech-nested-item {
+	.item-title {
+		font-size: clamp(1.5rem, 2vw, 28px);
+		font-weight: 400;
+		margin-bottom: 2rem;
+		line-height: clamp(1.8rem, 1.65rem + 0.73vw, 2.2rem);
+	}
+	.item-content {
+		p {
+			font-weight: 200;
+			font-size: clamp(18px, 2vw, 22px);
+			line-height: 1.8rem;
+		}
+	}
+}
+
+.blob-icon {
+	position: absolute;
+	right: -20px;
+	top: 50%;
+	width: 50px;
+	height: auto;
+	opacity: 0.9;
+	pointer-events: none;
+}
+
+figure.blob-s {
+	background: url("_assets/blob-small.svg") no-repeat;
+	background-size: contain;
+	position: absolute;
+	right: -195px;
+	top: 20px;
+	transform: translate(-50%, -50%);
+	width: 118px;
+	height: 160px;
+
+	@media (max-width: 768px) {
+		display: none !important;
+	}
+}
+// DOT NAVIGATION LABEL TEXT
+.sidebar-item {
+	.label {
+		line-height: 1rem;
+		text-transform: uppercase;
+	}
+}
+
+// Locomotive Scroll
+.page-container {
+	overflow: hidden;
+}
+
+// pin scroll.
+
+// Horizontal slide — children line up side-by-side, each takes full viewport width.
+// GSAP translates this element left as the user scrolls through the section8 pin.
+.pin-content-wrapper {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: flex-start;
+	will-change: transform;
+
+	// Each direct child = one full-width slide
+	& > * {
+		flex: 0 0 100vw;
+		max-width: 100vw;
+		padding: 0 10vw;
+		box-sizing: border-box;
+	}
+
+	h1.et_pb_module_heading {
+		width: 30%;
+	}
+}
+
+.pin-wrap {
+	height: 100vh;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 100px 10vw 50px;
+
+	& > * {
+		min-width: 60vw;
+		padding: 0 5vw;
+	}
+
+	img.wp-image-233 {
+		border-radius: 58px;
+
+		@media (max-width: $tablet) {
+			margin-left: -15vw;
+			max-width: none;
+			width: 55vw;
+		}
+	}
+}
+
+.btn-tech {
+	background-color: $primary-color;
+	padding: 10px 40px;
+	border-radius: $button-radius;
+	color: $white;
+	font-size: $button-font-size;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+
+	&::after {
+		content: "";
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background: url("_assets/btn-arrow.png") no-repeat center / contain;
+		transition: transform 0.3s ease;
+	}
+
+	&:hover::after {
+		transform: translateX(10px);
+	}
+}
+
+.scroll-description {
+	padding-right: 0px;
+	.innotech-nested-item .item-content {
+		& > p:first-of-type {
+			font-size: clamp(16px, 2vw, 18px);
+			font-weight: 200;
+			width: 30vw;
+		}
+	}
+}
+
+.row-tech {
+	display: flex;
+	justify-content: space-between;
+	column-gap: 60px;
+
+	.col-tech {
+		img {
+			width: 35vw;
+		}
+	}
+}
+
+.col-tech.grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	justify-items: center;
+	justify-content: center;
+	align-content: center;
+	column-gap: 30px;
+	row-gap: 30px;
+
+	.info {
+		border-bottom: 1px solid white;
+		padding-bottom: 2vh;
+	}
+}
+
+// Disable Divi Top Animation
+.et-waypoint.et_pb_animation_top.et-animated,
+.et_pb_animation_top.et-animated {
+	-webkit-animation: none !important;
+	animation: none !important;
+}
+
+.mining-blurb-img {
+	position: relative;
+	overflow: hidden;
+
+	h4 {
+		margin-top: 313px;
+		font-size: clamp(1.5rem, 3vw, 34px);
+		font-weight: 300;
+	}
+
+	.blurb-custom-icon {
+		padding: 0px;
+		width: 42px;
+		height: 42px;
+		background-color: #000;
+		border-radius: 100px;
+	}
+
+	.et_pb_main_blurb_image {
+		img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			opacity: 0 !important;
+			transform: scale(4);
+			transition:
+				transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+				opacity 0.6s ease;
+			pointer-events: none;
+		}
+	}
+
+	&:hover {
+		border-color: transparent !important;
+		transition: border-color 0.2s 0.2s;
+		.et_pb_main_blurb_image {
+			img {
+				opacity: 1 !important;
+				transform: scale(5.5);
+			}
+		}
+	}
+}
+
+#section5 {
+	.et_pb_row {
+		.et_pb_column {
+			.et_pb_module {
+				.et_pb_text_inner {
+					font-size: clamp(1rem, 2vw, 22px);
+					font-weight: 300;
+					text-align: right;
+					text-decoration: underline;
+					text-decoration-thickness: 1px;
+
+					#view-all-hardware {
+						&:hover {
+							cursor: pointer;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#section7 {
+	.et_pb_row.et_pb_row_4col {
+		.et_pb_column {
+			margin-right: 0 !important;
+			width: 100% !important;
+		}
+	}
+	.et_pb_row.et_pb_row_14_tb_body {
+		.et_pb_column {
+			margin-right: 0 !important;
+			width: 31.875% !important;
+		}
+	}
+}
+
+// GSAP ScrollTrigger pin wraps #section8 in .pin-spacer — color it to match
+// the section so the pinned gap doesn't flash a different background.
+.pin-spacer:has(#section8) {
+	background-color: #070c3b;
+}
+
+#section8 {
+	position: relative;
+	background-color: #070c3b;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+
+		background: url("_assets/swirl-compressed.png") no-repeat center;
+		-webkit-mask-image: url("_assets/mask-swirl-1.png");
+		mask-image: url("_assets/mask-swirl-1.png");
+
+		/* JS drives --s8-mask-w / --s8-mask-h via ScrollTrigger onUpdate.
+		   Fallback 400px 400px is the resting size before the pin fires. */
+		-webkit-mask-size: var(--s8-mask-w, 650px) var(--s8-mask-h, 650px);
+		mask-size: var(--s8-mask-w, 650px) var(--s8-mask-h, 650px);
+
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+
+		/* JS drives --s8-mask-x / --s8-mask-y for mouse-follow. */
+		-webkit-mask-position: var(--s8-mask-x, 50%) var(--s8-mask-y, 50%);
+		mask-position: var(--s8-mask-x, 50%) var(--s8-mask-y, 50%);
+
+		animation: maskPulse 4s ease-in-out infinite;
+		animation-play-state: var(--s8-anim-state, running);
+	}
+
+	@keyframes maskPulse {
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.04);
+		}
+	}
+
+	& > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	.innotech-nested-container {
+		grid-template-columns: 1.9fr 2.5fr 0.5fr !important;
+	}
+
+	.bullet-heading-slide {
+		.item-title {
+			font-size: clamp(2rem, 4vw, 3.75rem);
+			line-height: 3rem !important;
+		}
+	}
+}
+
+footer {
+	.et_pb_column_0_tb_footer {
+		p {
+			line-height: 1.3rem !important;
+		}
+	}
+
+	nav {
+		width: 100%;
+		ul#menu-footer-menu {
+			column-gap: 30px;
+			align-items: baseline;
+
+			#menu-item-468 {
+				transform: translateX(5vw);
+
+				a {
+					background-image: url(_assets/user.svg);
+					background-size: 14px;
+					background-repeat: no-repeat;
+					background-position: 26px 10px;
+					border-radius: 100px;
+					border: 2px solid rgba(255, 255, 255, 0.2509803922);
+					padding: 10px 40px 10px 46px;
+					display: flex;
+					align-items: center;
+					text-transform: capitalize !important;
+				}
+			}
+		}
+	}
+
+	.innotech-nested-container {
+		border-color: #ffffff40 !important;
+		grid-template-columns: 1fr 1fr !important;
+		display: grid !important;
+		img {
+			display: none;
+		}
+	}
+
+	.innotech-nested-item {
+		.item-content {
+			p {
+				font-weight: 400;
+				font-size: clamp(12px, 2vw, 14px);
+			}
+		}
+
+		.innotech-lower-footer-menu {
+			list-style-type: none;
+			display: flex;
+			column-gap: 42px;
+			li {
+				font-size: clamp(12px, 2vw, 14px);
+			}
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Latest Posts Shortcode  [innotech_latest_posts]
+// ─────────────────────────────────────────────────────────────────────────────
+.innotech-lp {
+	width: 100%;
+	padding: clamp(24px, 4vw, 48px);
+	box-sizing: border-box;
+
+	&__grid {
+		display: grid;
+		// Primary card wider, secondary narrower
+		grid-template-columns: 1.45fr 1fr;
+		gap: clamp(12px, 1.5vw, 20px);
+		align-items: stretch;
+	}
+
+	&__card {
+		position: relative;
+		border-radius: 14px;
+		overflow: hidden;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		cursor: pointer;
+		filter: grayscale(100%);
+		transition:
+			transform 0.35s ease,
+			filter 0.5s ease;
+		min-height: 300px;
+
+		&:hover {
+			transform: scale(1.015);
+			filter: grayscale(0%);
+		}
+	}
+
+	// Primary card is taller on large screens
+	&__card--primary {
+		min-height: clamp(320px, 40vw, 540px);
+	}
+
+	&__card--secondary {
+		min-height: clamp(280px, 35vw, 480px);
+	}
+
+	// Full-card clickable link sits above overlay but below content
+	&__card-link {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+	}
+
+	// Gradient overlay — darkens the bottom of the image for text legibility
+	&__card-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0) 20%,
+			rgba(0, 0, 0, 0.55) 60%,
+			rgba(0, 0, 0, 0.82) 100%
+		);
+		z-index: 1;
+	}
+
+	// Text content pinned to the bottom of the card
+	&__card-content {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: clamp(16px, 2.5vw, 28px);
+		z-index: 3;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__category {
+		display: inline-block;
+		font-size: clamp(10px, 1vw, 12px);
+		font-weight: 300;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.75);
+		text-decoration: none;
+		line-height: 1;
+
+		&:hover {
+			color: $white;
+		}
+	}
+
+	&__title {
+		margin: 0;
+		font-size: clamp(18px, 2.2vw, 28px);
+		font-weight: 300;
+		line-height: 1.25 !important;
+		color: $white;
+	}
+
+	// ── Responsive ─────────────────────────────────────────────────────────────
+
+	// Tablet: equal columns, slightly smaller cards
+	@media (max-width: $tablet) {
+		padding: clamp(16px, 3vw, 32px);
+
+		&__grid {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		&__card--primary,
+		&__card--secondary {
+			min-height: clamp(240px, 30vw, 380px);
+		}
+	}
+
+	// Mobile: single column, full-width cards
+	@media (max-width: $mobile) {
+		padding: 16px;
+
+		&__grid {
+			grid-template-columns: 1fr;
+		}
+
+		&__card--primary,
+		&__card--secondary {
+			min-height: 260px;
+		}
+
+		// Remove hover scale on touch devices
+		&__card:hover {
+			transform: none;
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Latest Post Hero  [innotech_latest_post_hero]
+// ─────────────────────────────────────────────────────────────────────────────
+.innotech-lph {
+	position: relative;
+	isolation: isolate;
+	border-radius: 20px;
+	overflow: hidden;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	min-height: clamp(460px, 35vw, 830px);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+
+	// Filtered background layer — grayscale/darken without affecting children
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: inherit;
+		filter: grayscale(100%) contrast(80%) brightness(40%);
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	// Gradient overlay — darkens the bottom for text legibility
+	// &::after {
+	// 	content: "";
+	// 	position: absolute;
+	// 	inset: 0;
+	// 	background: linear-gradient(
+	// 		to bottom,
+	// 		transparent 20%,
+	// 		rgba(0, 0, 0, 0.45) 60%,
+	// 		rgba(0, 0, 0, 0.75) 100%
+	// 	);
+	// 	z-index: 1;
+	// 	pointer-events: none;
+	// }
+
+	// Full-card invisible link (sits above overlays, below button)
+	&__link {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+	}
+
+	// Content grid — above all overlay layers
+	&__body {
+		position: relative;
+		z-index: 3;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: flex-end;
+		gap: clamp(16px, 2vw, 32px);
+		padding: clamp(24px, 5vw, 96px);
+	}
+
+	&__meta {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 12px;
+		font-size: clamp(10px, 1vw, 12px);
+		font-weight: 300;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: rgba(255, 255, 255, 0.65);
+	}
+
+	&__sep {
+		opacity: 0.5;
+	}
+
+	&__title {
+		margin: 0;
+		font-size: clamp(22px, 3vw, 60px);
+		font-weight: 300;
+		color: $white;
+		line-height: 1.2;
+	}
+
+	&__right {
+		display: flex;
+		align-items: flex-end;
+		padding-bottom: 2px;
+	}
+
+	// Read More pill button
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		background-color: $primary-color;
+		color: $white;
+		font-size: clamp(12px, 1.2vw, 14px);
+		font-weight: 400;
+		padding: 10px 22px;
+		border-radius: $button-radius;
+		text-decoration: none;
+		white-space: nowrap;
+		position: relative;
+		z-index: 4;
+		transition:
+			background-color 0.3s ease,
+			gap 0.2s ease;
+
+		svg {
+			transition: transform 0.2s ease;
+		}
+
+		&:hover {
+			background-color: darken($primary-color, 8%);
+			gap: 12px;
+
+			svg {
+				transform: translateX(3px);
+			}
+		}
+	}
+
+	// Responsive — stack on mobile
+	@media (max-width: $mobile) {
+		&__body {
+			grid-template-columns: 1fr;
+		}
+
+		&__right {
+			justify-content: flex-start;
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Blog Posts Listing  [innotech_blog_posts]
+// ─────────────────────────────────────────────────────────────────────────────
+.innotech-blog {
+	// ── Row 1: filter tabs + search ──────────────────────────────────────────
+	&__filters {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: clamp(20px, 3vw, 48px);
+		padding-bottom: clamp(24px, 3vw, 40px);
+	}
+
+	&__cats {
+		display: flex;
+		align-items: center;
+		gap: clamp(20px, 3vw, 48px);
+	}
+
+	&__cat-btn {
+		font-size: clamp(11px, 1.1vw, 13px);
+		font-weight: 400;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: rgba(255, 255, 255, 0.4);
+		text-decoration: none;
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		transition: color 0.2s ease;
+
+		&:hover,
+		&--active {
+			color: $white;
+		}
+	}
+
+	&__search {
+		position: relative; // anchor for dropdown
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+		padding-bottom: 6px;
+		min-width: clamp(220px, 25vw, 400px);
+	}
+
+	// ── Search dropdown ───────────────────────────────────────────────────────
+	&__dropdown {
+		display: none;
+		position: absolute;
+		top: calc(100% + 10px);
+		right: 0;
+		min-width: 100%;
+		width: max-content;
+		max-width: 480px;
+		background-color: #0d1133;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 10px;
+		overflow: hidden;
+		z-index: 200;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+		&--open {
+			display: block;
+		}
+	}
+
+	&__dropdown-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 12px 16px;
+		cursor: pointer;
+		transition: background-color 0.15s ease;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&:hover,
+		&--active {
+			background-color: rgba(255, 255, 255, 0.06);
+		}
+	}
+
+	&__dropdown-title {
+		flex: 1;
+		font-size: clamp(12px, 1.2vw, 14px);
+		font-weight: 300;
+		color: $white;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__dropdown-cat {
+		flex-shrink: 0;
+		font-size: 10px;
+		font-weight: 400;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	&__dropdown-empty {
+		padding: 16px;
+		font-size: 13px;
+		color: rgba(255, 255, 255, 0.4);
+		text-align: center;
+	}
+
+	&__no-results {
+		padding: clamp(24px, 4vw, 48px) 0;
+		color: rgba(255, 255, 255, 0.35);
+		font-size: 14px;
+		font-weight: 300;
+		text-align: center;
+	}
+
+	&__search-input {
+		flex: 1;
+		background-color: transparent !important;
+		border: none !important;
+		outline: none !important;
+		color: $white;
+		font-size: clamp(12px, 1.2vw, 14px);
+		padding: 0;
+
+		&::placeholder {
+			color: $white;
+		}
+	}
+
+	&__search-btn {
+		flex-shrink: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: rgba(255, 255, 255, 0.5);
+		display: flex;
+		align-items: center;
+		padding: 0;
+		transition: color 0.2s ease;
+
+		&:hover {
+			color: $white;
+		}
+	}
+
+	// ── Row 2: posts list ────────────────────────────────────────────────────
+	&__posts {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__divider {
+		border: none;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		margin: 0;
+	}
+
+	&__post {
+		display: grid;
+		grid-template-columns: 1.2fr 1fr;
+		align-items: center;
+		gap: clamp(24px, 4vw, 64px);
+		padding: clamp(32px, 4vw, 56px) 0 clamp(32px, 4vw, 70px);
+	}
+
+	// Image column
+	&__post-img {
+		border-radius: $image-radius;
+		overflow: hidden;
+		aspect-ratio: 4 / 3;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			filter: grayscale(100%);
+			transition: filter 0.5s ease;
+		}
+
+		&:hover img {
+			filter: grayscale(0%);
+		}
+	}
+
+	// Reveal colour when hovering the Read More button
+	&__post:has(&__post-btn:hover) &__post-img img {
+		filter: grayscale(0%);
+	}
+
+	&__post-img-fallback {
+		width: 100%;
+		height: 100%;
+		background-color: rgba(255, 255, 255, 0.04);
+	}
+
+	// Content column — 4-row grid: meta | title | excerpt | button
+	&__post-content {
+		display: grid;
+		grid-template-rows: auto auto auto auto;
+		gap: clamp(8px, 1vw, 12px);
+	}
+
+	&__post-meta {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: clamp(10px, 1vw, 12px);
+		font-weight: 300;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: #ffffff;
+	}
+
+	&__post-sep {
+		opacity: 0.4;
+	}
+
+	&__post-title {
+		margin: 0;
+		font-size: clamp(18px, 2.2vw, 32px);
+		font-weight: 300;
+		line-height: 1.25em !important;
+
+		a {
+			color: $white;
+			text-decoration: none;
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: rgba(255, 255, 255, 0.75);
+			}
+		}
+	}
+
+	&__post-excerpt {
+		margin: 0;
+		font-size: clamp(13px, 1.3vw, 15px);
+		font-weight: 300;
+		color: #ffffff;
+		line-height: 1.75;
+		align-self: start;
+	}
+
+	&__post-actions {
+		display: flex;
+		align-items: center;
+		margin-top: 2rem;
+	}
+
+	// Same properties as .innotech-lph__btn
+	&__post-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		background-color: $primary-color;
+		color: $white;
+		font-size: clamp(12px, 1.2vw, 14px);
+		font-weight: 400;
+		padding: 10px 22px;
+		border-radius: $button-radius;
+		text-decoration: none;
+		white-space: nowrap;
+		transition:
+			background-color 0.3s ease,
+			gap 0.2s ease;
+
+		svg {
+			transition: transform 0.2s ease;
+		}
+
+		&:hover {
+			background-color: darken($primary-color, 8%);
+			gap: 12px;
+
+			svg {
+				transform: translateX(3px);
+			}
+		}
+	}
+
+	// ── Responsive ───────────────────────────────────────────────────────────
+	@media (max-width: $tablet) {
+		&__filters {
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+
+		&__search {
+			min-width: auto;
+			width: 100%;
+		}
+	}
+
+	@media (max-width: $mobile) {
+		&__post {
+			grid-template-columns: 1fr;
+		}
+
+		&__post-img {
+			aspect-ratio: 16 / 9;
+		}
+
+		&__post-content {
+			gap: 10px;
+		}
+	}
+}
+
+.post-big-img-container {
+	img {
+		border-radius: $image-radius;
+		filter: grayscale(100%);
+	}
+}
+.post-content-wrapper {
+	ul {
+		li {
+			&::marker {
+				color: $primary-color;
+				font-size: 20px;
+			}
+		}
+	}
+
+	h2 {
+		line-height: 2rem !important;
+	}
+}
+.post-image-wrap {
+	.et_pb_image_wrap {
+		height: 270px;
+		overflow: hidden;
+		border-radius: $image-radius;
+
+		img {
+			filter: grayscale(100%);
+		}
+	}
+}
+
+// .darker-filter-background — dim row/section background to ~brightness(0.8)
+// without affecting child text/buttons. ::before paints a black 20% layer over
+// the row's background. Children lifted above it via stacking context.
+// Works on Divi rows where the host is .et_pb_row.
+.darker-filter-background,
+.et_pb_row.darker-filter-background,
+.et_pb_section.darker-filter-background {
+	position: relative !important;
+	isolation: isolate;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.5);
+		pointer-events: none;
+		z-index: 0;
+		border-radius: inherit;
+	}
+
+	// Lift every direct child (Divi columns/modules) above the dim layer.
+	> .et_pb_column,
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+// .box-overlay-gray — element is grayscaled + dimmed (brightness 0.5).
+// When .is-blob-active is added by external blob/JS, filter is removed and
+// the element returns to its original colors. Filter applied to ::before so
+// children stay sharp.
+.box-overlay-gray {
+	position: relative !important;
+	isolation: isolate;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-image: inherit;
+		background-size: inherit;
+		background-position: inherit;
+		background-repeat: inherit;
+		background-color: inherit;
+		filter: grayscale(1) brightness(0.5);
+		opacity: 1;
+		pointer-events: none;
+		z-index: 0;
+		border-radius: inherit;
+		transition:
+			opacity 0.4s ease,
+			filter 0.4s ease;
+	}
+
+	// Color returns whenever .is-blob-active is on self, a sibling, or any
+	// descendant of the same parent (Divi row/section).
+	&.is-blob-active::before,
+	&:has(~ .is-blob-active)::before,
+	&:has(.is-blob-active)::before {
+		opacity: 0;
+	}
+}
+
+// Catch the common Divi pattern: .is-blob-active is on a sibling COLUMN of
+// the same row. Triggers grayscale removal on .box-overlay-gray inside.
+.et_pb_row:has(.is-blob-active),
+.et_pb_section:has(.is-blob-active) {
+	.box-overlay-gray::before {
+		opacity: 0;
+	}
+
+	> .et_pb_module,
+	> .et_pb_column,
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+// .box-overlay-pattern — adds the swirl-pattern PNG as a layer ABOVE the
+// element's own background image but BELOW its children.
+.box-overlay-pattern {
+	position: relative !important;
+	isolation: isolate;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-image: url("_assets/swirl-pattern-compressed.png");
+		background-repeat: repeat;
+		background-size: auto;
+		background-position: center;
+		opacity: 0.85;
+		mix-blend-mode: overlay;
+		pointer-events: none;
+		z-index: 0;
+		border-radius: inherit;
+	}
+
+	// Lift direct children above the pattern.
+	> .et_pb_module,
+	> .et_pb_column,
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}

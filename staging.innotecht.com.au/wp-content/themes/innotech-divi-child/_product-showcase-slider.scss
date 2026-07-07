@@ -1,0 +1,290 @@
+// Product showcase carousel — [product_showcase_slider post_id=..].
+// Full-bleed image slides with heading/excerpt, side-nav-style numbered dots
+// (mirrors .side-nav in _base.scss — do NOT edit that file), and a
+// counter + circular prev/next arrows. Markup: product-showcase-slider.php.
+
+.product-showcase-slider {
+	--pss-accent: #0084cd;
+
+	position: relative;
+	width: 100%;
+	height: clamp(420px, 80vh, 820px);
+	overflow: hidden;
+	border-radius: 18px;
+	background: #0a0a0a;
+	color: #fff;
+
+	.pss-track {
+		position: absolute;
+		inset: 0;
+	}
+
+	// ── Slides (cross-fade) ───────────────────────────────────────────────
+	.pss-slide {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.8s ease,
+			visibility 0s linear 0.8s;
+
+		&.is-active {
+			opacity: 1;
+			visibility: visible;
+			transition:
+				opacity 0.8s ease,
+				visibility 0s;
+		}
+	}
+
+	.pss-bg {
+		position: absolute;
+		inset: 0;
+		background-size: cover;
+		background-position: center;
+		filter: grayscale(1) brightness(0.55);
+		transform: scale(1.06);
+		transition: transform 7s ease;
+	}
+	.pss-slide.is-active .pss-bg {
+		transform: scale(1);
+	}
+
+	.pss-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			90deg,
+			rgba(0, 0, 0, 0.78) 0%,
+			rgba(0, 0, 0, 0.45) 45%,
+			rgba(0, 0, 0, 0.1) 100%
+		);
+	}
+
+	// ── Caption ───────────────────────────────────────────────────────────
+	.pss-content {
+		position: absolute;
+		left: clamp(20px, 5vw, 70px);
+		bottom: clamp(30px, 8vh, 80px);
+		max-width: min(560px, 72%);
+		z-index: 2;
+		opacity: 0;
+		transform: translateY(22px);
+		transition:
+			opacity 0.7s ease 0.2s,
+			transform 0.7s ease 0.2s;
+	}
+	.pss-slide.is-active .pss-content {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.pss-heading {
+		margin: 0 0 0.75rem;
+		// Caps at 60px on large screens, scales down fluidly on smaller ones.
+		font-size: clamp(2rem, 5vw, 60px);
+		font-weight: 300;
+		line-height: 1.05;
+		color: #fff;
+	}
+	.pss-excerpt {
+		margin: 0;
+		max-width: 44ch;
+		font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+		font-weight: 300;
+		line-height: 1.55;
+		opacity: 0.85;
+
+		p {
+			margin: 0 0 0.5rem;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	// ── Numbered dot nav (side-nav style) ─────────────────────────────────
+	.pss-nav {
+		position: absolute;
+		right: clamp(16px,10vw,160px);
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 3;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		// Left-align so the dot column lines up with the sub-dots (centring would
+		// offset the dot by the width of the number label).
+		align-items: flex-start;
+		gap: 5px;
+	}
+
+	.pss-nav-item {
+		display: grid;
+		grid-template-columns: 16px auto;
+		align-items: center;
+		cursor: pointer;
+
+		.pss-dot-main {
+			grid-column: 1;
+			justify-self: center;
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+			background: #fff;
+			transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		}
+
+		.pss-nav-num {
+			grid-column: 2;
+			justify-self: start;
+			margin-left: 10px;
+			font-size: 13px;
+			opacity: 0.4;
+			transition: all 0.4s ease;
+		}
+
+		&.active {
+			.pss-dot-main {
+				transform: scale(1.6);
+			}
+			.pss-nav-num {
+				opacity: 1;
+				transform: translateX(4px);
+			}
+		}
+	}
+
+	// Dotted connector between items (3 sub-dots), aligned under the main dot.
+	.pss-subdots {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 5px;
+		width: 16px;
+		margin: 1px 0;
+
+		span {
+			width: 2px;
+			height: 2px;
+			border-radius: 50%;
+			background: #fff;
+			opacity: 0.4;
+		}
+	}
+
+	// ── Counter + arrows ──────────────────────────────────────────────────
+	.pss-controls {
+		position: absolute;
+		right: clamp(16px,10vw,160px);
+		bottom: clamp(20px, 5vh, 40px);
+		z-index: 3;
+		display: flex;
+		align-items: center;
+		gap: 18px;
+	}
+
+	.pss-counter {
+		font-size: 13px;
+		letter-spacing: 0.12em;
+		color: rgba(255, 255, 255, 0.55);
+
+		.pss-cur {
+			color: #fff;
+		}
+	}
+
+	.pss-arrows {
+		display: flex;
+		gap: 10px;
+	}
+
+	.pss-arrow {
+		width: 42px;
+		height: 42px;
+		padding: 0;
+		border-radius: 50%;
+		border: 1px solid rgba(255, 255, 255, 0.35);
+		background: transparent;
+		color: #fff;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition:
+			background 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.2s ease;
+
+		&:hover {
+			background: var(--pss-accent);
+			border-color: var(--pss-accent);
+		}
+		&:active {
+			transform: scale(0.94);
+		}
+
+		svg {
+			width: 18px;
+			height: 18px;
+		}
+	}
+
+	// Single slide → no nav/controls needed.
+	&[data-total="1"] {
+		.pss-nav,
+		.pss-controls {
+			display: none;
+		}
+	}
+
+	// ── Mobile ────────────────────────────────────────────────────────────
+	@media (max-width: 767px) {
+		height: clamp(380px, 70vh, 560px);
+		border-radius: 12px;
+
+		.pss-overlay {
+			background: linear-gradient(
+				180deg,
+				rgba(0, 0, 0, 0.25) 0%,
+				rgba(0, 0, 0, 0.5) 55%,
+				rgba(0, 0, 0, 0.85) 100%
+			);
+		}
+
+		.pss-content {
+			left: 20px;
+			right: 20px;
+			bottom: 84px;
+			max-width: none;
+		}
+
+		// Keep dots compact; drop the numbers to save room.
+		.pss-nav {
+			top: auto;
+			bottom: 24px;
+			right: 50%;
+			transform: translateX(50%);
+			flex-direction: row;
+			gap: 6px;
+		}
+		.pss-nav-item {
+			grid-template-columns: auto;
+			.pss-nav-num {
+				display: none;
+			}
+		}
+		.pss-subdots {
+			display: none;
+		}
+
+		.pss-controls {
+			left: 20px;
+			right: auto;
+			bottom: 24px;
+		}
+	}
+}

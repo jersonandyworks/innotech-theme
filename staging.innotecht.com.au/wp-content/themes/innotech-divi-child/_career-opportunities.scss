@@ -1,0 +1,240 @@
+// ── Career Opportunities Accordion ───────────────────────────────────────────
+
+$careers-padding-v: clamp(28px, 3.5vw, 30px);
+$careers-col-gap: clamp(32px, 5vw, 80px);
+
+.innotech-careers {
+	&__heading {
+		font-size: clamp(28px, 3.5vw, 46px);
+		font-weight: 300;
+		color: $white;
+		margin: 0 0 clamp(24px, 3vw, 30px);
+		line-height: 1.1;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__divider {
+		border: none;
+		border-top: 1px solid rgba(255, 255, 255, 0.12);
+		margin: 0;
+	}
+
+	// ── Item ─────────────────────────────────────────────────────────────────
+	&__item {
+	}
+
+	// Two-column grid — both columns always present.
+	// Closed: trigger spans both. Open: trigger = col1, panel = col2.
+	&__inner {
+		display: grid;
+		grid-template-columns: 9fr 11fr; // ~45% / 55% matching screenshot
+		column-gap: $careers-col-gap;
+		align-items: start; // both columns pin to the top
+	}
+
+	// ── Trigger ───────────────────────────────────────────────────────────────
+	&__trigger {
+		// Closed: full row
+		grid-column: 1 / -1;
+		align-self: start;
+
+		display: flex;
+		align-items: center;
+		gap: clamp(14px, 1.8vw, 24px);
+
+		background: none;
+		border: none;
+		cursor: pointer;
+		width: 100%;
+		text-align: left;
+		color: $white;
+
+		// Vertical rhythm — matches panel padding-top so title sits at the same
+		// baseline as the first line of content when open
+		padding: $careers-padding-v 0;
+
+		transition: color 0.2s ease;
+
+		&:hover {
+			color: rgba(255, 255, 255, 0.7);
+		}
+
+		// Open: left column only, top-pinned
+		.innotech-careers__item--open & {
+			grid-column: 1;
+			align-self: start;
+			padding-bottom: $careers-padding-v; // keep symmetric spacing
+		}
+	}
+
+	// ── + / × icon ───────────────────────────────────────────────────────────
+	&__icon {
+		flex-shrink: 0;
+		position: relative;
+		width: clamp(16px, 1.8vw, 16px);
+		height: clamp(16px, 1.8vw, 16px);
+		transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+		// Horizontal bar
+		&::before,
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			margin: auto;
+			background-color: currentColor;
+			border-radius: 2px;
+			transition: inherit;
+		}
+
+		&::before {
+			width: 100%;
+			height: 1.5px;
+		}
+
+		&::after {
+			width: 1.5px;
+			height: 100%;
+		}
+
+		// Rotate 45° → cross becomes ×
+		.innotech-careers__item--open & {
+			transform: rotate(45deg);
+		}
+	}
+
+	&__name {
+		font-size: clamp(16px, 2vw, 28px);
+		font-weight: 300;
+		line-height: 1.25;
+		color: inherit;
+	}
+
+	// ── Panel — right column ─────────────────────────────────────────────────
+	&__panel {
+		grid-column: 2;
+		align-self: start;
+		padding: $careers-padding-v 0;
+		animation: careersReveal 0.3s ease both;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	// ── Post content (WP editor output) ──────────────────────────────────────
+	&__content {
+		margin-bottom: clamp(20px, 2.5vw, 32px);
+
+		// Reset any Divi/theme global margins
+		> *:first-child {
+			margin-top: 0;
+		}
+		> *:last-child {
+			margin-bottom: 0;
+		}
+
+		p {
+			margin: 0 0 clamp(10px, 1.2vw, 16px);
+			font-size: clamp(13px, 1.3vw, 15px);
+			font-weight: 300;
+			color: rgba(255, 255, 255, 0.8);
+			line-height: 1.75;
+		}
+
+		ul,
+		ol {
+			list-style: none;
+			margin: clamp(10px, 1.2vw, 16px) 0 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			gap: clamp(10px, 1.2vw, 16px);
+
+			li {
+				display: flex;
+				align-items: flex-start;
+				gap: 12px;
+				font-size: clamp(13px, 1.3vw, 15px);
+				font-weight: 300;
+				color: rgba(255, 255, 255, 0.85);
+				line-height: 1.6;
+
+				&::before {
+					content: "";
+					flex-shrink: 0;
+					width: 7px;
+					height: 7px;
+					border-radius: 50%;
+					background-color: $primary-color;
+					margin-top: 0.42em;
+				}
+			}
+		}
+	}
+
+	// ── Apply Now button ─────────────────────────────────────────────────────
+	&__apply-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: clamp(20px, 2.5vw, 32px);
+		background-color: $primary-color;
+		color: $white;
+		text-decoration: none;
+		font-size: clamp(13px, 1.3vw, 15px);
+		font-weight: 400;
+		padding: clamp(10px, 1vw, 14px) clamp(22px, 2.2vw, 36px);
+		border-radius: $button-radius;
+		transition:
+			background-color 0.2s ease,
+			transform 0.2s ease;
+
+		svg {
+			transition: transform 0.2s ease;
+		}
+
+		&:hover {
+			background-color: darken($primary-color, 8%);
+		}
+
+		&:hover svg {
+			transform: translateX(3px);
+		}
+	}
+}
+
+// ── Reveal animation ─────────────────────────────────────────────────────────
+@keyframes careersReveal {
+	from {
+		opacity: 0;
+		transform: translateX(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: $tablet) {
+	.innotech-careers {
+		&__inner {
+			grid-template-columns: 1fr;
+		}
+
+		&__trigger,
+		.innotech-careers__item--open &__trigger {
+			grid-column: 1 !important;
+		}
+
+		&__panel {
+			grid-column: 1;
+			padding-top: 0;
+		}
+	}
+}

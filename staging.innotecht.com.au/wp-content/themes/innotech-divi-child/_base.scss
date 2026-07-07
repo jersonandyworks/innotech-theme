@@ -45,7 +45,7 @@ body {
 	background-repeat: repeat-x;
 	height: 14px;
 	opacity: 0.4;
-	transform: translateY(-60px);
+	transform: translateY(-320px);
 }
 
 .blog-post-single  {
@@ -270,6 +270,9 @@ body {
 		height: 0 !important;
 	}
 
+	#innotech__mobile__menu {
+		display: block;
+	}
 }
 
 // Header sticky bar — fluid horizontal padding so the logo/menu/button never
@@ -457,51 +460,6 @@ body {
 		width: 100% !important;
 		max-width: 1280px !important;
 		margin: 0 auto 0.5rem !important;
-	}
-}
-
-// Home-template dot-label columns (tb_body columns) are absolutely
-// positioned (left: 0) by the builder's critical CSS. In this same range the
-// rule above un-positions their parent row, so the column's containing block
-// becomes the full-width section and the label lands flush against the
-// viewport edge. Give the label the header logo's left offset — the logo sits
-// at 4vw, capped at 60px from 1500px up — so it tracks the logo fluidly as
-// the window resizes. Page-level dot-label columns (e.g. About Us) have no
-// _tb_body class and keep their heading alignment.
-@media only screen and (min-width: 981px) and (max-width: 1799px) {
-	.et_pb_column[class*="_tb_body"] > .innotech-dot-label-module {
-		margin-left: min(4vw, 60px) !important;
-	}
-
-	// Some layouts (showcase) also give these columns a builder horizontal
-	// offset (left: -120px), tuned for the column hanging off its centered
-	// row. With the row un-positioned in this range the column anchors to the
-	// full-width section instead, and the negative offset drags the label off
-	// the left edge of the screen. Zero it so the margin above lands the label
-	// on the logo. Static columns ignore `left`, so in-flow layouts are
-	// unaffected.
-	.et_pb_column[class*="_tb_body"]:has(> .innotech-dot-label-module) {
-		left: 0 !important;
-	}
-}
-
-// Section 7 ("Who We Help"): on desktop the label row is position:relative,
-// so its absolute column (top: 50px) hangs from the row itself and the label
-// lands level with the "How we help your industry" heading. In this range the
-// row is un-positioned (rule above), so the column anchors to the section top
-// while the now-empty row still holds its 2% padding + bottom margin in flow,
-// pushing the heading 20–70px below the label. Collapse the empty row and pin
-// the column to where the heading row starts: section padding-top (4% of
-// width ≈ 4vw) + the heading row's 5px padding-top.
-@media only screen and (min-width: 981px) and (max-width: 1799px) {
-	#section7 .et_pb_row:has(> .et_pb_column[class*="_tb_body"] > .innotech-dot-label-module) {
-		padding-top: 0 !important;
-		padding-bottom: 0 !important;
-		margin-bottom: 0 !important;
-	}
-
-	#section7 .et_pb_column[class*="_tb_body"]:has(> .innotech-dot-label-module) {
-		top: calc(4vw + 5px) !important;
 	}
 }
 

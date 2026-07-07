@@ -1,0 +1,118 @@
+// #section7 "How we help your industry" — mobile/tablet responsive.
+//
+// Desktop: a staggered masonry of industry tiles (4-col Divi rows with
+// per-column widths + a decorative swirl-blob image as the 4th tile). On
+// small screens those fixed px column widths and the float layout overflow
+// off the right edge. Reset to a clean 2-column grid of uniform tiles.
+//
+// !important throughout: Divi theme-builder + _components.scss set the
+// column widths/floats with higher specificity than this scope.
+
+@media (max-width: 980px) {
+	#section7 {
+		// Heading + dot-label rows: full width. Desktop pins heading column to
+		// 31.875% via `.et_pb_row.et_pb_row_14_tb_body .et_pb_column` — match that
+		// specificity (extra .et_pb_row) so this wins, else words stack 1-per-line.
+		.et_pb_row.et_pb_row_13_tb_body .et_pb_column,
+		.et_pb_row.et_pb_row_14_tb_body .et_pb_column {
+			width: 100% !important;
+			margin: 0 0 1rem !important;
+		}
+
+		.et_pb_heading_3_tb_body h3 {
+			font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+			line-height: 1.1;
+		}
+
+		// Industry tile rows → 2-column grid.
+		.et_pb_row_15_tb_body,
+		.et_pb_row_16_tb_body {
+			display: grid !important;
+			grid-template-columns: repeat(2, 1fr) !important;
+			gap: 12px !important;
+			width: 100% !important;
+			max-width: 100% !important;
+			// Desktop applies padding-left:150px + align-items:flex-end for the
+			// staggered masonry — kill both so the grid fills and tiles align.
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			align-items: stretch !important;
+		}
+
+		// Neutralise Divi's floated, fixed-width, offset columns.
+		.et_pb_row_4col .et_pb_column {
+			width: auto !important;
+			max-width: 100% !important;
+			min-width: 0 !important;
+			float: none !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			position: relative !important;
+			top: 0 !important;
+			left: 0 !important;
+			transform: none !important;
+			translate: none !important;
+		}
+
+		// Swirl-blob image — show it in its grid cell (beside Defense),
+		// centred and contained so it never stretches.
+		.et_pb_column_20_tb_body {
+			display: grid !important;
+			place-items: center;
+
+			.et_pb_image_4_tb_body {
+				width: 100% !important;
+				margin: 0 !important;
+				text-align: center;
+			}
+
+			.et_pb_image_wrap {
+				display: inline-block;
+			}
+
+			img {
+				width: auto;
+				max-width: 100%;
+				height: auto;
+				max-height: 200px;
+				object-fit: contain;
+			}
+		}
+
+		// Tiles: uniform height, label pinned bottom, icon stays top-left.
+		.mining-blurb-img {
+			height: 200px;
+			margin: 0 !important;
+			border-radius: 14px;
+
+			.et_pb_blurb_content {
+				height: 100%;
+			}
+
+			h4 {
+				margin-top: 0 !important; // kill desktop 313px push
+				position: absolute;
+				left: 16px;
+				right: 16px;
+				bottom: 14px;
+				font-size: 1.15rem !important;
+			}
+
+			.blurb-custom-icon {
+				top: 16px !important;
+				left: 16px !important;
+				transform: none !important;
+			}
+		}
+	}
+}
+
+@media (max-width: 600px) {
+	#section7 .mining-blurb-img {
+		height: 168px;
+
+		h4 {
+			font-size: 1rem !important;
+		}
+	}
+}
