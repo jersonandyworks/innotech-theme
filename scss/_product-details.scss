@@ -66,23 +66,41 @@
 			height: 100% !important;
 		}
 
+		// Placeholder shown until the GLB finishes loading: a dim brand-logo
+		// watermark (::after) behind a "3D asset loading" message (::before), so
+		// the slot never looks empty/broken while a large model streams in on
+		// mobile. Both fade out once .is-loaded is set.
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: url("_assets/innotecht-logo-xl.png") center / 44% auto
+				no-repeat;
+			opacity: 0.12;
+			pointer-events: none;
+			z-index: 0;
+			transition: opacity 0.4s ease;
+		}
+
 		&::before {
-			content: "Loading 3D model…";
+			content: "3D asset loading…";
 			position: absolute;
 			inset: 0;
 			display: flex;
-			align-items: center;
+			align-items: flex-end;
 			justify-content: center;
-			color: rgba(255, 255, 255, 0.5);
+			padding-bottom: 18%;
+			color: rgba(255, 255, 255, 0.55);
 			font-size: 13px;
 			letter-spacing: 0.08em;
 			pointer-events: none;
-			z-index: 0;
+			z-index: 1;
 			opacity: 1;
 			transition: opacity 0.4s ease;
 		}
 
-		&.is-loaded::before {
+		&.is-loaded::before,
+		&.is-loaded::after {
 			opacity: 0;
 		}
 	}
@@ -108,6 +126,27 @@
 	.product-details {
 		grid-template-columns: 1fr;
 		gap: 1.5rem;
+
+		// Stacked order: 3D viewer on top, then the topic menu, then the text
+		// panel. Desktop keeps the viewer sticky beside the scrolling text; on a
+		// single column that sticky positioning made the model ride up and sit
+		// over the panel below (QA), and with the menu on top a topic tap changed
+		// the model/text off-screen. Static + viewer-first fixes both: the panel
+		// updates directly under the tapped topic, model visible just above.
+		&__viewer {
+			order: 0;
+			position: static;
+			align-self: auto;
+			top: auto;
+		}
+
+		&__menu {
+			order: 1;
+		}
+
+		&__content {
+			order: 2;
+		}
 
 		&__viewer,
 		&__3d {

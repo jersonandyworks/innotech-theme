@@ -1,44 +1,29 @@
-// #section5 3D slider/carousel — mobile fluid height.
-// Container ships inline height:100vh (too tall on phones). Override with a
-// FLUID height that adjusts continuously as the browser shrinks — not stepped
-// fixed px.
+// #section5 3D slider/carousel.
 //
-// Best practice:
-//  - dvh, not vh: tracks the *visible* viewport when mobile browser chrome
-//    (address bar) shows/hides; vh stays fixed and causes a jump/clip.
-//  - clamp(floor, ideal, ceiling): 25dvh is the ideal target, but pure 25vh
-//    collapses the 3D scene + title/subtitle/dots on short screens — the floor
-//    keeps it usable, the ceiling stops it ballooning on tall tablets.
-//  - vh line first as a fallback for browsers without dvh.
-@media (max-width: 768px) {
-	// .et_pb_code_inner wrapper inside .3d-slider-code-wrapper. The class starts
-	// with a digit, so use an attribute selector (a plain `.3d-...` selector is
-	// invalid). Fluid 25dvh that shrinks with the viewport; same dvh + clamp
-	// best practice as the container below.
-	[class~="3d-slider-code-wrapper"] .et_pb_code_inner {
-		height: 25vh; // fallback for no-dvh browsers
-		height: clamp(180px, 25dvh, 320px) !important;
-		min-height: 0 !important;
-		max-height: none !important;
-	}
-
-	#innotech-3ds-container-1 {
-		// Fill the .et_pb_code_inner wrapper — it owns the 25vh height now.
-		height: 100% !important;
-		min-height: 0 !important;
-		max-height: none !important;
-
-		canvas {
-			transform: scale(0.78);
-			transform-origin: center center;
-			width: 100% !important;
-			height: 100% !important;
-		}
+// Mobile (<= 768px) is now handled by the plugin itself: below 768px the
+// plugin swaps the Three.js arc for a card-deck carousel and sizes its own
+// container (height:auto). The old mobile height/scale hacks that lived here
+// (25dvh clamp on .et_pb_code_inner, height:100% + canvas scale on the
+// container) fought that by clamping the wrapper to ~211px — removed.
+//
+// Desktop keeps the plugin's inline height (100vh) untouched.
+//
+// Desktop/tablet (> 980px): Divi gives #section5 translateY(-250px) to tuck
+// it under the pinned #section4, but transforms don't affect layout flow, so
+// the section's original slot leaves a 250px empty band above #section7.
+// Collapse it with a matching negative margin. (<= 980px the transform is
+// killed in _section4-responsive.scss, so no compensation needed there.)
+@media (min-width: 981px) {
+	#section5 {
+		margin-bottom: -250px;
 	}
 }
 
-@media (max-width: 480px) {
-	#innotech-3ds-container-1 canvas {
-		transform: scale(1.72);
+@media (max-width: 768px) {
+	// Let the code module wrapper grow with the deck's natural height.
+	[class~="3d-slider-code-wrapper"] .et_pb_code_inner {
+		height: auto;
+		min-height: 0;
+		max-height: none;
 	}
 }

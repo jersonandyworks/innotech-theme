@@ -231,8 +231,9 @@
 	}
 }
 
-// Strip native video chrome on our custom video.
-.innotech-product-video__media {
+// Strip native video chrome on our custom video —
+// except the --native-controls variant (e.g. [play_full_video]).
+.innotech-product-video:not(.innotech-product-video--native-controls) .innotech-product-video__media {
 	&::-webkit-media-controls,
 	&::-webkit-media-controls-panel,
 	&::-webkit-media-controls-play-button,

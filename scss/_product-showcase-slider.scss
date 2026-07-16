@@ -262,22 +262,10 @@
 			max-width: none;
 		}
 
-		// Keep dots compact; drop the numbers to save room.
+		// Hide the dot nav entirely on phones: it stacks right next to the arrows
+		// and counter, which already show position ("03 / 03") — the two together
+		// read as clutter (QA: "we don't need both").
 		.pss-nav {
-			top: auto;
-			bottom: 24px;
-			right: 50%;
-			transform: translateX(50%);
-			flex-direction: row;
-			gap: 6px;
-		}
-		.pss-nav-item {
-			grid-template-columns: auto;
-			.pss-nav-num {
-				display: none;
-			}
-		}
-		.pss-subdots {
 			display: none;
 		}
 

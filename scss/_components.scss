@@ -488,6 +488,78 @@ footer {
 			column-gap: 42px;
 			li {
 				font-size: clamp(12px, 2vw, 14px);
+				// Keep "Privacy Policy" / "Terms of Service" on one line each —
+				// in the narrow mobile column they wrapped mid-label (QA).
+				white-space: nowrap;
+			}
+		}
+	}
+
+	// Footer nav clone (js/footer-nav-clone.js) — stands in for the desktop
+	// footer menu that Divi hides below 980px. Desktop keeps the original menu
+	// row, so the clone stays hidden there (QA: duplicate bullet list).
+	.innotech-footer-nav-clone {
+		display: none;
+	}
+
+	@media (max-width: $tablet) {
+		// Even out the stack: the © item's 30px bottom margin doubled up with the
+		// grid's 32px gap, leaving ~62px above the menu vs 32px below (QA).
+		.innotech-nested-item.footer-text {
+			margin-bottom: 0 !important;
+		}
+
+		// Left-align Privacy/Terms with the menu row above — the ul's 14px
+		// padding-left indented it (QA).
+		.innotech-lower-footer-menu {
+			padding-left: 0 !important;
+		}
+
+		// Tap targets (QA R1-001): the bare text links measure 14–15px tall,
+		// under the 24px accessibility minimum. Pad the hit area and cancel it
+		// with a negative margin so the rendered layout doesn't move.
+		.innotech-footer-nav-clone__menu li a,
+		.innotech-lower-footer-menu li a {
+			display: inline-block;
+			padding: 6px 0;
+			margin: -6px 0;
+		}
+
+		.innotech-footer-nav-clone {
+			display: block;
+			// The footer grid's second column is content-sized (~60px), which
+			// stacked the cloned links one word per row (QA). Span the full grid
+			// so the menu reads as one horizontal row above Privacy/Terms.
+			grid-column: 1 / -1;
+
+			&__menu {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				column-gap: 6px;
+				row-gap: 6px;
+
+				li {
+					// 11px: six labels total ~262px, the footer column is ~302px —
+					// at 12px they overflow it and wrap to a second row.
+					font-size: 11px;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+
+	// ≤380px (iPhone SE/8-class): the column narrows to ~287px, so even 11px
+	// labels wrap to two rows (QA R1-002). One notch smaller keeps one row.
+	@media (max-width: 380px) {
+		.innotech-footer-nav-clone__menu {
+			column-gap: 4px;
+
+			li {
+				font-size: 10px;
 			}
 		}
 	}
@@ -498,7 +570,7 @@ footer {
 // ─────────────────────────────────────────────────────────────────────────────
 .innotech-lp {
 	width: 100%;
-	padding: clamp(24px, 4vw, 48px);
+	// padding: clamp(24px, 4vw, 48px);
 	box-sizing: border-box;
 
 	&__grid {

@@ -9,10 +9,32 @@
 
 footer {
 	nav {
-		// Medium desktop (981px – 1200px): reduce Login offset
+		// Laptop (1201px – 1600px), QA: at 1536×864 the six menu items plus
+		// 5×30px gaps overflow the menu column by ~10px and "Contact" drops to
+		// a second line. Tighter gap + one step down in size keeps one line
+		// down to ~1280px wide; row-gap keeps any residual wrap tidy below that.
+		@media (min-width: 1201px) and (max-width: 1600px) {
+			ul#menu-footer-menu {
+				column-gap: 14px;
+				row-gap: 8px;
+
+				li a {
+					font-size: 14px;
+				}
+			}
+		}
+
+		// Medium desktop (981px – 1200px), QA shrink pass: the six items never
+		// fit the 57.8% menu column at these widths — one more size step down
+		// (the column itself is widened in the row rule below).
 		@media (min-width: #{$tablet + 1}) and (max-width: 1200px) {
 			ul#menu-footer-menu {
-				column-gap: 20px;
+				column-gap: 12px;
+				row-gap: 8px;
+
+				li a {
+					font-size: 13px;
+				}
 
 				#menu-item-468 {
 					transform: translateX(2vw);
@@ -47,6 +69,21 @@ footer {
 			}
 		}
 	}
+
+	// 981–1200px, QA shrink pass: rebalance the footer columns — the tagline
+	// column doesn't need 36%, and the extra room lets the menu stay on one
+	// line with the size step above.
+	@media (min-width: #{$tablet + 1}) and (max-width: 1200px) {
+		.et_pb_row--with-menu {
+			.et_pb_column_0_tb_footer {
+				width: 25% !important;
+			}
+
+			.et_pb_column_1_tb_footer {
+				width: 69% !important;
+			}
+		}
+	}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -75,6 +112,197 @@ footer {
 	}
 }
 
+// Blog gallery shell lives in the DOM at every width (JS builds it once);
+// only the ≤767px block below reveals it. Hidden otherwise so desktop shows
+// the untouched builder columns — and no orphan arrow buttons.
+body.single-post .innotech-blog-gallery {
+	display: none;
+}
+
+// QA: underline inline links inside single-post body copy so they read as
+// links (e.g. the closing "Contact us" sentence). Post content renders in
+// plain et_pb_text_N modules; template chrome (social share, view-all) uses
+// _tb_body-suffixed modules — excluded so only body copy is underlined.
+body.single-post .et_pb_text:not([class*="_tb_body"]) .et_pb_text_inner a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Single Blog Post (single-post) — mobile-specific fixes
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	body.single-post {
+		// Case-study image row: image_0 carries a fixed 560px height with
+		// object-fit: fill, so its landscape photo is stretched tall. Let all
+		// three stacked images fall back to their natural aspect so none distort.
+		.et_pb_image_0_tb_body,
+		.et_pb_image_1_tb_body,
+		.et_pb_image_2_tb_body {
+			height: auto !important;
+
+			.et_pb_image_wrap,
+			img {
+				height: auto !important;
+			}
+		}
+
+		// Case-study image gallery (QA): js/blog-gallery-carousel.js moves the
+		// row's image modules into a single swipe track with prev/next arrows on
+		// phones. The emptied builder columns collapse to nothing; the arrows
+		// mirror the product-showcase-slider's circular chevrons.
+		.innotech-blog-gallery-active > .et_pb_column {
+			display: none;
+		}
+
+		.innotech-blog-gallery {
+			display: block;
+			width: 100%;
+
+			&__track {
+				display: flex;
+				overflow-x: auto;
+				scroll-snap-type: x mandatory;
+				-webkit-overflow-scrolling: touch;
+				scrollbar-width: none;
+
+				&::-webkit-scrollbar {
+					display: none;
+				}
+
+				> .et_pb_image {
+					flex: 0 0 100%;
+					scroll-snap-align: start;
+					margin: 0 !important;
+
+					// Uniform 3:2 crop: the three photos have different natural
+					// heights (200–450px), which left a dead gap under the shorter
+					// slides. cover crops instead of stretching.
+					img {
+						width: 100%;
+						aspect-ratio: 3 / 2;
+						object-fit: cover;
+						height: auto;
+						border-radius: 12px;
+					}
+				}
+			}
+
+			&__arrows {
+				display: flex;
+				gap: 10px;
+				margin-top: 16px;
+			}
+
+			&__arrow {
+				width: 42px;
+				height: 42px;
+				padding: 0;
+				border-radius: 50%;
+				border: 1px solid rgba(255, 255, 255, 0.35);
+				background: transparent;
+				color: #fff;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition:
+					background 0.25s ease,
+					border-color 0.25s ease,
+					transform 0.2s ease;
+
+				&:hover {
+					background: #0084cd;
+					border-color: #0084cd;
+				}
+				&:active {
+					transform: scale(0.94);
+				}
+
+				svg {
+					width: 18px;
+					height: 18px;
+				}
+			}
+		}
+
+		// Post body copy: the post's own builder rows (nested inside the
+		// template's content row) carry 30px side margins, indenting every
+		// paragraph 30px right of AUTHOR / SHARE ARTICLE (QA). Flush them on
+		// phones so the copy shares the page's left edge.
+		.et_pb_row_2_tb_body .et_pb_row {
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+			width: 100% !important;
+			max-width: 100% !important;
+		}
+
+		// "More To Read" header row: the row carries a desktop padding-left of
+		// 150px, which on mobile squeezes the heading + "View All Resources" link
+		// into a ~150px strip pinned to the right, so both wrap awkwardly. Drop the
+		// padding, stack the columns full-width, and left-align to match the post.
+		.et_pb_row_4_tb_body {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+
+			> .et_pb_column {
+				width: 100% !important;
+				max-width: 100% !important;
+				float: none !important;
+				margin-left: 0 !important;
+				margin-right: 0 !important;
+				text-align: left !important;
+			}
+
+			// Heading on one line (QA): builder 60px wraps "More To Read" in the
+			// ~300px column. 12vw tracks the column so it stays a single line from
+			// 320px up (text width ≈ 5.7 × font-size).
+			.et_pb_heading_1_tb_body .et_pb_module_heading {
+				text-align: left !important;
+				font-size: clamp(26px, 11vw, 48px) !important;
+				line-height: 1.1em !important;
+			}
+
+			// "VIEW ALL RESOURCES" link: builder gives it a 112px desktop
+			// margin-top (QA "too much spacing") and a left offset; drop both and
+			// centre it to the page (QA).
+			.et_pb_text_3_tb_body {
+				margin: 0 !important;
+				width: 100% !important;
+				max-width: 100% !important;
+
+				&,
+				.et_pb_text_inner {
+					text-align: center !important;
+				}
+			}
+		}
+
+		// Related posts ("View All Resources"): turn the stacked grid into a
+		// horizontal swipe carousel so the cards read as a set instead of a tall
+		// stack (QA). Pure CSS scroll-snap — no JS. Cards peek at 82% width to
+		// signal there's more to swipe.
+		.innotech-lp__grid {
+			grid-template-columns: none;
+			grid-auto-flow: column;
+			grid-auto-columns: 82%;
+			overflow-x: auto;
+			scroll-snap-type: x mandatory;
+			scroll-padding-left: 16px;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			> .innotech-lp__card {
+				scroll-snap-align: start;
+			}
+		}
+	}
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Desktop (≥981px): widen Divi 2/3 columns in gutter-3 rows
 // ─────────────────────────────────────────────────────────────────────────────
@@ -91,5 +319,429 @@ footer {
 @media (max-width: $mobile) {
 	.industry-row {
 		padding: 40px !important;
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// First body section: clear the fixed header on mobile
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	.et_pb_section_0_tb_body,
+	.et_pb_section_0 {
+		padding-top: 120px;
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Home hero: desktop paddings (120px section + 130px column) left ~250px of
+// dead space above the heading on phones — hero ran ~630px tall. Tighten to
+// roughly heading + tagline with breathing room (~470px at 320w).
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	body.home #section1 {
+		padding-top: 100px !important;
+		padding-bottom: 30px !important;
+
+		.et_pb_column {
+			padding-top: 50px !important;
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Home §2 motor image: builder right-aligns it inside its column, which reads
+// off-balance on phones — center it. Home-scoped: image_0_tb_body numbering
+// repeats on other theme-builder templates.
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	body.home #section2 .et_pb_image_0_tb_body {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Industries hero heading: its builder module sets 2.25rem on mobile while
+// every other internal page hero is 1.93rem — match them. Page-scoped so other
+// templates' heading_0 modules are untouched.
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	body.page-id-1829 .et_pb_heading_0_tb_body .et_pb_heading_container h1 {
+		font-size: 1.93rem;
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// About Us (page-id-702) — mobile
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	body.page-id-702 {
+		// Testimonial attribution: the "— St Ives" span carries an inline
+		// font-size: 46px, so it towers over the 20px quote and its 30px line box
+		// clips it. Bring it down to a proper caption size, give it its own line
+		// and a little air above so it reads as an attribution, not a headline.
+		.sixty-font-size .et_pb_text_inner p span {
+			font-size: 20px !important; // beat the inline 46px
+			line-height: 1.4 !important;
+			display: inline-block;
+			margin-top: 14px;
+		}
+
+		// Bottom CTA ("Grow Your Career") — on desktop the heading row is
+		// position:absolute (top:170px) to overlap the image row, and the image
+		// row carries 91px top padding to clear it. Stacked on mobile that overlap
+		// collapses onto the image and body copy. Return the heading to normal
+		// flow, drop the compensating padding, and centre the image.
+		.et_pb_section_5 {
+			.et_pb_row_7 {
+				position: static !important;
+				top: auto !important;
+				margin: 6px auto 4px !important;
+			}
+
+			.et_pb_row_8 {
+				padding-top: 24px !important; // was 91px (cleared the absolute heading)
+			}
+
+			.et_pb_heading_4 .et_pb_module_heading {
+				margin-bottom: 8px;
+			}
+
+			.et_pb_image_2 {
+				text-align: center;
+
+				.et_pb_image_wrap {
+					margin-left: auto;
+					margin-right: auto;
+				}
+			}
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// About Us (page-id-702) — desktop bottom CTA
+// Same builder quirk as mobile: the "Grow Your Career" heading row is
+// position:absolute (top:170px) overlaying the image row, and with the heading
+// wrapping to two lines it lands on top of the photo (QA annotation). Return
+// the heading row to flow above the image row and swap the 91px compensating
+// padding for a proper gap — the image column already sits on the row's left
+// edge, so it lines up under the heading. Page-scoped: no other page touched.
+// ─────────────────────────────────────────────────────────────────────────────
+@media (min-width: #{$tablet + 1}) {
+	body.page-id-702 .et_pb_section_5 {
+		.et_pb_row_7 {
+			position: static !important;
+			top: auto !important;
+		}
+
+		.et_pb_row_8 {
+			padding-top: 40px !important; // was 91px (cleared the absolute heading)
+			// The image row is built 160px narrower than the heading row and
+			// auto-centres, offsetting the photo 80px right of the heading — match
+			// the heading row's width so their left edges line up (QA annotation).
+			width: 100% !important;
+			max-width: 1440px !important;
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Hardware / Software / Industries — mobile hero (shared _tb_body template)
+// The hero is a 16:9 video (1920×1080) with the heading absolutely overlaid,
+// both sitting in row_0_tb_body. The builder inner-content wrapper insets the
+// row ~38px each side, so the hero reads as a small boxed video instead of the
+// edge-to-edge hero used on the Showcase pages. Full-bleed the whole row so the
+// video and its centred heading overlay both span the viewport, matching the
+// Showcase hero and keeping the three internal pages consistent. Aspect is
+// preserved (object-fit stays clean at 100vw). Scoped to the three page-ids
+// because the _tb_body module numbering repeats on other templates.
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	body.page-id-1804,
+	body.page-id-1748,
+	body.page-id-1829 {
+		// Clip the sub-pixel/scrollbar-width overshoot from the 100vw full-bleed so
+		// it can never surface a page-level horizontal scrollbar. The hero section
+		// isn't a sticky/scroll container, so clipping here is side-effect free.
+		.et_pb_section_0_tb_body {
+			overflow-x: hidden;
+		}
+
+		.et_pb_row_0_tb_body {
+			width: 100vw;
+			max-width: 100vw;
+			margin-left: calc(50% - 50vw);
+			margin-right: calc(50% - 50vw);
+			padding-bottom: 0 !important;
+			// Builder gives the row a fixed height sized for the old inset video;
+			// full-bleed the video is taller, so it poked 50px into the next
+			// section. Let the row wrap its content.
+			height: auto !important;
+			min-height: 0 !important;
+
+			.et_pb_column_0_tb_body,
+			.et_pb_video_0_tb_body {
+				width: 100% !important;
+				max-width: 100% !important;
+			}
+
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Hardware / Software / Industries hero — close the hero flush (all widths).
+// The video module's 30px bottom margin, the row's bottom padding, the
+// section's 3px bottom padding, and the video column's builder top:50px offset
+// together left a band of the hero's background image visible under the video —
+// reads as a thin horizontal line between the hero and the first product card
+// (QA, desktop and mobile).
+// ─────────────────────────────────────────────────────────────────────────────
+body.page-id-1804,
+body.page-id-1748,
+body.page-id-1829 {
+	.et_pb_section_0_tb_body {
+		padding-bottom: 0 !important;
+	}
+
+	.et_pb_row_0_tb_body {
+		padding-bottom: 0 !important;
+
+		.et_pb_column_0_tb_body {
+			top: 0 !important;
+		}
+
+		.et_pb_video_0_tb_body {
+			margin-bottom: 0 !important;
+		}
+	}
+
+	// The product-cards section layers dark-bg.svg over a WHITE background-
+	// colour. At the hero boundary a sub-pixel edge of the cover image exposes
+	// that white base as a thin full-width line (QA — "the line still exists").
+	// Match the hero's black base so nothing can peek through the seam.
+	.et_pb_section_1_tb_body {
+		background-color: #000000 !important;
+	}
+
+	// Desktop: match the blog page's gap between the header and the hero row.
+	// Blog gets 72px section padding + 80px row margin (=152px); these templates
+	// only carry the 72px. Add the missing 80px as section padding rather than
+	// row margin — row_0 is the GSAP mask-reveal pin target, and margins on
+	// pinned elements skew the pin-spacer height. Same look: section bg is the
+	// dark hero image, row is transparent.
+	@media (min-width: #{$tablet + 1}) {
+		.et_pb_section_0_tb_body {
+			padding-top: 152px !important;
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Hardware / Software / Industries content rows (shared _tb_body template) —
+// mobile. Each product row is a 2-column [copy | image] block. On phones the
+// desktop padding (48px 56px 48px 32px) plus the builder inset crushes the copy
+// into a ~212px column, so paragraphs wrap every few words and each page runs
+// very long. Tighten the row padding to widen the copy, and lift the image above
+// the heading so every block reads image → heading → body (QA: "images either
+// above the headings or between the heading and body copy"). Scoped to the three
+// page-ids because the _tb_body module numbering repeats on other templates.
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $mobile) {
+	body.page-id-1804,
+	body.page-id-1748,
+	body.page-id-1829 {
+		.et_pb_section_1_tb_body .et_pb_row {
+			padding: 32px 16px !important;
+			display: flex;
+			flex-direction: column;
+
+			// image column is 2nd in the DOM — pull it above the copy column
+			> .et_pb_column {
+				order: 1;
+			}
+
+			> .et_pb_column:nth-child(2) {
+				order: 0;
+				// !important: the image column is :last-child in the DOM, and the
+				// generic _tb_body stacking rule zeroes last-child margins with
+				// !important — without this the image sits flush on the heading.
+				margin-bottom: 20px !important;
+			}
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Industries (page-id-1829) — layout repairs, all widths
+// ─────────────────────────────────────────────────────────────────────────────
+body.page-id-1829 {
+	// Fire Industry row: the builder shipped it without the bordered-card
+	// settings the six industry rows above share (border 0, padding 0 0 80px),
+	// its text column absolutely positioned at left:-120px (so the image sits on
+	// top of the copy), and its portrait image squeezed to 40% width. Restore
+	// normal flow and match the card treatment of the rows above.
+	.et_pb_row_7_tb_body {
+		border: 1px solid #333333;
+		border-radius: 20px;
+		padding: 48px 56px 48px 96px !important;
+
+		> .et_pb_column_13_tb_body {
+			position: relative !important;
+			top: auto !important;
+			right: auto !important;
+			bottom: auto !important;
+			left: auto !important;
+		}
+
+		.et_pb_image_6_tb_body {
+			width: 100% !important;
+			max-width: 100% !important;
+			height: auto !important;
+			min-height: 0 !important; // builder's 735px stretched the card taller than siblings
+			margin: 0 !important;
+
+			img {
+				width: 100%;
+				height: auto;
+				aspect-ratio: 3 / 2; // sibling row images are 2560×1706 (3:2) —
+				object-fit: cover; // crop the portrait source (1200×1600) to match
+				border-radius: 20px;
+			}
+		}
+
+		// Type: the builder shipped this row's modules smaller than the six
+		// sibling rows (heading 44px/500 with a stray 12px top pad, body 14px vs
+		// the siblings' 60px/400 and 18px). Match them. Desktop-scoped so Divi's
+		// own responsive module sizes keep governing phones/tablets.
+		@media (min-width: #{$tablet + 1}) {
+			.et_pb_heading_7_tb_body {
+				padding-top: 0 !important;
+
+				.et_pb_module_heading {
+					font-size: 60px !important;
+					font-weight: 400 !important;
+					line-height: 1em !important;
+				}
+			}
+
+			// On .et_pb_text_inner itself, not just its <p> — the first paragraph
+			// is a bare text node with no <p> wrapper.
+			.et_pb_text_6_tb_body .et_pb_text_inner {
+				font-size: 18px !important;
+				line-height: 1.7em !important;
+			}
+		}
+	}
+
+	// Advanced Data Visualisation: the device-image column (image + its callout
+	// labels) is absolutely positioned, so its ~640px height never reaches the
+	// row — the section stays ~530px tall and the device hangs down over the
+	// "Contact our sales team" section below. Put the column back in flow so the
+	// section wraps its content; the callouts are positioned relative to the
+	// image module, so they travel with it.
+	.et_pb_row_10_tb_body > .et_pb_column_17_tb_body {
+		position: relative !important;
+		top: auto !important;
+		right: auto !important;
+		bottom: auto !important;
+		left: auto !important;
+	}
+
+	// "Advanced Data Visualisation" heading: sits a full row below the "VISUAL
+	// INSIGHTS" eyebrow. A negative margin can't lift it — Divi columns are
+	// floats, and row_9's floated column refuses to rise above row_8's float —
+	// so lift the whole row out of flow instead, pinned to the eyebrow's line
+	// (section pad 96px + row_8 pad 5px = 101px). Its builder 150px left padding
+	// already clears the eyebrow text horizontally. Desktop only — phones keep
+	// the stacked flow.
+	@media (min-width: #{$tablet + 1}) {
+		.et_pb_row_9_tb_body {
+			position: absolute !important;
+			top: 101px;
+			left: 0;
+			right: 0;
+			padding-top: 0 !important;
+			padding-bottom: 0 !important;
+			margin-top: 0 !important;
+		}
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Internal-page contact CTA (#section8 template reuse).
+// The pinned slide effect (mask-zoom-effect.js) runs here just like the
+// homepage §8, with page-aware slide targets (see the JS). Layout differences
+// from home, per QA:
+//  - GET IN TOUCH eyebrow: builder centres it (column is flex +
+//    justify-content:center) — push it to the content edge like home's ABOUT.
+//  - Slide 2 repeats the sliding heading as its .item-title; on internal pages
+//    that reads as the heading "coming back" after it exits — drop it and let
+//    the copy card stand alone at a readable single-column measure.
+//  - The decorative .blob-icon lands ~2000px right (outside the content) —
+//    remove it here.
+// ─────────────────────────────────────────────────────────────────────────────
+body:not(.home) #section8 {
+	.innotech_dot_label {
+		margin-right: auto !important;
+		margin-left: 0 !important;
+	}
+
+	.innotech-nested-container {
+		// was 1.9fr 2.5fr 0.5fr — col 1 held the (now hidden) duplicate title
+		grid-template-columns: 1fr !important;
+		// The single cell (and its translucent panel) otherwise spans the whole
+		// 100vw slide — cap it so the panel inside (max-width minus the slide's
+		// 192px side paddings) matches the annotated ~890px card width.
+		max-width: 1280px;
+
+		.item-title {
+			display: none;
+		}
+
+		.item-content {
+			max-width: 100%;
+		}
+	}
+
+	.blob-icon {
+		display: none !important;
+	}
+
+	// Some pages' slider column carries Divi's centre alignment
+	// (justify-content:center); with the slides overflowing the 1440px column
+	// that centring shifts the whole strip ~880px left, so the section renders
+	// mid-scroll before you've scrolled (Software vs Industries). Pin the strip
+	// to flex-start so every page shares the same geometry.
+	.pin-content-wrapper {
+		justify-content: flex-start !important;
+	}
+
+	// Sliding heading: the builder module ships 30px/500 here while the
+	// homepage §8 heading uses the site's h1 scale — match it. The shared
+	// .pin-content-wrapper rule caps h1 at 30% width, which folds this longer
+	// heading into a six-line tower at 100px — give it half the slide instead
+	// (~3 lines, like the mockup).
+	.pin-content-wrapper h1.et_pb_module_heading {
+		font-size: clamp(40px, 5vw + 20px, 100px) !important;
+		font-weight: 400;
+		line-height: 1em !important;
+		width: 50%;
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Contact Us — map section eyebrow row (QA R1-003). The builder absolutely
+// positions .et_pb_row_2 (the dot-label eyebrow) at left:120px/width:319px for
+// the desktop composition; on phones 120+319 overruns every mobile viewport and
+// the whole page gains ~30px of horizontal scroll. Let it flow on mobile.
+// ─────────────────────────────────────────────────────────────────────────────
+@media (max-width: $tablet) {
+	body.page-id-856 .et_pb_section_2 .et_pb_row_2 {
+		position: static !important;
+		left: auto !important;
+		width: 100% !important;
+		max-width: 100% !important;
 	}
 }

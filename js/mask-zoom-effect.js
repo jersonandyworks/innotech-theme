@@ -12,17 +12,57 @@
 
 		var pinCreated = false;
 
-		// Slide ratios — defined here so they are shared between the immediate
-		// gsap.set below and the ScrollTrigger created later inside createPin().
+		// Homepage keeps the original hand-tuned translate ratios — its §8
+		// composes with other homepage-only transforms, so measurement-based
+		// values regress it. Internal pages (Industries etc. reuse this template
+		// with #section8 inside a centred 1440px row, ~1200px right of the
+		// homepage geometry) compute from the wrapper's measured offset instead:
+		//   pin START → slide 1 sits at 0.29 × vw, which centres its 30%-wide
+		//               "Contact our sales team…" heading in the viewport
+		//   pin END   → slide 2 lands at 0.09 × vw: its copy card starts right
+		//               of the GET IN TOUCH eyebrow (no overlap), and slide 1's
+		//               heading has fully exited off the left edge
+		var isHome = document.body.classList.contains("home");
 		var X_START_RATIO = 0.785;
 		var X_END_RATIO = 0.424;
+		var CHILD1_START_LEFT = 0.29;
+		var CHILD2_END_LEFT = 0.09;
+
+		var pinContent = section.querySelector(".pin-content-wrapper");
+
+		function naturalLeft() {
+			// Wrapper's untransformed viewport-left (subtract the current tween x).
+			var x = parseFloat(gsap.getProperty(pinContent, "x")) || 0;
+			return pinContent.getBoundingClientRect().left - x;
+		}
+		function slideStartX() {
+			if (isHome) return window.innerWidth * X_START_RATIO;
+			// Centre slide 1's heading in the viewport by measuring it, so the
+			// start position stays correct whatever width/size the heading has.
+			var slide1 = pinContent.children[0];
+			var h1 = slide1 && slide1.querySelector("h1, .et_pb_module_heading");
+			if (h1) {
+				var padLeft = parseFloat(getComputedStyle(slide1).paddingLeft) || 0;
+				var w = h1.getBoundingClientRect().width;
+				return (window.innerWidth - w) / 2 - padLeft - naturalLeft();
+			}
+			return window.innerWidth * CHILD1_START_LEFT - naturalLeft();
+		}
+		function slideEndX() {
+			if (isHome) return -window.innerWidth * X_END_RATIO;
+			// Slide 2 sits one viewport-width after slide 1 inside the wrapper.
+			return (
+				window.innerWidth * CHILD2_END_LEFT -
+				naturalLeft() -
+				window.innerWidth
+			);
+		}
 
 		// ── Set slide start position IMMEDIATELY on load ───────────────────────
 		// Must run before the 600ms MutationObserver delay so the wrapper is
 		// already at the correct position when the page first renders.
-		var pinContent = section.querySelector(".pin-content-wrapper");
 		if (pinContent) {
-			gsap.set(pinContent, { x: window.innerWidth * X_START_RATIO });
+			gsap.set(pinContent, { x: slideStartX() });
 		}
 
 		// Mask size range (matches _components.scss fallback → user-specified max)
@@ -113,14 +153,10 @@
 			// ── Horizontal slide for .pin-content-wrapper (locomotive pattern) ─────
 			// Each child is 100vw wide; translate the wrapper left by (n-1) × 100vw,
 			// scrubbed to the same trigger/start/end as the pin above.
-			var pinContent = section.querySelector(".pin-content-wrapper");
+			// slideStartX / slideEndX are declared at the top of the load handler.
 			if (pinContent && pinContent.children.length > 1) {
-				// X_START_RATIO / X_END_RATIO declared at the top of the load handler
-
 				gsap.to(pinContent, {
-					x: function () {
-						return -window.innerWidth * X_END_RATIO;
-					},
+					x: slideEndX,
 					ease: "none",
 					scrollTrigger: {
 						trigger: "#section8",
@@ -130,7 +166,7 @@
 						invalidateOnRefresh: true,
 						onRefresh: function () {
 							// Re-apply start position on resize so it stays proportional
-							gsap.set(pinContent, { x: window.innerWidth * X_START_RATIO });
+							gsap.set(pinContent, { x: slideStartX() });
 						},
 					},
 				});

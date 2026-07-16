@@ -1,6 +1,12 @@
 (function () {
 	"use strict";
 
+	// Videos inside the --native-controls variant keep the browser chrome;
+	// we only manage the initial play overlay for them.
+	function hasNativeControls(v) {
+		return !!v.closest(".innotech-product-video--native-controls");
+	}
+
 	function syncOverlay(v) {
 		var wrap = v.closest(".innotech-product-video");
 		if (!wrap) return;
@@ -13,6 +19,11 @@
 
 	function toggle(vid) {
 		if (vid.paused) {
+			// QA: play WITH sound — user-initiated playback is allowed to be
+			// audible; clear any muted state left by autoplay helpers or the
+			// browser restoring a previous session.
+			vid.muted = false;
+			vid.removeAttribute("muted");
 			var p = vid.play();
 			if (p && typeof p.catch === "function") p.catch(function () {});
 		} else {
@@ -28,9 +39,10 @@
 			if (vid) toggle(vid);
 			return;
 		}
-		// Click directly on the playing video pauses it.
+		// Click directly on the playing video pauses it — but not when native
+		// controls are on (the browser already handles clicks there).
 		var media = e.target.closest(".innotech-product-video__media");
-		if (media) toggle(media);
+		if (media && !hasNativeControls(media)) toggle(media);
 	});
 
 	// Document-level media events — covers dynamically-added videos.
@@ -40,7 +52,7 @@
 			function (e) {
 				var v = e.target;
 				if (!v.classList || !v.classList.contains("innotech-product-video__media")) return;
-				v.controls = false;
+				if (!hasNativeControls(v)) v.controls = false;
 				syncOverlay(v);
 			},
 			true,

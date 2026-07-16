@@ -281,6 +281,45 @@ body {
 	box-sizing: border-box;
 }
 
+// Center the nav pill in the header. The Divi markup nests logo + menu in one
+// column with the button in another, so flexing the columns can only center
+// the pill within its own column — off-center in the header. Instead the row
+// becomes a 3-track grid (logo | menu | button) and the logo column dissolves
+// via display:contents so its two modules join the grid directly. Equal 1fr
+// side tracks keep the pill dead-center in the row at every viewport width.
+// Desktop only — below 981px the custom hamburger + overlay menu takes over
+// (see _mobile-menu.scss, which restyles this same row).
+@media only screen and (min-width: 981px) {
+	.et_pb_row_0_tb_header.et_pb_row--with-menu {
+		display: grid !important;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+	}
+
+	.et_pb_row_0_tb_header > .et_pb_column_0_tb_header {
+		display: contents;
+	}
+
+	.et_pb_row_0_tb_header .et_pb_image_0_tb_header {
+		grid-column: 1;
+		justify-self: start;
+		margin-bottom: 0;
+	}
+
+	.et_pb_row_0_tb_header .et_pb_menu_0_tb_header {
+		grid-column: 2;
+		justify-self: center;
+		width: auto !important; // Divi's 100% module width would stretch the auto track
+		margin-bottom: 0;
+	}
+
+	.et_pb_row_0_tb_header > .et_pb_column_1_tb_header {
+		grid-column: 3;
+		justify-self: end;
+		width: auto !important;
+	}
+}
+
 // Button pulsating glow effect
 @keyframes pulseGlow {
 	0%,
@@ -525,6 +564,19 @@ body {
 	}
 }
 
+// QA: the home hero lost its full-screen height on desktop/laptop — with no
+// height rule it collapses to content + paddings (~737px on a 1080 screen).
+// The header is fixed and overlays the section, so 100vh is a true first
+// screen; the extra space centres the heading/side-nav rows.
+@media (min-width: 981px) {
+	body.home #section1 {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+}
+
 .liquid-background-canvas {
 	position: absolute;
 	top: 0;
@@ -543,4 +595,12 @@ body {
 
 footer nav ul#menu-footer-menu {
     align-items: center !important;
+}
+// Video loading state (QA R1-005): autoplay videos ship without poster frames,
+// so on slow connections the slot renders as an empty white box until the
+// first frame arrives. Every video on the site sits on dark art direction —
+// paint the element black so the loading state reads as intentional.
+// (A real poster image per video is still the better long-term fix.)
+video {
+	background-color: #000;
 }

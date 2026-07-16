@@ -21,9 +21,22 @@
 			margin: 0 0 1rem !important;
 		}
 
+		// Builder gives the heading module a narrow fixed width and right
+		// alignment — on phones the title wrapped word-per-word in a box on
+		// the right. Full width + left aligned; with the whole row available
+		// the sentence fits one line on typical phone widths (wraps only when
+		// it genuinely can't fit, e.g. 320px).
+		.et_pb_heading {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+		}
+
 		.et_pb_heading h3 {
 			font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
 			line-height: 1.1;
+			text-align: left !important;
 		}
 
 		// Industry tile rows → 2-column grid.

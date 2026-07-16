@@ -186,8 +186,16 @@
 				var distForWidth =
 					sweptWidth / 2 / (Math.tan(fov / 2) * camera.aspect);
 				var dist = Math.max(distForHeight, distForWidth) * FIT_MARGIN;
+				// Clip planes must scale with the model: GLBs exported in real-world
+				// units (e.g. the leaching tank, ~300 units tall, fit dist ~600) sat
+				// entirely beyond the fixed far plane of 200 and rendered as blank
+				// white. Derive near/far from the fitted distance so any unit scale
+				// works; far covers zoomMax (1.6×dist) plus the model's own depth.
+				camera.near = Math.max(dist / 1000, 0.01);
+				camera.far = dist * 10;
 				camera.position.set(0, 0, dist);
 				camera.lookAt(0, 0, 0);
+				camera.updateProjectionMatrix();
 
 				// Seed zoom bounds from the fitted distance: closer for zoom-in,
 				// a bit further than the fit for zoom-out.

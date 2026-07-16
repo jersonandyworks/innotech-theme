@@ -27,21 +27,23 @@ function innotech_acf_file_to_url($file) {
 }
 
 /**
- * Emit the standard .innotech-product-video markup: an HTML5 video with NO
- * controls plus a centered play overlay (icn-video-play.png). Play / pause /
- * icon visibility are driven by js/product-video.js (delegated, forces
- * controls off), so any block using these classes behaves the same.
+ * Emit the standard .innotech-product-video markup: an HTML5 video plus a
+ * centered play overlay (icn-video-play.png). By default native controls are
+ * suppressed and playback is driven by js/product-video.js; pass
+ * $controls = true to keep the browser's native controls (JS then leaves the
+ * video alone apart from the initial overlay).
  */
-function innotech_video_markup($url, $poster = '') {
+function innotech_video_markup($url, $poster = '', $controls = false) {
     if (empty($url)) return '';
     $play_icon = get_stylesheet_directory_uri() . '/_assets/icn-video-play.png';
 
     ob_start();
     ?>
-    <div class="innotech-product-video">
+    <div class="innotech-product-video<?php echo $controls ? ' innotech-product-video--native-controls' : ''; ?>">
         <video class="innotech-product-video__media"
                preload="metadata"
                playsinline
+               <?php if ($controls) : ?>controls<?php endif; ?>
                <?php if ($poster) : ?>poster="<?php echo esc_url($poster); ?>"<?php endif; ?>>
             <source src="<?php echo esc_url($url); ?>" type="video/mp4">
         </video>
@@ -93,7 +95,7 @@ add_shortcode('full_video', 'innotech_full_video_shortcode');
 
 /**
  * [play_full_video id="N"] → showcase top-level `play_full_video_file` field.
- * Same no-controls + play-icon overlay as the product videos.
+ * Same play-icon overlay as the product videos, but with native controls.
  */
 function innotech_play_full_video_shortcode($atts) {
     $atts = shortcode_atts(array('id' => ''), $atts, 'play_full_video');
@@ -109,6 +111,7 @@ function innotech_play_full_video_shortcode($atts) {
     if (!$post_id || !function_exists('get_field')) return '';
 
     $file = get_field('play_full_video_file', $post_id);
-    return innotech_video_markup(innotech_acf_file_to_url($file));
+    // Native browser controls ON for this one (unlike the product videos).
+    return innotech_video_markup(innotech_acf_file_to_url($file), '', true);
 }
 add_shortcode('play_full_video', 'innotech_play_full_video_shortcode');

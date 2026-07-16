@@ -206,9 +206,15 @@
 		}
 	}
 
-	// Nav arrows hidden on mobile — carousel autoplays instead.
+	// Manual navigation: autoplay removed (section4-carousel.js) — arrows
+	// + counter are the only way slides move, so show them.
 	.section4-carousel__nav {
-		display: none !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 18px;
+		order: 3;
+		margin-top: 16px;
 	}
 
 	.section4-carousel__btn {

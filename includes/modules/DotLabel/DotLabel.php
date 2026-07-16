@@ -164,6 +164,16 @@ class INNOTECH_DotLabel extends ET_Builder_Module {
             ),
         ) );
 
+        // QA (2026-07): the "Data <br /> Integration" label is too long next to
+        // the "Integrate Your Data" heading — content team asked for just
+        // "Data". The text lives in a Divi global module (library item 1654 +
+        // embedded copies in the body layouts); normalising it here ships the
+        // fix with the theme and survives template re-saves. Remove once the
+        // builder content itself is edited to plain "Data".
+        if ( preg_replace( '/\s+/', ' ', trim( wp_strip_all_tags( str_replace( '<br', ' <br', $label_text ) ) ) ) === 'Data Integration' ) {
+            $label_text = 'Data';
+        }
+
         // Build the HTML content
         $html_content = sprintf(
             '<div class="sidebar-item">

@@ -83,29 +83,7 @@
 		});
 		STATE.resizeObserver = ro;
 
-		// Autoplay — advances every AUTOPLAY_MS. Stops permanently on first
-		// user interaction so taps on links/buttons inside slides land.
-		var AUTOPLAY_MS = 4500;
-		STATE.autoplayStopped = false;
-		STATE.autoplay = setInterval(function () {
-			if (STATE.autoplayStopped) return;
-			if (document.hidden) return;
-			go(STATE.current + 1);
-		}, AUTOPLAY_MS);
-
-		function stopAutoplay() {
-			STATE.autoplayStopped = true;
-			if (STATE.autoplay) {
-				clearInterval(STATE.autoplay);
-				STATE.autoplay = null;
-			}
-		}
-		// Document-level listeners so taps anywhere inside section4 stop autoplay,
-		// even on translated/off-screen slide content.
-		var section4 = document.getElementById("section4");
-		(section4 || viewport).addEventListener("pointerdown", stopAutoplay, true);
-		(section4 || viewport).addEventListener("touchstart", stopAutoplay, true);
-		(section4 || viewport).addEventListener("click", stopAutoplay, true);
+		// No autoplay — slides move only via the arrows or swipe.
 		prev.addEventListener("click", function () {
 			go(STATE.current - 1);
 		});
@@ -153,10 +131,6 @@
 		if (STATE.resizeObserver) {
 			STATE.resizeObserver.disconnect();
 			STATE.resizeObserver = null;
-		}
-		if (STATE.autoplay) {
-			clearInterval(STATE.autoplay);
-			STATE.autoplay = null;
 		}
 		if (STATE.viewport) STATE.viewport.remove();
 		if (STATE.nav) STATE.nav.remove();

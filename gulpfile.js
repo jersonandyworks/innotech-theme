@@ -43,6 +43,8 @@ const bundleOrder = [
   './js/footer-bg-sway.js',
   './js/video-autoplay.js',
   './js/mobile-menu.js',
+  './js/footer-nav-clone.js',
+  './js/blog-gallery-carousel.js',
   './js/product-blueprint.js',
   './js/wc-gallery-lightbox.js',
   './js/breadcrumb-chevron.js',

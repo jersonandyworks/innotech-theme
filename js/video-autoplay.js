@@ -1,4 +1,27 @@
 (function () {
+	// Map a file extension to the correct MIME type.
+	var MIME = { mp4: "video/mp4", webm: "video/webm", ogg: "video/ogg", ogv: "video/ogg", mov: "video/mp4" };
+
+	// Divi can emit a <source> whose `type` doesn't match the actual file — the
+	// hero MP4s ship with type="video/webm". iOS Safari trusts the type, decides
+	// it can't play WebM, skips the only source, and the hero renders blank on
+	// iPhone (fine on desktop Chrome, which is lenient). Rewrite each source's
+	// type from its file extension so Safari attempts the source it can play.
+	// Returns true if any type was corrected (caller must reload to re-evaluate).
+	function normalizeSources(v) {
+		var changed = false;
+		v.querySelectorAll("source").forEach(function (s) {
+			var src = s.getAttribute("src") || "";
+			var ext = (src.split("?")[0].split("#")[0].split(".").pop() || "").toLowerCase();
+			var correct = MIME[ext];
+			if (correct && s.getAttribute("type") !== correct) {
+				s.setAttribute("type", correct);
+				changed = true;
+			}
+		});
+		return changed;
+	}
+
 	function init() {
 		var vids = document.querySelectorAll(
 			".autoplay-video video, .et_pb_video.autoplay-video video",
@@ -16,6 +39,10 @@
 			v.setAttribute("loop", "");
 			v.setAttribute("playsinline", "");
 			v.removeAttribute("controls");
+
+			// Fix mislabeled source MIME types, then reload so the media element
+			// re-picks a source it can actually decode (needed for iOS Safari).
+			if (normalizeSources(v)) v.load();
 
 			var p = v.play();
 			if (p && typeof p.catch === "function") {

@@ -1,5 +1,21 @@
 // Showcase post layout tweaks.
 
+// The intro image under the hero uses .box-overlay-pattern and ships in full
+// colour, while every other showcase card image is greyscaled via
+// .box-overlay-gray. Match it so the page reads consistently (QA). grayscale(1)
+// with no brightness change desaturates the photo while leaving the white
+// overlaid heading white and legible; the element already isolates its stacking
+// context, and the fixed .showcase-blob isn't a descendant, so nothing else
+// shifts. On hover the original colour returns (QA).
+body.single-showcase .box-overlay-pattern {
+	filter: grayscale(1);
+	transition: filter 0.5s ease;
+
+	&:hover {
+		filter: grayscale(0);
+	}
+}
+
 // Mouse-follow blob bridging the showcase rows (js/showcase-blob.js).
 // Fixed + centred on its coordinate; JS drives top/left, x locked to the left
 // card edge so it only moves vertically.
@@ -104,6 +120,71 @@
 #free-trial-section {
 	padding-left: clamp(20px, 6vw, 80px) !important;
 	padding-right: clamp(20px, 6vw, 80px) !important;
+
+	// Background photo (worker at the concrete wall): keep the cover crop
+	// centred at every breakpoint regardless of builder per-device settings.
+	.darker-filter-background {
+		background-position: center center !important;
+		background-size: cover !important;
+	}
+}
+
+// Free-trial CTA on phones: the row/columns carry desktop-sized heights and
+// 80px padding, leaving ~400px of empty photo below the button (QA). Let the
+// card wrap its content with tighter spacing.
+@media (max-width: $mobile) {
+	#free-trial-section {
+		padding-top: 60px !important;
+		padding-bottom: 60px !important;
+
+		// Phone focal point: pull the crop left so the worker/glove reads
+		// centred (client-specified offset). Desktop keeps center center.
+		.darker-filter-background {
+			background-position: -280px center !important;
+		}
+
+		.et_pb_row {
+			height: auto !important;
+			min-height: 0 !important;
+			padding: 40px 24px !important;
+		}
+
+		.et_pb_column {
+			height: auto !important;
+			min-height: 0 !important;
+		}
+	}
+}
+
+// "Arrange a Free Trial" CTA: in the narrow mobile column the label wraps to
+// three lines, and with the pill's 100px radius that collapses into a fat
+// oval/near-circle (QA: reads oval vs the single-line pill used site-wide).
+// Keep it on one line so it renders as a proper pill at every width.
+body.single-showcase #free-trial-section .et_pb_button {
+	white-space: nowrap;
+}
+
+// QA: hide the "Play Full Video" section when the showcase has no video
+// uploaded — the ACF shortcode renders nothing, which would leave an orphan
+// "Video" dot label + "Play Full Video" heading over an empty block.
+body.single-showcase .et_pb_section_9_tb_body:not(:has(.innotech-product-video)) {
+	display: none;
+}
+
+// QA: hide the accuracy / Industry-HotSpot section when the post has no
+// [dreamwp_hotspot] content in accuracy_hotspot_image — otherwise only the
+// section headings render above an empty area.
+body.single-showcase .et_pb_section_4_tb_body:not(:has(.dwph-wrap)) {
+	display: none;
+}
+
+// QA: show the FULL hotspot image. The plugin crops it into a 700px
+// object-fit:cover box, cutting off the bottom of tall images — and any
+// hotspot markers placed there (their % positions assume the full image).
+// Natural aspect at full width keeps every marker on its intended spot.
+body.single-showcase .dwph-image {
+	height: auto;
+	object-fit: initial;
 }
 
 // Showcase body copy — keep paragraphs presentable (not oversized) on
