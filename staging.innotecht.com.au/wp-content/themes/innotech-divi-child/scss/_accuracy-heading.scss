@@ -1,0 +1,80 @@
+// Accuracy heading row: heading left, category text beside it, link pinned
+// right. Category and link sit level with the heading's last text line
+// (bottom-aligned with a small lift), per the design reference.
+// NB: module selectors are doubled (.et_pb_module.et_pb_module etc.) to reach
+// 0-3-0 specificity — Divi's `.et_pb_gutters3 .et_pb_column_4_4 .et_pb_module
+// { margin-bottom: 2.75% }` wins over anything weaker.
+.accuracy-heading-column {
+	display: flex;
+	align-items: flex-end;
+	flex-wrap: nowrap; // one line: heading, category, link — category shrinks first
+	gap: clamp(12px, 2vw, 32px);
+	width: 100%;
+
+	// Divi gives each module its own bottom margin (and none on the last),
+	// which skews the flex-end alignment — flatten them all.
+	> .et_pb_module.et_pb_module {
+		margin-bottom: 0;
+	}
+
+	> .et_pb_module.et_pb_heading {
+		flex: 0 0 auto;
+		min-width: 0;
+		// Divi gives the module a fixed 38% width; the box is ~200px wider than
+		// the heading text, which strands the category text mid-column. A box
+		// can't shrink-wrap to wrapped text lines, so cap it just above the
+		// widest line ("Real-Time Data" ≈ 340px at the fixed 44px font) — the
+		// wrap point is unchanged and the category text moves in next to the
+		// heading. On narrow columns Divi's 38% takes over (more wraps, fine).
+		max-width: min(38%, 360px) !important; // Divi sets its 38% with !important
+	}
+
+	> .et_pb_module.accuracy-category-text {
+		flex: 1 1 auto;
+		min-width: 0; // let long headings shrink instead of overflowing
+		text-align: left;
+		padding-bottom: 10px; // ride the heading's last line, not its very bottom
+	}
+
+	> .et_pb_module.accuracy-link {
+		flex: 0 0 auto; // keep the link its natural size, pinned right
+		margin-left: auto;
+		padding-bottom: 10px;
+		white-space: nowrap;
+		text-align: right;
+	}
+
+	// Laptop / small desktop: tighten the row a touch.
+	@media (max-width: 1440px) {
+		gap: clamp(10px, 1.5vw, 24px);
+	}
+
+	// Tablet: same layout, slightly smaller breathing room.
+	@media (max-width: $tablet) {
+		gap: 16px;
+	}
+
+	// Mobile: stack — text on top, link underneath, both flush left.
+	@media (max-width: $mobile) {
+		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+
+		> .et_pb_module.accuracy-category-text,
+		> .et_pb_module.accuracy-link {
+			padding-bottom: 0;
+		}
+
+		> .et_pb_module.accuracy-link {
+			margin-left: 0;
+			text-align: left;
+			white-space: normal;
+		}
+
+		// Divi switches the heading to 100% width on phones — follow it.
+		> .et_pb_module.et_pb_heading {
+			max-width: 100% !important;
+		}
+	}
+}

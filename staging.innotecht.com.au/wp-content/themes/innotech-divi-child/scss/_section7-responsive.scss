@@ -1,0 +1,292 @@
+// #section7 "How we help your industry" — mobile/tablet responsive.
+//
+// Desktop: a staggered masonry of industry tiles (4-col Divi rows with
+// per-column widths + a decorative swirl-blob image as the 4th tile). The
+// blurb image is hidden (opacity:0) and only zooms in on hover, so on small
+// screens — where there is no hover — tiles would render empty. On mobile we
+// instead show each image as a cover background with the label pinned bottom.
+//
+// Selectors are kept STABLE (.et_pb_row_4col, .mining-blurb-img, blurb inner
+// classes) NOT the volatile `_N_tb_body` indexes — Divi renumbers those whenever
+// a module is added/removed, which silently breaks index-based rules.
+//
+// !important throughout: Divi theme-builder + _components.scss set the column
+// widths/floats/image hiding with higher specificity than this scope.
+
+@media (max-width: 980px) {
+	#section7 {
+		// Dot-label + heading rows (every non-tile row): full width.
+		.et_pb_row:not(.et_pb_row_4col) .et_pb_column {
+			width: 100% !important;
+			margin: 0 0 1rem !important;
+		}
+
+		// Builder gives the heading module a narrow fixed width and right
+		// alignment — on phones the title wrapped word-per-word in a box on
+		// the right. Full width + left aligned; with the whole row available
+		// the sentence fits one line on typical phone widths (wraps only when
+		// it genuinely can't fit, e.g. 320px).
+		.et_pb_heading {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+		}
+
+		.et_pb_heading h3 {
+			font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+			line-height: 1.1;
+			text-align: left !important;
+		}
+
+		// Industry tile rows → 2-column grid.
+		.et_pb_row_4col {
+			display: grid !important;
+			grid-template-columns: repeat(2, 1fr) !important;
+			gap: 12px !important;
+			width: 100% !important;
+			max-width: 100% !important;
+			// Desktop applies padding-left + align-items:flex-end for the staggered
+			// masonry — kill both so the grid fills and tiles align.
+			padding-left: 20px !important;
+			padding-right: 20px !important;
+			align-items: stretch !important;
+		}
+
+		// Neutralise Divi's floated, fixed-width, offset columns.
+		.et_pb_row_4col .et_pb_column {
+			width: auto !important;
+			max-width: 100% !important;
+			min-width: 0 !important;
+			float: none !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			position: relative !important;
+			top: 0 !important;
+			left: 0 !important;
+			transform: none !important;
+			translate: none !important;
+		}
+
+		// Decorative swirl-blob column (the only .et_pb_image module, not a blurb).
+		// Show it centred + contained so it fills the 4th cell without stretching.
+		.et_pb_row_4col .et_pb_column:has(> .et_pb_image) {
+			display: grid !important;
+			place-items: center;
+
+			.et_pb_image {
+				width: 100% !important;
+				margin: 0 !important;
+				text-align: center;
+			}
+
+			.et_pb_image_wrap {
+				display: inline-block;
+			}
+
+			img {
+				width: auto;
+				max-width: 100%;
+				height: auto;
+				max-height: 160px;
+				object-fit: contain;
+			}
+		}
+
+		// Tiles: uniform height, image as cover background, label pinned bottom.
+		.mining-blurb-img {
+			height: 200px;
+			margin: 0 !important;
+			border-radius: 14px;
+			overflow: hidden;
+			position: relative;
+
+			// Divi shrink-wraps .et_pb_blurb_content (≈100px) — force it to fill the
+			// tile so the absolute image chain + label anchor to the full box.
+			.et_pb_blurb_content {
+				position: absolute !important;
+				inset: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				max-width: none !important;
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+
+			// Un-hide the blurb image (desktop hides it for the hover-zoom effect)
+			// and make it fill the tile.
+			.et_pb_main_blurb_image,
+			.et_pb_main_blurb_image .et_pb_image_wrap {
+				position: absolute;
+				inset: 0;
+				width: 100% !important;
+				height: 100% !important;
+				margin: 0 !important;
+			}
+
+			.et_pb_main_blurb_image img {
+				position: absolute !important;
+				inset: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				object-fit: cover !important;
+				opacity: 1 !important;
+				transform: none !important;
+				z-index: 0 !important;
+			}
+
+			// Gradient scrim so the white label stays legible over any image.
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(
+					to top,
+					rgba(0, 0, 0, 0.65) 0%,
+					rgba(0, 0, 0, 0) 50%
+				);
+				z-index: 1;
+				pointer-events: none;
+			}
+
+			h4 {
+				margin-top: 0 !important; // kill desktop 313px push
+				position: absolute;
+				left: 16px;
+				right: 16px;
+				bottom: 14px;
+				z-index: 2;
+				color: #fff;
+				font-size: 1.15rem !important;
+			}
+
+			.blurb-custom-icon {
+				top: 16px !important;
+				left: 16px !important;
+				transform: none !important;
+				z-index: 2;
+			}
+
+			// No hover on touch — neutralise the desktop scale(5.5) zoom.
+			&:hover .et_pb_main_blurb_image img {
+				transform: none !important;
+			}
+		}
+	}
+}
+
+@media (max-width: 600px) {
+	#section7 .mining-blurb-img {
+		height: 168px;
+
+		h4 {
+			font-size: 1rem !important;
+		}
+	}
+}
+
+// Desktop (≥981px): the staggered masonry tile height = h4 `margin-top:313px`
+// + the label's line count (the image is absolute, so it adds no height). As
+// columns narrowed below ~1791px, labels wrapped to 2–3 lines ("Iron Ore",
+// "Fire industry", "Oil & Gas") while single-word ones stayed 1 line, so tile
+// heights diverged.
+//
+// Fix: replace the masonry with a clean, uniform 4-column grid — equal widths,
+// one shorter responsive height, label pinned to the bottom (so height is no
+// longer label-driven), and a hover that COVER-fills the tile instead of the
+// scale(4)→5.5 crop that got cut off.
+// Scoped to .et_pb_row_4col (NOT .show-card-container, which reuses #section7).
+@media (min-width: 981px) {
+	#section7 .et_pb_row_4col {
+		display: grid !important;
+		grid-template-columns: repeat(4, 1fr) !important;
+		gap: 1.5rem !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		align-items: stretch !important;
+
+		// Equal-width tracks: neutralise Divi's floated, varied-width columns.
+		> .et_pb_column {
+			width: 100% !important;
+			max-width: 100% !important;
+			min-width: 0 !important;
+			float: none !important;
+			margin: 0 !important;
+			transform: none !important;
+			translate: none !important;
+		}
+
+		.mining-blurb-img {
+			// One uniform, shorter height for every tile.
+			height: clamp(360px, 26vw, 440px) !important;
+			padding: 0 !important;
+
+			// Content fills the tile → offset parent for the absolute image + label.
+			.et_pb_blurb_content {
+				position: relative !important;
+				height: 100% !important;
+				width: 100% !important;
+				max-width: none !important;
+			}
+
+			// Hover-reveal image: hidden by default, COVER-fills the tile on hover
+			// (replaces the scale(4)→5.5 crop that got cut off).
+			.et_pb_main_blurb_image,
+			.et_pb_main_blurb_image .et_pb_image_wrap {
+				position: absolute !important;
+				inset: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				margin: 0 !important;
+			}
+
+			.et_pb_main_blurb_image img {
+				position: absolute !important;
+				inset: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				object-fit: cover !important;
+				object-position: center !important;
+				opacity: 0 !important;
+				transform: none !important;
+				z-index: 0 !important;
+				transition:
+					opacity 0.5s ease,
+					transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+			}
+
+			&:hover .et_pb_main_blurb_image img {
+				opacity: 1 !important;
+				transform: scale(1.05) !important;
+			}
+
+			// Gradient scrim so the white label stays legible over the hover image.
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(
+					to top,
+					rgba(0, 0, 0, 0.6) 0%,
+					rgba(0, 0, 0, 0) 55%
+				);
+				z-index: 1;
+				pointer-events: none;
+			}
+
+			// Label pinned bottom → height no longer label-driven (equal at all widths).
+			h4 {
+				margin-top: 0 !important;
+				position: absolute;
+				left: 24px;
+				right: 24px;
+				bottom: 20px;
+				z-index: 2;
+			}
+
+			.blurb-custom-icon {
+				z-index: 2;
+			}
+		}
+	}
+}

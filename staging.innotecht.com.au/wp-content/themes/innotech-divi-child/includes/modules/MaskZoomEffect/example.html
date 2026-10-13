@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Parallax BG</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			section {
+				background-color: cadetblue;
+				height: 650px;
+			}
+
+			/* ── Section 1 ── */
+			#section-1 {
+				position: relative;
+				background-color: #070c3b;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			/* Real div so GSAP can target it directly */
+			.bg-circle {
+				position: absolute;
+				inset: 0;
+				background-image: url("../../../_assets/swirl-compressed.png");
+				background-size: cover;
+				background-position: center;
+				/* Initial state: small soft circle */
+				-webkit-mask-image: radial-gradient(
+					circle 220px at 100% 75%,
+					black 89%,
+					transparent 100%
+				);
+				mask-image: radial-gradient(
+					circle 220px at 100% 75%,
+					black 89%,
+					transparent 100%
+				);
+			}
+
+			/* Text sits above the masked layer */
+			#section-1 h1 {
+				position: relative;
+				z-index: 1;
+				color: #ffffff;
+				font-size: 2.4rem;
+				font-family: sans-serif;
+				letter-spacing: 0.08em;
+				text-shadow: 0 2px 18px rgba(0 0 0 / 0.7);
+				padding-top: 60px;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="section-1" class="parallax-bg">
+			<div class="bg-circle"></div>
+			<h1>Parallax BG</h1>
+		</section>
+
+		<section id="section-2">
+			<h1>Section 2</h1>
+		</section>
+
+		<section id="section-3">
+			<h1>Section 3</h1>
+		</section>
+
+		<!-- GSAP + ScrollTrigger -->
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+		<script>
+			gsap.registerPlugin(ScrollTrigger);
+
+			// ── Options ────────────────────────────────────────────────
+			const OPTIONS = {
+				mouseFollow: true, // circle tracks cursor while inside the section
+				followDelay: 2, // seconds the circle takes to catch up to the cursor (higher = slower)
+				featherPx: 25, // soft-edge width in pixels
+				defaultX: 50, // % fallback center X (used when mouse is outside)
+				defaultY: 55, // % fallback center Y
+			};
+			// ───────────────────────────────────────────────────────────
+
+			const section1 = document.getElementById("section-1");
+			const bgCircle = document.querySelector(".bg-circle");
+			const state = { r: 220 };
+			const pos = { x: OPTIONS.defaultX, y: OPTIONS.defaultY };
+
+			function applyMask() {
+				const { r } = state;
+				const inner = ((r - OPTIONS.featherPx) / r) * 100;
+				const mask = `radial-gradient(circle ${r}px at ${pos.x}% ${pos.y}%, black ${inner}%, transparent 100%)`;
+				bgCircle.style.webkitMaskImage = mask;
+				bgCircle.style.maskImage = mask;
+			}
+
+			// Mouse-follow listener
+			if (OPTIONS.mouseFollow) {
+				section1.addEventListener("mousemove", (e) => {
+					const rect = section1.getBoundingClientRect();
+					const targetX = ((e.clientX - rect.left) / rect.width) * 100;
+					const targetY = ((e.clientY - rect.top) / rect.height) * 100;
+
+					// Ease pos toward the cursor — overwrite cancels any in-flight tween
+					gsap.to(pos, {
+						x: targetX,
+						y: targetY,
+						duration: OPTIONS.followDelay,
+						ease: "power3.out",
+						overwrite: true,
+						onUpdate: applyMask,
+					});
+				});
+
+				// Reset to default center when cursor leaves the section
+				section1.addEventListener("mouseleave", () => {
+					gsap.to(pos, {
+						x: OPTIONS.defaultX,
+						y: OPTIONS.defaultY,
+						duration: 0.6,
+						ease: "power2.out",
+						overwrite: true,
+						onUpdate: applyMask,
+					});
+				});
+			}
+
+			// Scroll-driven radius reveal
+			gsap.to(state, {
+				r: 1500,
+				ease: "none",
+				scrollTrigger: {
+					trigger: "#section-1",
+					start: "top top",
+					end: "+=900",
+					pin: true,
+					scrub: 1,
+					anticipatePin: 1,
+				},
+				onUpdate: applyMask,
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,163 @@
+/* ============================================
+   Mask Zoom-Out Effect Styles
+   Production-ready CSS for GSAP animations
+   ============================================ */
+
+/**
+ * Base mask zoom-out container
+ * Ensure proper stacking and overflow handling
+ */
+.mask-zoom-out {
+	position: relative;
+	width: 100%;
+	height: auto;
+	overflow: visible; /* must NOT be hidden — clipping kills the mask fade edge */
+	will-change: mask-size, -webkit-mask-size;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	/* mask-image is set by JS so it picks up the edgeBlur config */
+}
+
+/**
+ * Ensure smooth rendering with GPU acceleration
+ */
+.mask-zoom-out * {
+	will-change: auto;
+	transform: translateZ(0);
+}
+
+/**
+ * Section containing mask effect
+ * Pin-ready styling
+ */
+section .mask-zoom-out {
+	display: block;
+	width: 100%;
+}
+
+/**
+ * Image/media within mask
+ * Prevent layout shift
+ */
+.mask-zoom-out img,
+.mask-zoom-out video {
+	display: block;
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+}
+
+/**
+ * Dark overlay variant (optional)
+ */
+.mask-zoom-out.dark-overlay::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.3);
+	z-index: 1;
+	pointer-events: none;
+}
+
+/**
+ * Light overlay variant (optional)
+ */
+.mask-zoom-out.light-overlay::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: rgba(255, 255, 255, 0.1);
+	z-index: 1;
+	pointer-events: none;
+}
+
+/**
+ * Content within masked area
+ */
+.mask-zoom-out .content {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/**
+ * Text content optimization
+ */
+.mask-zoom-out h1,
+.mask-zoom-out h2,
+.mask-zoom-out h3,
+.mask-zoom-out h4,
+.mask-zoom-out h5,
+.mask-zoom-out h6,
+.mask-zoom-out p {
+	margin: 0;
+	padding: 0;
+	z-index: 2;
+	position: relative;
+}
+
+/**
+ * Section pinning optimization
+ * When ScrollTrigger pins the section
+ */
+.mask-zoom-out.gsap-pinned {
+	position: fixed;
+	width: 100vw;
+}
+
+/**
+ * Ensure proper parent section styling.
+ * The section clips overflow so the mask edges that extend beyond the
+ * element don't bleed outside the section boundary.
+ */
+section:has(.mask-zoom-out) {
+	position: relative;
+	overflow: hidden; /* clips the mask-image fade zone that extends past the element */
+}
+
+/**
+ * Media query for mobile optimization
+ */
+@media (max-width: 768px) {
+	.mask-zoom-out {
+		min-height: 50vh;
+	}
+
+	.mask-zoom-out img,
+	.mask-zoom-out video {
+		width: 100%;
+		height: auto;
+	}
+}
+
+/**
+ * Reduce animation on reduced motion preference
+ */
+@media (prefers-reduced-motion: reduce) {
+	.mask-zoom-out {
+		clip-path: circle(100%) !important;
+		animation: none !important;
+	}
+
+	.mask-zoom-out,
+	.mask-zoom-out * {
+		will-change: auto !important;
+		transform: none !important;
+	}
+}
+
+/**
+ * Print styles
+ */
+@media print {
+	.mask-zoom-out {
+		clip-path: none;
+		break-inside: avoid;
+	}
+}

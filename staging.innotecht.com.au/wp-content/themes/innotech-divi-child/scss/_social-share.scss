@@ -1,0 +1,59 @@
+// Social Share Buttons
+// Circular dark icon buttons matching the design reference
+
+.custom-share-buttons {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	a,
+	button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 46px;
+		height: 46px;
+		border-radius: 50%;
+		background-color: #191c1e;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		overflow: hidden;
+		font-size: 0;
+		color: transparent;
+		text-decoration: none;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 20px 20px;
+		flex-shrink: 0;
+		transition:
+			background-color 0.2s ease,
+			transform 0.15s ease;
+
+		&:hover {
+			background-color: #2c2c2c;
+			transform: scale(1.08);
+		}
+	}
+
+	// Copy Link button — chain icon, displayed first
+	.share-copy-link {
+		order: -1;
+		background-image: url(_assets/link.svg);
+	}
+
+	// Facebook icon
+	.share-facebook {
+		background-image: url(_assets/fb.svg);
+	}
+
+	// Twitter icon
+	.share-twitter {
+		background-image: url(_assets/twitter.svg);
+	}
+
+	// LinkedIn icon
+	.share-linkedin {
+		background-image: url(_assets/linkedin.svg);
+	}
+}
