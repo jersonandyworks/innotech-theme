@@ -1,4 +1,5 @@
 (function () {
+	// Initialize the liquid background effect on the section with ID "section1"
 	function initLiquidBackground() {
 		var section = document.getElementById("section1");
 		if (!section) {
