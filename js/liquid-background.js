@@ -25,12 +25,14 @@
 				var themeUrl = window.innotechTheme
 					? window.innotechTheme.themeUrl
 					: "";
-				var imageUrl = themeUrl + "/_assets/background.png";
+				var imageUrl = themeUrl + "/_assets/background.webp";
 
 				app.loadImage(imageUrl);
-				app.liquidPlane.material.metalness = 1;
-				app.liquidPlane.material.roughness = 5;
-				app.liquidPlane.uniforms.displacementScale.value = 4.08;
+				// Reduce the dark, metallic look so the hero background feels lighter and
+				// more faithful to the intended softer wash while preserving the motion.
+				app.liquidPlane.material.metalness = 0.55;
+				app.liquidPlane.material.roughness = 4.25;
+				app.liquidPlane.uniforms.displacementScale.value = 3.2;
 				app.setRain(false);
 
 				// Handle resize
