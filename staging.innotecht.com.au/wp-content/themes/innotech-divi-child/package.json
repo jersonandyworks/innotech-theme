@@ -1,0 +1,20 @@
+{
+  "name": "innotech-divi-child",
+  "version": "1.0.0",
+  "description": "InnoTech Divi Child Theme",
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "dev": "gulp"
+  },
+  "devDependencies": {
+    "gulp": "^5.0.1",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^2.1.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-terser": "^2.1.0",
+    "sass": "^1.77.0"
+  }
+}

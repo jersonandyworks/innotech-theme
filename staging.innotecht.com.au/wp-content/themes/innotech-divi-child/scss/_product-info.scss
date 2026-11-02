@@ -1,0 +1,241 @@
+// ACF Product Information — single field, tabbed, and bordered+accordion layouts.
+
+.innotech-product-info {
+	color: #fff;
+	font-size: 1rem;
+	line-height: 1.7;
+
+	p {
+		margin: 0 0 1rem;
+	}
+	ul,
+	ol {
+		margin: 0 0 1rem 1.2rem;
+	}
+	a {
+		color: #0084cd;
+		text-decoration: underline;
+	}
+}
+
+// Tabbed UI (legacy [product_info_tabs]).
+.innotech-product-info-tabs {
+	color: #fff;
+	width: 100%;
+
+	&__nav {
+		display: flex;
+		gap: 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+		margin-bottom: 1.5rem;
+		flex-wrap: wrap;
+	}
+
+	&__tab {
+		background: transparent;
+		border: 0;
+		color: rgba(255, 255, 255, 0.55);
+		font-family: inherit;
+		font-size: 14px;
+		font-weight: 500;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		padding: 0.9rem 1.4rem;
+		cursor: pointer;
+		position: relative;
+		transition: color 0.25s ease;
+
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: -1px;
+			height: 2px;
+			background: #0084cd;
+			transform: scaleX(0);
+			transform-origin: center;
+			transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		&:hover {
+			color: #fff;
+		}
+
+		&.is-active {
+			color: #fff;
+			&::after {
+				transform: scaleX(1);
+			}
+		}
+	}
+
+	&__panel {
+		font-size: 1rem;
+		line-height: 1.7;
+		color: rgba(255, 255, 255, 0.85);
+
+		&[hidden] {
+			display: none;
+		}
+
+		p {
+			margin: 0 0 1rem;
+		}
+		ul,
+		ol {
+			margin: 0 0 1rem 1.2rem;
+			padding: 0;
+		}
+		li {
+			margin-bottom: 0.5rem;
+		}
+		a {
+			color: #0084cd;
+		}
+	}
+}
+
+// New: features (bordered) + accordion layout [product_info_layout].
+.innotech-product-layout {
+	color: #fff;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 2.5rem;
+
+	// Features: title outside, content inside white-bordered container.
+	&__features-title {
+		font-size: 1.125rem !important;
+		font-weight: 600;
+		color: #fff;
+		margin: 0 0 0.85rem;
+		letter-spacing: 0.02em;
+	}
+
+	&__features-box {
+		border: 1px solid rgba(255, 255, 255, 0.6);
+		border-radius: 14px;
+		padding: 1.5rem 1.75rem;
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: rgba(255, 255, 255, 0.9);
+
+		ul,
+		ol {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 0.65rem;
+		}
+
+		li {
+			position: relative;
+			padding-left: 2rem;
+
+			// Check icon via SVG mask — inherits color from currentColor.
+			&::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 0.4em;
+				width: 1.05rem;
+				height: 1.05rem;
+				background: #fff;
+				-webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") no-repeat center / contain;
+				mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") no-repeat center / contain;
+			}
+		}
+
+		p {
+			margin: 0 0 0.75rem;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	// Accordion (Overview + Shipping).
+	&__accordion {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__item {
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+		&:first-child {
+			border-top: 0;
+		}
+
+		&:last-child {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+		}
+	}
+
+	&__head {
+		background: transparent;
+		border: 0;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1.1rem 0;
+		font-family: inherit;
+		font-size: 1.125rem !important;
+		font-weight: 600;
+		color: #fff;
+		cursor: pointer;
+		text-align: left;
+		letter-spacing: 0.02em;
+	}
+
+	&__label {
+		flex: 1;
+	}
+
+	&__caret {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		color: rgba(255, 255, 255, 0.7);
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+		.innotech-product-layout__item.is-open & {
+			transform: rotate(180deg);
+			color: #fff;
+		}
+	}
+
+	&__panel {
+		overflow: hidden;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__panel-inner {
+		padding: 0 0 1.5rem;
+		font-size: 0.95rem;
+		line-height: 1.75;
+		color: rgba(255, 255, 255, 0.85);
+
+		p {
+			margin: 0 0 1rem;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+		strong,
+		b {
+			color: #fff;
+		}
+		a {
+			color: #0084cd;
+		}
+	}
+}

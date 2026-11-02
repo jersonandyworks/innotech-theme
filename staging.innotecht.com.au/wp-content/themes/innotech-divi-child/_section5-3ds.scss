@@ -1,0 +1,27 @@
+// #section5 3D slider/carousel — mobile tweaks.
+// Reduce container height and zoom-out the 3D scene so objects fit + render
+// fully within the smaller viewport.
+@media (max-width: 768px) {
+	#innotech-3ds-container-1 {
+		height: 480px !important;
+		min-height: 0 !important;
+		max-height: 70vh !important;
+
+		canvas {
+			transform: scale(0.78);
+			transform-origin: center center;
+			width: 100% !important;
+			height: 100% !important;
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	#innotech-3ds-container-1 {
+		height: 400px !important;
+
+		canvas {
+			transform: scale(0.72);
+		}
+	}
+}
