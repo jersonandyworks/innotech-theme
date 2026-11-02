@@ -10,12 +10,14 @@
 		var horizontalScrollLength =
 			secondChild.offsetLeft + secondChild.offsetWidth * 0.65;
 
-		// Fade out .dot-nav when pin scroll starts
+		// Fade out .dot-nav just before the pin scroll starts. The text column
+		// slides left over the label as soon as the pin engages (~2.6px per scroll
+		// px at 1920), so the label has to be gone by the pin's start offset.
 		gsap.to("#section4 .dot-nav", {
 			scrollTrigger: {
 				trigger: "#section4",
-				start: "top top+=80",
-				end: "+=200",
+				start: "top top+=200",
+				end: "top top+=180",
 				scrub: true,
 			},
 			opacity: 0,

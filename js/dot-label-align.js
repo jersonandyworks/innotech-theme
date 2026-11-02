@@ -3,9 +3,9 @@
 
 	// Home "Our Methods" label (.dot-2): the builder positions it with a fixed
 	// translateY, which lands it on the seam between the two cards and drifts as
-	// card heights change with viewport width. Line it up with the second card's
-	// title instead, measured from layout (offsetTop) so scroll-reveal
-	// transforms on the cards can't skew it.
+	// card heights change with viewport width. Line its top edge up with the top
+	// edge of the second card instead, measured from layout (offsetTop) so
+	// scroll-reveal transforms on the cards can't skew it.
 	var DESKTOP = window.matchMedia("(min-width: 981px)");
 
 	function offsetWithin(el, root) {
@@ -30,17 +30,18 @@
 		var titles = section.querySelectorAll(".item-title");
 		var title = titles[titles.length - 1];
 		if (!title) return;
+		var card = title.closest(".et_pb_with_border") || title;
 
 		// Drop any previous nudge so offsetTop reads the un-shifted position.
 		dot.style.transform = "none";
 		var dotTop = offsetWithin(dot, section);
-		var titleTop = offsetWithin(title, section);
-		if (dotTop === null || titleTop === null) {
+		var cardTop = offsetWithin(card, section);
+		if (dotTop === null || cardTop === null) {
 			dot.style.transform = "";
 			return;
 		}
 
-		var shift = titleTop + title.offsetHeight / 2 - (dotTop + dot.offsetHeight / 2);
+		var shift = cardTop - dotTop;
 		dot.style.transform = "translateY(" + Math.round(shift) + "px)";
 	}
 
