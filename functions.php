@@ -99,7 +99,7 @@ function innotech_enqueue_animation_scripts() {
     ));
 
     // ── ES module — must stay a separate <script type="module"> (see filter) ───
-    wp_enqueue_script('liquid-background', $theme_uri . '/js/min/liquid-background.min.js', array(), '1.0.0', true);
+    wp_enqueue_script('liquid-background', $theme_uri . '/js/min/liquid-background.min.js', array(), '1.0.1', true);
     wp_localize_script('liquid-background', 'innotechTheme', array(
         'themeUrl' => $theme_uri,
     ));

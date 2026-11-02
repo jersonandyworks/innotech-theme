@@ -229,8 +229,11 @@
 				max-width: none !important;
 			}
 
-			// Hover-reveal image: hidden by default, COVER-fills the tile on hover
-			// (replaces the scale(4)→5.5 crop that got cut off).
+			// Image COVER-fills the tile (replaces the scale(4)→5.5 crop that got
+			// cut off). Shown on load under a brand-blue wash (greyscale image +
+			// blue multiply layer); hover fades the wash out to full colour.
+			isolation: isolate;
+
 			.et_pb_main_blurb_image,
 			.et_pb_main_blurb_image .et_pb_image_wrap {
 				position: absolute !important;
@@ -247,20 +250,38 @@
 				height: 100% !important;
 				object-fit: cover !important;
 				object-position: center !important;
-				opacity: 0 !important;
+				opacity: 1 !important;
+				filter: grayscale(1);
 				transform: none !important;
 				z-index: 0 !important;
 				transition:
-					opacity 0.5s ease,
+					filter 0.5s ease,
 					transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
 			}
 
+			// Brand-blue wash over the greyscale image.
+			.et_pb_main_blurb_image::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: #0080c7;
+				mix-blend-mode: multiply;
+				opacity: 0.85;
+				z-index: 0;
+				pointer-events: none;
+				transition: opacity 0.5s ease;
+			}
+
 			&:hover .et_pb_main_blurb_image img {
-				opacity: 1 !important;
+				filter: none;
 				transform: scale(1.05) !important;
 			}
 
-			// Gradient scrim so the white label stays legible over the hover image.
+			&:hover .et_pb_main_blurb_image::after {
+				opacity: 0;
+			}
+
+			// Gradient scrim so the white label stays legible over the image.
 			&::after {
 				content: "";
 				position: absolute;

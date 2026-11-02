@@ -585,6 +585,8 @@ body {
 	height: 100%;
 	z-index: 0;
 	pointer-events: none;
+	// Hero background brightness: <1 darker, >1 lighter.
+	filter: brightness(1.25);
 }
 
 #section1 > *:not(.liquid-background-canvas) {

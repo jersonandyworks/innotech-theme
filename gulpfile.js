@@ -56,7 +56,8 @@ const bundleOrder = [
   './js/product-video.js',
   './js/innotech-video-wrapper.js',
   './js/show-card-carousel.js',
-  './js/blog-search.js'
+  './js/blog-search.js',
+  './js/dot-label-align.js'
 ];
 
 // Compile SCSS, concatenate, and minify
