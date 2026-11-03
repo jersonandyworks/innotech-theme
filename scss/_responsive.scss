@@ -683,9 +683,25 @@ body.page-id-1829 {
 //    remove it here.
 // ─────────────────────────────────────────────────────────────────────────────
 body:not(.home) #section8 {
+	// Eyebrow x must match the page's other dot-labels (e.g. Visual Insights).
+	// A flat margin-left:0 left it flush against the viewport edge — 58px short
+	// of them at 1440 and 111px past them at 1920. 981–1799: same offset as the
+	// shared rule in _base.scss (the logo's left offset, min(4vw, 60px)).
+	// ≥1800: those labels hang 120px left of their row (builder left:-120px) and
+	// that row is 80% of the section's 64px-padded content box (max 1440px),
+	// while this row is 80% of the full width (max 1440px) — so the two rows
+	// reach their 1440px cap at different widths and the gap between the labels
+	// slides from -69px (doc width 1800) to -120px (doc width ≥1928), linear in
+	// between: 657.2px - 0.4 × doc width (vw less a 15px scrollbar).
 	.innotech_dot_label {
 		margin-right: auto !important;
-		margin-left: 0 !important;
+		margin-left: min(4vw, 60px) !important;
+	}
+
+	@media only screen and (min-width: 1800px) {
+		.innotech_dot_label {
+			margin-left: clamp(-120px, calc(657.2px - 40vw), -68.8px) !important;
+		}
 	}
 
 	.innotech-nested-container {
